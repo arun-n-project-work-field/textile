@@ -17,17 +17,13 @@ class _SplashScreenState extends State<SplashScreen> {
     Get.put(SplashController());
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset(
-              "assets/images/splash.jpg",
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset("assets/images/splash.jpg", fit: BoxFit.cover),
           ),
 
           const Positioned(
@@ -35,9 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
             left: 0,
             right: 0,
             child: Center(
-              child: CircularProgressIndicator(
-                color: Colors.brown,
-              ),
+              child: CircularProgressIndicator(color: Colors.brown),
             ),
           ),
         ],

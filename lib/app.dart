@@ -12,10 +12,7 @@ class NammaKaimaggaApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Namma Kaimagga",
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.blue,
-      ),
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
       initialRoute: AppRoutes.splash,
       getPages: AppPages.pages,
       builder: EasyLoading.init(),

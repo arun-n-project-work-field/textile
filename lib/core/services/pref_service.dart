@@ -19,17 +19,11 @@ class PrefService {
     return _pref.getBool(key) ?? false;
   }
 
-  static Future<void> setString(
-      String key,
-      String value,
-      ) async {
+  static Future<void> setString(String key, String value) async {
     await _pref.setString(key, value);
   }
 
-  static Future<void> setBool(
-      String key,
-      bool value,
-      ) async {
+  static Future<void> setBool(String key, bool value) async {
     await _pref.setBool(key, value);
   }
 
