@@ -5,6 +5,7 @@ import 'package:namma_kaimagga_app/modules/bank-details/bank_details_screen.dart
 import 'package:namma_kaimagga_app/modules/family_info/family_info_binding.dart';
 import 'package:namma_kaimagga_app/modules/family_info/family_info_screen.dart';
 import 'package:namma_kaimagga_app/modules/geo-tagging/geo_tagging_screen.dart';
+import 'package:namma_kaimagga_app/modules/geotagging/geotagging_screen.dart';
 import 'package:namma_kaimagga_app/modules/house-details/house-details-screen.dart';
 import 'package:namma_kaimagga_app/modules/login/login_binding.dart';
 import 'package:namma_kaimagga_app/modules/loom-details/loom_details_screen.dart';
@@ -47,7 +48,7 @@ class AppPages {
       binding: FamilyInfoBinding(),
     ),
     GetPage(name: "/saved-survey", page: () => const SavedSurveyScreen()),
-    GetPage(name: AppRoutes.geoTagging, page: () => const GeoTaggingScreen()),
+    // GetPage(name: AppRoutes.geoTagging, page: () => const GeoTaggingScreen()),
     GetPage(
       name: AppRoutes.weaverInformation,
       page: () => const WeaverInformationScreen(),
@@ -59,7 +60,7 @@ class AppPages {
     GetPage(name: AppRoutes.dashboard, page: () => DashboardScreen()),
     GetPage(name: AppRoutes.savedSurvey, page: () => const SavedSurveyScreen()),
     GetPage(name: AppRoutes.sync, page: () => const SyncDataScreen()),
-    GetPage(name: AppRoutes.geoTagging, page: () => const GeoTaggingScreen()),
+    GetPage(name: AppRoutes.geotagging, page: () => const GeoTaggingScreen()),
     GetPage(
       name: AppRoutes.resetPassword,
       page: () => const ResetPasswordScreen(),

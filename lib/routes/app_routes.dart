@@ -14,9 +14,10 @@ abstract class AppRoutes {
   static const resetPassword = "/reset-password";
   static const about = "/about";
   static const disclaimer = "/disclaimer";
-  static const geoTagging="/geo-tagging";
+  // static const geoTagging="/geo-tagging";
   static const weaverInformation="/weaver-information";
   static const bankDetails = "/bank-details";
   static const loomDetails = "/loom-details";
   static const startSurvey = "/start-survey";
+  static const geotagging = "/geotagging";
 }

@@ -106,46 +106,46 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 15),
+            // const SizedBox(height: 15),
 
-            const Text(
-              "Survey Statistics",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Obx(
-              () => Row(
-                children: [
-                  Expanded(
-                    child: _StatCard(
-                      title: "Total",
-                      value: controller.totalSurvey.value.toString(),
-                      color: Colors.blue,
-                    ),
-                  ),
+            // const Text(
+            //   "Survey Statistics",
+            //   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            // ),
+            // const SizedBox(height: 10),
+            // Obx(
+            //   () => Row(
+            //     children: [
+            //       Expanded(
+            //         child: _StatCard(
+            //           title: "Total",
+            //           value: controller.totalSurvey.value.toString(),
+            //           color: Colors.blue,
+            //         ),
+            //       ),
 
-                  const SizedBox(width: 10),
+            //       const SizedBox(width: 10),
 
-                  Expanded(
-                    child: _StatCard(
-                      title: "Completed",
-                      value: controller.completedSurvey.value.toString(),
-                      color: Colors.green,
-                    ),
-                  ),
+            //       Expanded(
+            //         child: _StatCard(
+            //           title: "Completed",
+            //           value: controller.completedSurvey.value.toString(),
+            //           color: Colors.green,
+            //         ),
+            //       ),
 
-                  const SizedBox(width: 10),
+            //       const SizedBox(width: 10),
 
-                  Expanded(
-                    child: _StatCard(
-                      title: "Pending",
-                      value: controller.pendingSurvey.value.toString(),
-                      color: Colors.orange,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            //       Expanded(
+            //         child: _StatCard(
+            //           title: "Pending",
+            //           value: controller.pendingSurvey.value.toString(),
+            //           color: Colors.orange,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
 
             const SizedBox(height: 15),
 
@@ -164,17 +164,17 @@ class DashboardScreen extends StatelessWidget {
               children: [
                 _DashboardCard(
                   icon: Icons.assignment_add,
-                  title: "New Survey",
-                  subtitle: "Start Survey",
+                  title: "Start Geo-Tagging",
+                  subtitle: "Start Collecting Details",
                   color: Colors.blue,
                   onTap: () {
-                    Get.toNamed(AppRoutes.weaverList);
+                    Get.toNamed(AppRoutes.geotagging);
                   },
                 ),
 
                 _DashboardCard(
                   icon: Icons.folder_copy,
-                  title: "Saved Data",
+                  title: "View Data",
                   subtitle: "Offline Records",
                   color: Colors.orange,
                   onTap: () {
@@ -193,12 +193,12 @@ class DashboardScreen extends StatelessWidget {
                 ),
 
                 _DashboardCard(
-                  icon: Icons.map,
-                  title: "Geo Tagging",
-                  subtitle: "Capture GPS",
+                  icon: Icons.exit_to_app,
+                  title: "Log Out",
+                  subtitle: "Sign Out of App",
                   color: Colors.purple,
                   onTap: () {
-                    Get.toNamed(AppRoutes.geoTagging);
+                    Get.toNamed(AppRoutes.geotagging);
                   },
                 ),
 
@@ -226,7 +226,7 @@ class DashboardScreen extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            const SizedBox(height: 15),
+            // const SizedBox(height: 15),
 
             Center(
               child: Text(
@@ -366,42 +366,37 @@ class _AppDrawer extends StatelessWidget {
             ),
           ),
 
-          _drawerItem(
-            context,
-            Icons.dashboard,
-            "Dashboard",
-            AppRoutes.dashboard,
-          ),
+          // _drawerItem(
+          //   context,
+          //   Icons.dashboard,
+          //   "Dashboard",
+          //   AppRoutes.dashboard,
+          // ),
 
-          _drawerItem(
-            context,
-            Icons.assignment_add,
-            "New Survey",
-            AppRoutes.startSurvey,
-          ),
+          // _drawerItem(
+          //   context,
+          //   Icons.assignment_add,
+          //   "New Survey",
+          //   AppRoutes.startSurvey,
+          // ),
 
-          _drawerItem(
-            context,
-            Icons.folder,
-            "Saved Survey",
-            AppRoutes.savedSurvey,
-          ),
+          // _drawerItem(
+          //   context,
+          //   Icons.folder,
+          //   "Saved Survey",
+          //   AppRoutes.savedSurvey,
+          // ),
 
-          _drawerItem(context, Icons.sync, "Sync Data", AppRoutes.sync),
+          // _drawerItem(context, Icons.sync, "Sync Data", AppRoutes.sync),
 
-          _drawerItem(
-            context,
-            Icons.location_on,
-            "Geo Tagging",
-            AppRoutes.geoTagging,
-          ),
+          // _drawerItem(
+          //   context,
+          //   Icons.location_on,
+          //   "Geo Tagging",
+          //   AppRoutes.geoTagging,
+          // ),
 
-          _drawerItem(
-            context,
-            Icons.lock_reset,
-            "Reset Password",
-            AppRoutes.resetPassword,
-          ),
+          
 
           _drawerItem(context, Icons.info_outline, "About", AppRoutes.about),
 
@@ -413,6 +408,13 @@ class _AppDrawer extends StatelessWidget {
           ),
 
           const Divider(),
+
+          _drawerItem(
+            context,
+            Icons.lock_reset,
+            "Reset Password",
+            AppRoutes.resetPassword,
+          ),
 
           _drawerItem(context, Icons.logout, "Logout", AppRoutes.login),
         ],
