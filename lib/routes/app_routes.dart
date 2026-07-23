@@ -19,5 +19,9 @@ abstract class AppRoutes {
   static const bankDetails = "/bank-details";
   static const loomDetails = "/loom-details";
   static const startSurvey = "/start-survey";
-  static const geotagging = "/geotagging";
+  static const geoTagging = "/geotagging";
+  static const productDetails = "/product-details";
+  static const addProduct = "/add-product";
+  static const productList = "/product-list";
+  static const syncStatus = "/sync-status";
 }

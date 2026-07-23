@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:namma_kaimagga_app/routes/app_routes.dart';
 
 class GeoTaggingController extends GetxController {
-
   //------------------------------------------
   // LOCATION
   //------------------------------------------
@@ -18,9 +18,7 @@ class GeoTaggingController extends GetxController {
   //------------------------------------------
 
   final barcodeController = TextEditingController();
-
   final weightController = TextEditingController();
-
   final remarksController = TextEditingController();
 
   //------------------------------------------
@@ -28,7 +26,6 @@ class GeoTaggingController extends GetxController {
   //------------------------------------------
 
   RxString photo1Path = "".obs;
-
   RxString photo2Path = "".obs;
 
   //------------------------------------------
@@ -38,131 +35,97 @@ class GeoTaggingController extends GetxController {
   RxBool satelliteMap = true.obs;
 
   @override
-  void onInit() {
-    super.onInit();
-
+  void onReady() {
+    super.onReady();
     getCurrentLocation();
   }
 
   @override
   void onClose() {
-
     barcodeController.dispose();
     weightController.dispose();
     remarksController.dispose();
-
     super.onClose();
   }
 
   //--------------------------------------------------
-  // GET LOCATION
+  // GET CURRENT LOCATION
   //--------------------------------------------------
 
   Future<void> getCurrentLocation() async {
-
-    // Temporary values.
-    // Replace with Geolocator later.
+    // TODO:
+    // Replace with Geolocator later
 
     latitude.value = "13.028900";
-
     longitude.value = "77.589400";
-
     accuracy.value = "4.8 m";
+    time.value = DateFormat("dd-MM-yyyy hh:mm a").format(DateTime.now());
 
-    time.value =
-        DateFormat("dd-MM-yyyy  hh:mm a").format(DateTime.now());
-
-    Get.snackbar(
-      "Location",
-      "Current location updated",
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    debugPrint("Location Updated");
   }
 
   //--------------------------------------------------
-  // MAP TYPE
+  // CHANGE MAP TYPE
   //--------------------------------------------------
 
   void changeMapType() {
-
     satelliteMap.value = !satelliteMap.value;
 
-    Get.snackbar(
-      "Map",
-      satelliteMap.value
-          ? "Satellite View"
-          : "Street View",
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    debugPrint(satelliteMap.value ? "Satellite View" : "Street View");
   }
 
   //--------------------------------------------------
-  // CAMERA 1
+  // CAPTURE PHOTO 1
   //--------------------------------------------------
 
   Future<void> capturePhoto1() async {
-
     // TODO:
-    // ImagePicker
+    // ImagePicker / Camera
 
     photo1Path.value = "photo1.jpg";
 
-    Get.snackbar(
-      "Photo",
-      "Photo 1 Captured",
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    debugPrint("Photo 1 Captured");
   }
 
   //--------------------------------------------------
-  // CAMERA 2
+  // CAPTURE PHOTO 2
   //--------------------------------------------------
 
   Future<void> capturePhoto2() async {
-
     // TODO:
-    // ImagePicker
+    // ImagePicker / Camera
 
     photo2Path.value = "photo2.jpg";
 
-    Get.snackbar(
-      "Photo",
-      "Photo 2 Captured",
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    debugPrint("Photo 2 Captured");
   }
 
   //--------------------------------------------------
-  // BARCODE
+  // BARCODE SCAN
   //--------------------------------------------------
 
   Future<void> scanBarcode() async {
-
     // TODO:
-    // Mobile Scanner
+    // Barcode Scanner
 
     barcodeController.text = "HL-2026-000125";
 
-    Get.snackbar(
-      "Barcode",
-      "Barcode Scanned Successfully",
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    debugPrint("Barcode Scanned");
   }
 
   //--------------------------------------------------
-  // SAVE
+  // SAVE DRAFT
   //--------------------------------------------------
 
   Future<void> saveDraft() async {
-
     // TODO:
-    // SQLite Save
+    // Save to SQLite
 
     Get.snackbar(
       "Saved",
       "Draft saved successfully",
       snackPosition: SnackPosition.BOTTOM,
+      duration: const Duration(seconds: 2),
     );
   }
 
@@ -171,63 +134,48 @@ class GeoTaggingController extends GetxController {
   //--------------------------------------------------
 
   Future<void> submitData() async {
-
     if (barcodeController.text.isEmpty) {
-
       Get.snackbar(
         "Validation",
         "Please scan barcode",
+        snackPosition: SnackPosition.BOTTOM,
       );
-
       return;
     }
 
     if (photo1Path.value.isEmpty) {
-
       Get.snackbar(
         "Validation",
         "Capture Photo 1",
+        snackPosition: SnackPosition.BOTTOM,
       );
-
       return;
     }
 
     if (photo2Path.value.isEmpty) {
-
       Get.snackbar(
         "Validation",
         "Capture Photo 2",
+        snackPosition: SnackPosition.BOTTOM,
       );
-
       return;
     }
 
     if (weightController.text.isEmpty) {
-
       Get.snackbar(
         "Validation",
         "Enter Product Weight",
+        snackPosition: SnackPosition.BOTTOM,
       );
-
       return;
     }
 
-    // TODO
-
-    // SQLite
-
-    // API
-
     Get.dialog(
-      const Center(
-        child: CircularProgressIndicator(),
-      ),
+      const Center(child: CircularProgressIndicator()),
       barrierDismissible: false,
     );
 
-    await Future.delayed(
-      const Duration(seconds: 2),
-    );
+    await Future.delayed(const Duration(seconds: 2));
 
     Get.back();
 
@@ -235,6 +183,11 @@ class GeoTaggingController extends GetxController {
       "Success",
       "Geo Tagging Completed",
       snackPosition: SnackPosition.BOTTOM,
+      duration: const Duration(seconds: 2),
     );
+  }
+
+  void goToProductDetails() {
+    Get.toNamed(AppRoutes.productDetails);
   }
 }

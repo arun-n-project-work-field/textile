@@ -168,7 +168,7 @@ class DashboardScreen extends StatelessWidget {
                   subtitle: "Start Collecting Details",
                   color: Colors.blue,
                   onTap: () {
-                    Get.toNamed(AppRoutes.geotagging);
+                    Get.toNamed(AppRoutes.geoTagging);
                   },
                 ),
 
@@ -198,7 +198,7 @@ class DashboardScreen extends StatelessWidget {
                   subtitle: "Sign Out of App",
                   color: Colors.purple,
                   onTap: () {
-                    Get.toNamed(AppRoutes.geotagging);
+                    Get.toNamed(AppRoutes.login);
                   },
                 ),
 
