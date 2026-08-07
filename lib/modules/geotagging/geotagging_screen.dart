@@ -291,16 +291,358 @@
 //   }
 // }
 
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:namma_kaimagga_app/routes/app_routes.dart';
+
+// import 'geotagging_controller.dart';
+
+// class GeoTaggingScreen extends StatelessWidget {
+//   GeoTaggingScreen({super.key});
+
+//   final GeoTaggingController controller = Get.find<GeoTaggingController>();
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: const Color(0xffF4F7FA),
+
+//       appBar: AppBar(
+//         elevation: 0,
+//         centerTitle: true,
+//         backgroundColor: Colors.green.shade800,
+//         foregroundColor: Colors.white,
+//         title: const Text(
+//           "Geo Tagging",
+//           style: TextStyle(fontWeight: FontWeight.bold),
+//         ),
+//       ),
+
+//       body: SafeArea(
+//         child: SingleChildScrollView(
+//           padding: const EdgeInsets.all(16),
+//           child: Column(
+//             children: [
+//               //------------------------------------------------
+//               // MAP
+//               //------------------------------------------------
+//               Container(
+//                 height: 300,
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   borderRadius: BorderRadius.circular(18),
+//                   boxShadow: [
+//                     BoxShadow(color: Colors.grey.shade300, blurRadius: 10),
+//                   ],
+//                 ),
+//                 child: Stack(
+//                   children: [
+//                     Container(
+//                       decoration: BoxDecoration(
+//                         color: Colors.grey.shade300,
+//                         borderRadius: BorderRadius.circular(18),
+//                       ),
+//                       child: const Center(
+//                         child: Text(
+//                           "ArcGIS Map",
+//                           style: TextStyle(fontSize: 18),
+//                         ),
+//                       ),
+//                     ),
+
+//                     Positioned(
+//                       left: 15,
+//                       top: 15,
+//                       child: Column(
+//                         children: [
+//                           FloatingActionButton.small(
+//                             heroTag: "gps",
+//                             backgroundColor: Colors.green,
+//                             onPressed: controller.getCurrentLocation,
+//                             child: const Icon(Icons.my_location),
+//                           ),
+
+//                           const SizedBox(height: 12),
+
+//                           FloatingActionButton.small(
+//                             heroTag: "layer",
+//                             backgroundColor: Colors.green,
+//                             onPressed: controller.changeMapType,
+//                             child: const Icon(Icons.layers),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+
+//               const SizedBox(height: 20),
+
+//               //------------------------------------------------
+//               // LOCATION DETAILS
+//               //------------------------------------------------
+//               Card(
+//                 elevation: 3,
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(18),
+//                 ),
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(18),
+//                   child: Obx(
+//                     () => Column(
+//                       children: [
+//                         Row(
+//                           children: [
+//                             Expanded(
+//                               child: _infoTile(
+//                                 Icons.location_on,
+//                                 "Latitude",
+//                                 controller.latitude.value,
+//                               ),
+//                             ),
+
+//                             Expanded(
+//                               child: _infoTile(
+//                                 Icons.location_searching,
+//                                 "Longitude",
+//                                 controller.longitude.value,
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+
+//                         const Divider(height: 30),
+
+//                         Row(
+//                           children: [
+//                             Expanded(
+//                               child: _infoTile(
+//                                 Icons.gps_fixed,
+//                                 "Accuracy",
+//                                 controller.accuracy.value,
+//                               ),
+//                             ),
+
+//                             Expanded(
+//                               child: _infoTile(
+//                                 Icons.access_time,
+//                                 "Captured Time",
+//                                 controller.time.value,
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ),
+
+//               const SizedBox(height: 20),
+
+//               //------------------------------------------------
+//               // PHOTOS
+//               //------------------------------------------------
+//               Row(
+//                 children: [
+//                   Expanded(
+//                     child: _photoCard(
+//                       "Handloom Photo",
+//                       controller.capturePhoto1,
+//                     ),
+//                   ),
+
+//                   const SizedBox(width: 15),
+
+//                   Expanded(
+//                     child: _photoCard(
+//                       "Weaver + Handloom",
+//                       controller.capturePhoto2,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+
+//               const SizedBox(height: 20),
+
+//               //------------------------------------------------
+//               // REMARKS
+//               //------------------------------------------------
+//               Card(
+//                 elevation: 3,
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(18),
+//                 ),
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(18),
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       const Text(
+//                         "Remarks",
+//                         style: TextStyle(
+//                           fontWeight: FontWeight.bold,
+//                           fontSize: 18,
+//                         ),
+//                       ),
+
+//                       const SizedBox(height: 15),
+
+//                       TextField(
+//                         controller: controller.remarksController,
+//                         maxLines: 4,
+//                         decoration: InputDecoration(
+//                           hintText: "Enter remarks (Optional)",
+//                           border: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(12),
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+
+//               const SizedBox(height: 30),
+
+//               //------------------------------------------
+//               // BUTTONS
+//               //------------------------------------------
+//               Row(
+//                 children: [
+//                   Expanded(
+//                     child: ElevatedButton.icon(
+//                       onPressed: controller.saveDraft,
+//                       icon: const Icon(Icons.save),
+//                       label: const Text("Save Draft"),
+//                       style: ElevatedButton.styleFrom(
+//                         minimumSize: const Size.fromHeight(55),
+//                       ),
+//                     ),
+//                   ),
+
+//                   const SizedBox(width: 15),
+
+//                   Expanded(
+//                     child: ElevatedButton.icon(
+//                       onPressed: () {
+//                         Get.toNamed(AppRoutes.productList);
+//                       },
+//                       icon: const Icon(Icons.arrow_forward),
+//                       label: const Text("Next"),
+//                       style: ElevatedButton.styleFrom(
+//                         backgroundColor: Colors.green,
+//                         foregroundColor: Colors.white,
+//                         minimumSize: const Size.fromHeight(55),
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+
+//               const SizedBox(height: 30),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _infoTile(IconData icon, String title, String value) {
+//     return Column(
+//       children: [
+//         CircleAvatar(
+//           radius: 24,
+//           backgroundColor: Colors.green.shade50,
+//           child: Icon(icon, color: Colors.green),
+//         ),
+
+//         const SizedBox(height: 10),
+
+//         Text(
+//           title,
+//           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+//           textAlign: TextAlign.center,
+//         ),
+
+//         const SizedBox(height: 6),
+
+//         Text(
+//           value,
+//           textAlign: TextAlign.center,
+//           style: const TextStyle(color: Colors.black87),
+//         ),
+//       ],
+//     );
+//   }
+
+//   Widget _photoCard(String title, VoidCallback onTap) {
+//     return Card(
+//       elevation: 3,
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+//       child: InkWell(
+//         borderRadius: BorderRadius.circular(18),
+//         onTap: onTap,
+//         child: SizedBox(
+//           height: 230,
+//           child: Padding(
+//             padding: const EdgeInsets.all(16),
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 CircleAvatar(
+//                   radius: 38,
+//                   backgroundColor: Colors.green.shade50,
+//                   child: const Icon(
+//                     Icons.camera_alt,
+//                     size: 40,
+//                     color: Colors.green,
+//                   ),
+//                 ),
+
+//                 const SizedBox(height: 18),
+
+//                 Text(
+//                   title,
+//                   textAlign: TextAlign.center,
+//                   style: const TextStyle(
+//                     fontWeight: FontWeight.bold,
+//                     fontSize: 17,
+//                   ),
+//                 ),
+
+//                 const SizedBox(height: 10),
+
+//                 const Text(
+//                   "Tap to Capture",
+//                   style: TextStyle(color: Colors.grey),
+//                 ),
+
+//                 const SizedBox(height: 12),
+
+//                 const Icon(Icons.add_a_photo, color: Colors.green),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:namma_kaimagga_app/routes/app_routes.dart';
 
 import 'geotagging_controller.dart';
 
 class GeoTaggingScreen extends StatelessWidget {
   GeoTaggingScreen({super.key});
 
-  final GeoTaggingController controller = Get.find<GeoTaggingController>();
+  final GeoTaggingController controller =
+      Get.find<GeoTaggingController>();
 
   @override
   Widget build(BuildContext context) {
@@ -314,113 +656,179 @@ class GeoTaggingScreen extends StatelessWidget {
         foregroundColor: Colors.white,
         title: const Text(
           "Geo Tagging",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
 
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              //------------------------------------------------
-              // MAP
-              //------------------------------------------------
-              Container(
-                height: 300,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18),
-                  boxShadow: [
-                    BoxShadow(color: Colors.grey.shade300, blurRadius: 10),
-                  ],
-                ),
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
+      body: Obx(
+        () => SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+
+                // ==================================================
+                // MAP
+                // ==================================================
+
+                Container(
+                  height: 300,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
                         color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(18),
+                        blurRadius: 10,
                       ),
-                      child: const Center(
-                        child: Text(
-                          "ArcGIS Map",
-                          style: TextStyle(fontSize: 18),
+                    ],
+                  ),
+                  child: Stack(
+                    children: [
+
+                      Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius:
+                              BorderRadius.circular(18),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            "ArcGIS Map",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight:
+                                  FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
 
-                    Positioned(
-                      left: 15,
-                      top: 15,
-                      child: Column(
-                        children: [
-                          FloatingActionButton.small(
-                            heroTag: "gps",
-                            backgroundColor: Colors.green,
-                            onPressed: controller.getCurrentLocation,
-                            child: const Icon(Icons.my_location),
-                          ),
+                      Positioned(
+                        left: 15,
+                        top: 15,
+                        child: Column(
+                          children: [
 
-                          const SizedBox(height: 12),
+                            FloatingActionButton.small(
+                              heroTag: "gps",
+                              backgroundColor:
+                                  Colors.green,
+                              foregroundColor:
+                                  Colors.white,
+                              onPressed:
+                                  controller
+                                      .getCurrentLocation,
+                              child: const Icon(
+                                Icons.my_location,
+                              ),
+                            ),
 
-                          FloatingActionButton.small(
-                            heroTag: "layer",
-                            backgroundColor: Colors.green,
-                            onPressed: controller.changeMapType,
-                            child: const Icon(Icons.layers),
-                          ),
-                        ],
+                            const SizedBox(height: 12),
+
+                            FloatingActionButton.small(
+                              heroTag: "layer",
+                              backgroundColor:
+                                  Colors.green,
+                              foregroundColor:
+                                  Colors.white,
+                              onPressed:
+                                  controller
+                                      .changeMapType,
+                              child: const Icon(
+                                Icons.layers,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
 
-              const SizedBox(height: 20),
-
-              //------------------------------------------------
-              // LOCATION DETAILS
-              //------------------------------------------------
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
+                      if (controller.isLoading.value)
+                        const Center(
+                          child:
+                              CircularProgressIndicator(),
+                        ),
+                    ],
+                  ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(18),
-                  child: Obx(
-                    () => Column(
+
+                const SizedBox(height: 20),
+
+                // ==================================================
+                // LOCATION DETAILS
+                // ==================================================
+
+                Card(
+                  elevation: 3,
+                  shape:
+                      RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(18),
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.all(18),
+                    child: Column(
                       children: [
+
+                        const Align(
+                          alignment:
+                              Alignment.centerLeft,
+                          child: Text(
+                            "Location Details",
+                            style: TextStyle(
+                              fontSize: 19,
+                              fontWeight:
+                                  FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
                         Row(
                           children: [
+
                             Expanded(
                               child: _infoTile(
                                 Icons.location_on,
                                 "Latitude",
-                                controller.latitude.value,
+                                controller
+                                    .latitude.value,
                               ),
                             ),
 
                             Expanded(
                               child: _infoTile(
-                                Icons.location_searching,
+                                Icons
+                                    .location_searching,
                                 "Longitude",
-                                controller.longitude.value,
+                                controller
+                                    .longitude.value,
                               ),
                             ),
                           ],
                         ),
 
-                        const Divider(height: 30),
+                        const Divider(
+                          height: 30,
+                        ),
 
                         Row(
                           children: [
+
                             Expanded(
                               child: _infoTile(
                                 Icons.gps_fixed,
                                 "Accuracy",
-                                controller.accuracy.value,
+                                controller
+                                    .accuracy.value,
                               ),
                             ),
 
@@ -428,7 +836,8 @@ class GeoTaggingScreen extends StatelessWidget {
                               child: _infoTile(
                                 Icons.access_time,
                                 "Captured Time",
-                                controller.time.value,
+                                controller
+                                    .time.value,
                               ),
                             ),
                           ],
@@ -437,193 +846,327 @@ class GeoTaggingScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              //------------------------------------------------
-              // PHOTOS
-              //------------------------------------------------
-              Row(
-                children: [
-                  Expanded(
-                    child: _photoCard(
-                      "Handloom Photo",
-                      controller.capturePhoto1,
-                    ),
-                  ),
+                // ==================================================
+                // PHOTOS
+                // ==================================================
 
-                  const SizedBox(width: 15),
+                Row(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
 
-                  Expanded(
-                    child: _photoCard(
-                      "Weaver + Handloom",
-                      controller.capturePhoto2,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              //------------------------------------------------
-              // REMARKS
-              //------------------------------------------------
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Remarks",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                    Expanded(
+                      child: _photoCard(
+                        title: "Handloom Photo",
+                        imagePath:
+                            controller
+                                .photo1Path.value,
+                        onTap:
+                            controller
+                                .capturePhoto1,
+                        onRemove:
+                            controller.removePhoto1,
                       ),
+                    ),
 
-                      const SizedBox(height: 15),
+                    const SizedBox(width: 15),
 
-                      TextField(
-                        controller: controller.remarksController,
-                        maxLines: 4,
-                        decoration: InputDecoration(
-                          hintText: "Enter remarks (Optional)",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                    Expanded(
+                      child: _photoCard(
+                        title:
+                            "Weaver + Handloom",
+                        imagePath:
+                            controller
+                                .photo2Path.value,
+                        onTap:
+                            controller
+                                .capturePhoto2,
+                        onRemove:
+                            controller.removePhoto2,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                // ==================================================
+                // REMARKS
+                // ==================================================
+
+                Card(
+                  elevation: 3,
+                  shape:
+                      RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(18),
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.all(18),
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+
+                        const Text(
+                          "Remarks",
+                          style: TextStyle(
+                            fontWeight:
+                                FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        TextField(
+                          controller: controller
+                              .remarksController,
+                          maxLines: 4,
+                          decoration:
+                              InputDecoration(
+                            hintText:
+                                "Enter remarks (Optional)",
+                            border:
+                                OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius
+                                      .circular(12),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 30),
+
+                // ==================================================
+                // BUTTONS
+                // ==================================================
+
+                Row(
+                  children: [
+
+                    Expanded(
+                      child:
+                          OutlinedButton.icon(
+                        onPressed:
+                            controller.saveDraft,
+                        icon: const Icon(
+                          Icons.save,
+                        ),
+                        label: const Text(
+                          "Save Draft",
+                        ),
+                        style:
+                            OutlinedButton
+                                .styleFrom(
+                          minimumSize:
+                              const Size
+                                  .fromHeight(
+                            55,
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+
+                    const SizedBox(width: 15),
+
+                    Expanded(
+                      child:
+                          ElevatedButton.icon(
+                        onPressed:
+                            controller.next,
+                        icon: const Icon(
+                          Icons.arrow_forward,
+                        ),
+                        label: const Text(
+                          "Next",
+                        ),
+                        style:
+                            ElevatedButton
+                                .styleFrom(
+                          backgroundColor:
+                              Colors.green,
+                          foregroundColor:
+                              Colors.white,
+                          minimumSize:
+                              const Size
+                                  .fromHeight(
+                            55,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
 
-              const SizedBox(height: 30),
-
-              //------------------------------------------
-              // BUTTONS
-              //------------------------------------------
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: controller.saveDraft,
-                      icon: const Icon(Icons.save),
-                      label: const Text("Save Draft"),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(55),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(width: 15),
-
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Get.toNamed(AppRoutes.productList);
-                      },
-                      icon: const Icon(Icons.arrow_forward),
-                      label: const Text("Next"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size.fromHeight(55),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 30),
-            ],
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _infoTile(IconData icon, String title, String value) {
+  // ==========================================================
+  // LOCATION TILE
+  // ==========================================================
+
+  Widget _infoTile(
+    IconData icon,
+    String title,
+    String value,
+  ) {
     return Column(
       children: [
+
         CircleAvatar(
           radius: 24,
-          backgroundColor: Colors.green.shade50,
-          child: Icon(icon, color: Colors.green),
+          backgroundColor:
+              Colors.green.shade50,
+          child: Icon(
+            icon,
+            color: Colors.green,
+          ),
         ),
 
         const SizedBox(height: 10),
 
         Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
         ),
 
         const SizedBox(height: 6),
 
         Text(
-          value,
+          value.isEmpty ? "--" : value,
           textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.black87),
+          style: const TextStyle(
+            color: Colors.black87,
+          ),
         ),
       ],
     );
   }
 
-  Widget _photoCard(String title, VoidCallback onTap) {
+  // ==========================================================
+  // PHOTO CARD
+  // ==========================================================
+
+  Widget _photoCard({
+    required String title,
+    required String imagePath,
+    required VoidCallback onTap,
+    required VoidCallback onRemove,
+  }) {
+    final bool hasImage =
+        imagePath.isNotEmpty;
+
     return Card(
       elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      shape:
+          RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(18),
+      ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius:
+            BorderRadius.circular(18),
         onTap: onTap,
-        child: SizedBox(
-          height: 230,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 38,
-                  backgroundColor: Colors.green.shade50,
-                  child: const Icon(
-                    Icons.camera_alt,
-                    size: 40,
-                    color: Colors.green,
+        child: Padding(
+          padding:
+              const EdgeInsets.all(12),
+          child: Column(
+            children: [
+
+              SizedBox(
+                height: 170,
+                width: double.infinity,
+                child: hasImage
+                    ? ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(
+                                12),
+                        child: Image.file(
+                          File(imagePath),
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Container(
+                        decoration:
+                            BoxDecoration(
+                          color:
+                              Colors.green.shade50,
+                          borderRadius:
+                              BorderRadius
+                                  .circular(12),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.camera_alt,
+                            size: 50,
+                            color:
+                                Colors.green,
+                          ),
+                        ),
+                      ),
+              ),
+
+              const SizedBox(height: 12),
+
+              Text(
+                title,
+                textAlign:
+                    TextAlign.center,
+                style: const TextStyle(
+                  fontWeight:
+                      FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              Text(
+                hasImage
+                    ? "Tap to Retake"
+                    : "Tap to Capture",
+                style: const TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+
+              if (hasImage) ...[
+                const SizedBox(height: 5),
+
+                TextButton.icon(
+                  onPressed: onRemove,
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: Colors.red,
+                  ),
+                  label: const Text(
+                    "Remove",
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
                   ),
                 ),
-
-                const SizedBox(height: 18),
-
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                const Text(
-                  "Tap to Capture",
-                  style: TextStyle(color: Colors.grey),
-                ),
-
-                const SizedBox(height: 12),
-
-                const Icon(Icons.add_a_photo, color: Colors.green),
               ],
-            ),
+            ],
           ),
         ),
       ),

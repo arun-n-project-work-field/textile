@@ -119,5 +119,6 @@ class AppPages {
       page: () => PreviewScreen(),
       binding: PreviewBinding(),
     ),
+    GetPage(name: AppRoutes.syncData, page: () => const SyncDataScreen()),
   ];
 }

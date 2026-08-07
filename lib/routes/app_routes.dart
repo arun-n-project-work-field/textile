@@ -24,4 +24,6 @@ abstract class AppRoutes {
   static const addProduct = "/add-product";
   static const productList = "/product-list";
   static const syncStatus = "/sync-status";
+  static const syncData = "/sync-data";
 }
+

@@ -188,7 +188,7 @@ class DashboardScreen extends StatelessWidget {
                   subtitle: "Upload Records",
                   color: Colors.green,
                   onTap: () {
-                    Get.toNamed(AppRoutes.sync);
+                    Get.toNamed(AppRoutes.syncData);
                   },
                 ),
 
