@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:namma_kaimagga_app/core/services/pref_service.dart';
 
+import 'package:namma_kaimagga_app/core/services/pref_service.dart';
 import 'app.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await PrefService.init();
 
-  runApp(const NammaKaimaggaApp());
+  runApp(
+    const NammaKaimaggaApp(),
+  );
 }
-
 // import 'package:flutter/material.dart';
 
 // void main() {

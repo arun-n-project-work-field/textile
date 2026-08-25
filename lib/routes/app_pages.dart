@@ -13,6 +13,7 @@ import 'package:namma_kaimagga_app/modules/login/login_binding.dart';
 import 'package:namma_kaimagga_app/modules/loom-details/loom_details_screen.dart';
 import 'package:namma_kaimagga_app/modules/preview-screen/preview_screen.dart';
 import 'package:namma_kaimagga_app/modules/saved-surveys/saved_surveys_screen.dart';
+import 'package:namma_kaimagga_app/modules/splash/splash_binding.dart';
 import 'package:namma_kaimagga_app/modules/sync-data/sync_data_screen.dart';
 import 'package:namma_kaimagga_app/modules/weaver-information/weaver_information_screen.dart';
 import 'package:namma_kaimagga_app/preview/preview_binding.dart';
@@ -32,9 +33,25 @@ import '../modules/weaver_list/weaver_list_screen.dart';
 import '../modules/weaver_details/weaver_details_binding.dart';
 import '../modules/weaver_details/weaver_details_screen.dart';
 
+
 class AppPages {
   static final pages = [
-    GetPage(name: AppRoutes.splash, page: () => const SplashScreen()),
+     GetPage(
+      name: AppRoutes.splash,
+      page: () => const SplashScreen(),
+      binding: SplashBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.login,
+      page: () => const LoginScreen(),
+      binding: LoginBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.dashboard,
+      page: () => DashboardScreen(),
+    ),
 
     GetPage(
       name: AppRoutes.login,
@@ -120,5 +137,6 @@ class AppPages {
       binding: PreviewBinding(),
     ),
     GetPage(name: AppRoutes.syncData, page: () => const SyncDataScreen()),
+    
   ];
 }

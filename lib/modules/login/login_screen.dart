@@ -17,21 +17,22 @@ class LoginScreen extends GetView<LoginController> {
             padding: const EdgeInsets.all(24),
 
             child: Container(
-              constraints: const BoxConstraints(maxWidth: 430),
+              constraints: const BoxConstraints(
+                maxWidth: 430,
+              ),
 
               padding: const EdgeInsets.all(28),
 
               decoration: BoxDecoration(
                 color: Colors.white,
-
                 borderRadius: BorderRadius.circular(24),
 
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: .08),
-
+                    color: Colors.black.withValues(
+                      alpha: 0.08,
+                    ),
                     blurRadius: 20,
-
                     offset: const Offset(0, 10),
                   ),
                 ],
@@ -39,137 +40,83 @@ class LoginScreen extends GetView<LoginController> {
 
               child: Column(
                 children: [
+
+                  // ==================================================
+                  // LOGO
+                  // ==================================================
+
                   const CircleAvatar(
                     radius: 45,
-
                     backgroundColor: Color(0xff1565C0),
 
-                    child: Icon(Icons.handshake, color: Colors.white, size: 42),
+                    child: Icon(
+                      Icons.handshake,
+                      color: Colors.white,
+                      size: 42,
+                    ),
                   ),
 
                   const SizedBox(height: 20),
 
-                  const Text(
-                    "Namma Kaimagga",
+                  // ==================================================
+                  // APP NAME
+                  // ==================================================
 
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  const Text(
+                    'Namma Kaimagga',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
 
                   const SizedBox(height: 8),
 
                   Text(
-                    "Handloom Survey Application",
-
-                    style: TextStyle(color: Colors.grey.shade700),
+                    'Handloom Survey Application',
+                    style: TextStyle(
+                      color: Colors.grey.shade700,
+                    ),
                   ),
 
                   const SizedBox(height: 35),
 
-                  Autocomplete<String>(
-                    optionsBuilder: (value) {
-                      if (value.text.isEmpty) {
-                        return controller.usernameList;
-                      }
+                  // ==================================================
+                  // MOBILE NUMBER
+                  // ==================================================
 
-                      return controller.usernameList.where(
-                        (e) =>
-                            e.toLowerCase().contains(value.text.toLowerCase()),
-                      );
-                    },
+                  TextField(
+                    controller:
+                        controller.mobileController,
 
-                    fieldViewBuilder:
-                        (context, textController, focusNode, onSubmitted) {
-                          controller.usernameController.text =
-                              textController.text;
+                    keyboardType:
+                        TextInputType.phone,
 
-                          textController.addListener(() {
-                            controller.usernameController.text =
-                                textController.text;
-                          });
+                    maxLength: 10,
 
-                          return TextField(
-                            controller: textController,
+                    decoration: InputDecoration(
+                      counterText: '',
 
-                            focusNode: focusNode,
-
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.person),
-
-                              labelText: "Username",
-
-                              filled: true,
-
-                              fillColor: Colors.grey.shade100,
-
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                            ),
-                          );
-                        },
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  Obx(
-                    () => TextField(
-                      controller: controller.passwordController,
-
-                      obscureText: controller.obscurePassword.value,
-
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.lock_outline),
-
-                        suffixIcon: IconButton(
-                          onPressed: controller.togglePassword,
-
-                          icon: Icon(
-                            controller.obscurePassword.value
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                        ),
-
-                        labelText: "Password",
-
-                        filled: true,
-
-                        fillColor: Colors.grey.shade100,
-
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 30),
-
-                  SizedBox(
-                    width: double.infinity,
-
-                    height: 55,
-
-                    child: ElevatedButton(
-                      onPressed: controller.login,
-
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff1565C0),
-
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
+                      prefixIcon: const Icon(
+                        Icons.phone_android,
                       ),
 
-                      child: const Text(
-                        "LOGIN",
+                      labelText:
+                          'Mobile Number',
 
-                        style: TextStyle(
-                          color: Colors.white,
+                      hintText:
+                          'Enter 10 digit mobile number',
 
-                          fontSize: 17,
+                      filled: true,
 
-                          fontWeight: FontWeight.bold,
+                      fillColor:
+                          Colors.grey.shade100,
+
+                      border:
+                          OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(
+                          14,
                         ),
                       ),
                     ),
@@ -177,12 +124,222 @@ class LoginScreen extends GetView<LoginController> {
 
                   const SizedBox(height: 15),
 
-                  TextButton(
-                    onPressed: () {
-                      Get.toNamed('/reset-password');
-                    },
+                  // ==================================================
+                  // SEND OTP
+                  // ==================================================
 
-                    child: const Text("Change Password"),
+                  Obx(
+                    () => SizedBox(
+                      width: double.infinity,
+                      height: 50,
+
+                      child: ElevatedButton.icon(
+                        onPressed:
+                            controller.isLoading.value
+                                ? null
+                                : controller.sendOtp,
+
+                        icon:
+                            controller.isLoading.value
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child:
+                                        CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color:
+                                          Colors.white,
+                                    ),
+                                  )
+                                : const Icon(
+                                    Icons.sms,
+                                  ),
+
+                        label: Text(
+                          controller.isLoading.value
+                              ? 'Sending OTP...'
+                              : 'Send OTP',
+                        ),
+
+                        style:
+                            ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color(
+                            0xff1565C0,
+                          ),
+
+                          foregroundColor:
+                              Colors.white,
+
+                          shape:
+                              RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(
+                              14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // ==================================================
+                  // OTP SECTION
+                  // ==================================================
+
+                  Obx(
+                    () {
+                      if (!controller
+                          .otpSent
+                          .value) {
+                        return const SizedBox.shrink();
+                      }
+
+                      return Column(
+                        children: [
+
+                          const SizedBox(
+                            height: 25,
+                          ),
+
+                          TextField(
+                            controller:
+                                controller
+                                    .otpController,
+
+                            keyboardType:
+                                TextInputType.number,
+
+                            maxLength: 4,
+
+                            obscureText:
+                                controller
+                                    .obscureOtp
+                                    .value,
+
+                            decoration:
+                                InputDecoration(
+                              counterText: '',
+
+                              prefixIcon:
+                                  const Icon(
+                                Icons.lock_outline,
+                              ),
+
+                              suffixIcon:
+                                  IconButton(
+                                onPressed:
+                                    controller
+                                        .toggleOtpVisibility,
+
+                                icon: Icon(
+                                  controller
+                                          .obscureOtp
+                                          .value
+                                      ? Icons
+                                          .visibility
+                                      : Icons
+                                          .visibility_off,
+                                ),
+                              ),
+
+                              labelText:
+                                  'OTP',
+
+                              hintText:
+                                  'Enter 4 digit OTP',
+
+                              filled: true,
+
+                              fillColor:
+                                  Colors.grey.shade100,
+
+                              border:
+                                  OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius
+                                        .circular(
+                                  14,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(
+                            height: 20,
+                          ),
+
+                          // ========================================
+                          // LOGIN
+                          // ========================================
+
+                          SizedBox(
+                            width:
+                                double.infinity,
+
+                            height: 55,
+
+                            child:
+                                ElevatedButton(
+                              onPressed:
+                                  controller
+                                      .isLoading
+                                      .value
+                                      ? null
+                                      : controller
+                                          .login,
+
+                              style:
+                                  ElevatedButton
+                                      .styleFrom(
+                                backgroundColor:
+                                    Colors.green,
+
+                                foregroundColor:
+                                    Colors.white,
+
+                                shape:
+                                    RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius
+                                          .circular(
+                                    15,
+                                  ),
+                                ),
+                              ),
+
+                              child: const Text(
+                                'LOGIN',
+                                style:
+                                    TextStyle(
+                                  fontSize: 17,
+                                  fontWeight:
+                                      FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(
+                            height: 10,
+                          ),
+
+                          // ========================================
+                          // CHANGE MOBILE
+                          // ========================================
+
+                          TextButton(
+                            onPressed:
+                                controller
+                                    .changeMobile,
+
+                            child: const Text(
+                              'Change Mobile Number',
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),
