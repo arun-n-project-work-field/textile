@@ -1,4 +1,4 @@
-package com.example.namma_kaimagga_app
+package com.ksrsac.nammaKaimagga
 
 import io.flutter.embedding.android.FlutterActivity
 

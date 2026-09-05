@@ -1,240 +1,317 @@
-// import 'package:get/get.dart';
-
-// import '../../routes/app_routes.dart';
-
-// class SplashController extends GetxController {
-//   @override
-//   void onInit() {
-//     super.onInit();
-
-//     Future.delayed(const Duration(seconds: 3), () {
-//       Get.offAllNamed(AppRoutes.login);
-//     });
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-import '../../core/services/pref_service.dart';
-import '../../routes/app_routes.dart';
 import '../../services/api_service.dart';
 
 class SplashController extends GetxController {
-
-  // ==========================================================
-  // API
-  // ==========================================================
-
   final ApiService apiService = ApiService();
 
   // ==========================================================
-  // STATE
+  // VERSION CHECK LOADING STATUS
   // ==========================================================
 
-  final RxBool isCheckingVersion = true.obs;
-
-  final RxString statusMessage =
-      'Checking application version...'.obs;
+  final isCheckingVersion = true.obs;
 
   // ==========================================================
-  // CURRENT APP VERSION
+  // PREVENT MULTIPLE VERSION CHECKS
   // ==========================================================
 
-  static const String currentAppVersion = 'v1.0';
+  bool _versionCheckCompleted = false;
 
   // ==========================================================
-  // INIT
+  // CONTROLLER READY
   // ==========================================================
 
   @override
-  void onInit() {
-    super.onInit();
+  void onReady() {
+    super.onReady();
 
-    _initializeApp();
+    checkVersion();
   }
 
   // ==========================================================
-  // INITIALIZE APP
+  // CHECK APPLICATION VERSION
   // ==========================================================
 
-  Future<void> _initializeApp() async {
-    try {
-
-      // --------------------------------------------------------
-      // Keep splash visible for at least 3 seconds
-      // --------------------------------------------------------
-
-      final minimumSplashTime = Future.delayed(
-        const Duration(seconds: 3),
-      );
-
-      // --------------------------------------------------------
-      // Version check
-      // --------------------------------------------------------
-
-      await _checkVersion();
-
-      // --------------------------------------------------------
-      // Wait for minimum splash duration
-      // --------------------------------------------------------
-
-      await minimumSplashTime;
-
-    } catch (e) {
-
-      debugPrint(
-        'Splash initialization error: $e',
-      );
-
-      // Still wait so the splash does not disappear immediately
-      await Future.delayed(
-        const Duration(seconds: 3),
-      );
+  Future<void> checkVersion() async {
+    // Prevent this method from running more than once.
+    if (_versionCheckCompleted) {
+      return;
     }
 
-    // ----------------------------------------------------------
-    // Stop loading
-    // ----------------------------------------------------------
-
-    isCheckingVersion.value = false;
-
-    // ----------------------------------------------------------
-    // Navigate
-    // ----------------------------------------------------------
-
-    _navigateToNextScreen();
-  }
-
-  // ==========================================================
-  // VERSION CHECK
-  // ==========================================================
-
-  Future<void> _checkVersion() async {
-
     try {
+      isCheckingVersion.value = true;
 
-      statusMessage.value =
-          'Checking application version...';
+      // ======================================================
+      // GET INSTALLED APP VERSION
+      // ======================================================
+
+      final packageInfo =
+          await PackageInfo.fromPlatform();
+
+      final installedVersion =
+          packageInfo.version;
+
+      debugPrint(
+        'INSTALLED APP VERSION: $installedVersion',
+      );
+
+      // ======================================================
+      // CALL VERSION API
+      // ======================================================
 
       final response =
           await apiService.checkAppVersion();
 
       debugPrint(
-        'VERSION API RESPONSE: $response',
+        'VERSION API DATA: $response',
       );
 
-      // --------------------------------------------------------
-      // Handle API response
-      // --------------------------------------------------------
+      // ======================================================
+      // GET CURRENT VERSION FROM API
+      // ======================================================
 
-      final bool success =
-          _isVersionValid(response);
+      final String? apiVersion =
+          response['CurrentVersion']?.toString();
 
-      if (!success) {
-
-        debugPrint(
-          'Version check failed or update may be required.',
-        );
-
-        // ------------------------------------------------------
-        // IMPORTANT:
-        //
-        // Until the exact backend response structure is
-        // confirmed, we do not block the application.
-        //
-        // Later we can enforce mandatory update here.
-        // ------------------------------------------------------
-
-      } else {
-
-        debugPrint(
-          'Version check successful.',
+      if (apiVersion == null ||
+          apiVersion.isEmpty) {
+        throw Exception(
+          'CurrentVersion not found in API response',
         );
       }
 
+      debugPrint(
+        'API CURRENT VERSION: $apiVersion',
+      );
+
+      // ======================================================
+      // COMPARE VERSIONS
+      // ======================================================
+
+      final bool updateRequired =
+          isVersionLower(
+        installedVersion,
+        apiVersion,
+      );
+
+      debugPrint(
+        'UPDATE REQUIRED: $updateRequired',
+      );
+
+      // ======================================================
+      // STOP LOADING
+      // ======================================================
+
+      isCheckingVersion.value = false;
+
+      // ======================================================
+      // UPDATE REQUIRED
+      // ======================================================
+
+      if (updateRequired) {
+        _versionCheckCompleted = true;
+
+        debugPrint(
+          'APP UPDATE REQUIRED',
+        );
+
+        // Small delay so the splash screen is completely
+        // rendered before the dialog appears.
+        await Future.delayed(
+          const Duration(milliseconds: 300),
+        );
+
+        // ====================================================
+        // SHOW DIALOG ON TOP OF SPLASH SCREEN
+        // ====================================================
+
+        if (Get.context != null) {
+          await Get.dialog(
+            WillPopScope(
+              onWillPop: () async {
+                // Prevent Android back button from closing
+                // the update dialog.
+                return false;
+              },
+
+              child: AlertDialog(
+                title: const Text(
+                  'Update Required',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                content: const Text(
+                  'Please update the app to proceed further.\n\n'
+                  'Close and reopen the app after you update it from the Google Play Store',
+                  style: TextStyle(
+                    fontSize: 15,
+                    height: 1.4,
+                  ),
+                ),
+
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(15),
+                ),
+
+                contentPadding:
+                    const EdgeInsets.fromLTRB(
+                  24,
+                  20,
+                  24,
+                  24,
+                ),
+
+                titlePadding:
+                    const EdgeInsets.fromLTRB(
+                  24,
+                  24,
+                  24,
+                  0,
+                ),
+              ),
+            ),
+
+            // ==================================================
+            // IMPORTANT
+            // ==================================================
+            // The splash screen remains behind the dialog.
+            //
+            // Colors.black54 creates the dark transparent
+            // overlay while keeping the splash image visible.
+            // ==================================================
+
+            barrierDismissible: false,
+
+            barrierColor: Colors.black54,
+          );
+        }
+
+        // ====================================================
+        // DO NOT NAVIGATE
+        // ====================================================
+
+        return;
+      }
+
+      // ======================================================
+      // VERSION IS VALID
+      // ======================================================
+
+      _versionCheckCompleted = true;
+
+      await goToNextScreen();
+
     } catch (e) {
+      // ======================================================
+      // VERSION API ERROR
+      // ======================================================
 
       debugPrint(
         'Version API error: $e',
       );
 
-      // --------------------------------------------------------
-      // Offline-first behavior:
-      //
-      // If version API cannot be reached, allow the user
-      // to continue using the application.
-      // --------------------------------------------------------
+      isCheckingVersion.value = false;
+
+      _versionCheckCompleted = true;
+
+      // ======================================================
+      // OFFLINE MODE
+      // ======================================================
 
       debugPrint(
         'Continuing application in offline mode.',
       );
+
+      await goToNextScreen();
     }
   }
 
   // ==========================================================
-  // VERSION RESPONSE HANDLER
+  // VERSION COMPARISON
   // ==========================================================
 
-  bool _isVersionValid(
-    Map<String, dynamic> response,
+  bool isVersionLower(
+    String installed,
+    String current,
   ) {
+    final installedParts = installed
+        .split('.')
+        .map(
+          (e) => int.tryParse(e) ?? 0,
+        )
+        .toList();
 
-    // ----------------------------------------------------------
-    // Different APIs may return different response formats.
-    // This currently supports common formats.
-    // ----------------------------------------------------------
+    final currentParts = current
+        .split('.')
+        .map(
+          (e) => int.tryParse(e) ?? 0,
+        )
+        .toList();
 
-    if (response.isEmpty) {
-      return false;
+    // ========================================================
+    // MAKE BOTH VERSION LISTS THE SAME LENGTH
+    // ========================================================
+
+    final int length =
+        installedParts.length >
+                currentParts.length
+            ? installedParts.length
+            : currentParts.length;
+
+    // ========================================================
+    // COMPARE EACH VERSION PART
+    // ========================================================
+
+    for (int i = 0; i < length; i++) {
+      final int installedValue =
+          i < installedParts.length
+              ? installedParts[i]
+              : 0;
+
+      final int currentValue =
+          i < currentParts.length
+              ? currentParts[i]
+              : 0;
+
+      // Installed version is older.
+      if (installedValue < currentValue) {
+        return true;
+      }
+
+      // Installed version is newer.
+      if (installedValue > currentValue) {
+        return false;
+      }
     }
 
-    // Example:
-    // {
-    //   "status": true
-    // }
-
-    if (response['status'] == false) {
-      return false;
-    }
-
-    // If status is true or not supplied,
-    // allow application to continue.
-
-    return true;
+    // Versions are equal.
+    return false;
   }
 
   // ==========================================================
-  // NAVIGATION
+  // GO TO NEXT SCREEN
   // ==========================================================
 
-  void _navigateToNextScreen() {
+  Future<void> goToNextScreen() async {
+    // ========================================================
+    // KEEP YOUR ACTUAL LOGIN STATUS LOGIC HERE
+    // ========================================================
 
-    final bool loggedIn =
-        PrefService.isLoggedIn;
+    final loginStatus = false;
 
     debugPrint(
-      'LOGIN STATUS: $loggedIn',
+      'LOGIN STATUS: $loginStatus',
     );
 
-    if (loggedIn) {
-
-      // --------------------------------------------------------
-      // USER ALREADY LOGGED IN
-      // --------------------------------------------------------
-
-      Get.offAllNamed(
-        AppRoutes.dashboard,
-      );
-
+    if (loginStatus) {
+      Get.offNamed('/dashboard');
     } else {
-
-      // --------------------------------------------------------
-      // FIRST TIME / LOGGED OUT
-      // --------------------------------------------------------
-
-      Get.offAllNamed(
-        AppRoutes.login,
-      );
+      Get.offNamed('/login');
     }
   }
 }

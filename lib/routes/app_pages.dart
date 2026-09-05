@@ -49,9 +49,20 @@ class AppPages {
     ),
 
     GetPage(
-      name: AppRoutes.dashboard,
-      page: () => DashboardScreen(),
-    ),
+  name: AppRoutes.dashboard,
+  page: () {
+    final arguments = Get.arguments ?? {};
+
+    return DashboardScreen(
+      mobileNumber:
+          arguments['mobileNumber']?.toString() ?? '',
+      districtName:
+          arguments['districtName']?.toString() ?? '',
+      talukName:
+          arguments['talukName']?.toString() ?? '',
+    );
+  },
+),
 
     GetPage(
       name: AppRoutes.login,
@@ -59,7 +70,7 @@ class AppPages {
       binding: LoginBinding(),
     ),
 
-    GetPage(name: AppRoutes.dashboard, page: () => DashboardScreen()),
+    // GetPage(name: AppRoutes.dashboard, page: () => DashboardScreen()),
 
     GetPage(
       name: AppRoutes.weaverList,

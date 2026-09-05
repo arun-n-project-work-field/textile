@@ -45,7 +45,8 @@ import 'package:get/get.dart';
 
 import 'splash_controller.dart';
 
-class SplashScreen extends GetView<SplashController> {
+class SplashScreen
+    extends GetView<SplashController> {
   const SplashScreen({
     super.key,
   });
@@ -53,27 +54,30 @@ class SplashScreen extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
+
       body: Stack(
+        fit: StackFit.expand,
         children: [
 
-          // ======================================================
+          // ====================================================
           // FULL SCREEN SPLASH IMAGE
-          // ======================================================
+          // ====================================================
 
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/splash.jpg',
-              fit: BoxFit.cover,
-            ),
+          Image.asset(
+            'assets/images/splash.jpg',
+            fit: BoxFit.cover,
           ),
 
-          // ======================================================
-          // LOADING
-          // ======================================================
+          // ====================================================
+          // VERSION CHECK LOADING
+          // ====================================================
 
           Obx(
             () {
-              if (!controller.isCheckingVersion.value) {
+              if (!controller
+                  .isCheckingVersion
+                  .value) {
                 return const SizedBox.shrink();
               }
 
@@ -81,21 +85,29 @@ class SplashScreen extends GetView<SplashController> {
                 bottom: 45,
                 left: 0,
                 right: 0,
+
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
 
                     CircularProgressIndicator(
                       color: Colors.brown,
                     ),
 
-                    SizedBox(height: 15),
+                    SizedBox(
+                      height: 15,
+                    ),
 
                     Text(
                       'Checking application version...',
+                      textAlign: TextAlign.center,
+
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        fontWeight:
+                            FontWeight.w500,
+
                         shadows: [
                           Shadow(
                             blurRadius: 5,

@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.namma_kaimagga_app"
+    namespace = "com.ksrsac.nammaKaimagga"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
