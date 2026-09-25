@@ -317,6 +317,204 @@
 // }
 
 
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:package_info_plus/package_info_plus.dart';
+
+// import '../../routes/app_routes.dart';
+// import '../../services/api_service.dart';
+// import '../../services/app_session.dart';
+
+// class SplashController extends GetxController {
+//   final ApiService apiService = ApiService();
+
+//   final isCheckingVersion = true.obs;
+
+//   bool _versionCheckCompleted = false;
+
+//   @override
+//   void onReady() {
+//     super.onReady();
+
+//     checkVersion();
+//   }
+
+//   Future<void> checkVersion() async {
+//     if (_versionCheckCompleted) {
+//       return;
+//     }
+
+//     try {
+//       isCheckingVersion.value = true;
+
+//       final packageInfo =
+//           await PackageInfo.fromPlatform();
+
+//       final installedVersion =
+//           packageInfo.version;
+
+//       debugPrint(
+//         'INSTALLED VERSION: $installedVersion',
+//       );
+
+//       final response =
+//           await apiService.checkAppVersion();
+
+//       debugPrint(
+//         'VERSION DATA: $response',
+//       );
+
+//       final apiVersion =
+//           response['appVersion']?.toString().trim();
+
+//       if (apiVersion == null ||
+//           apiVersion.isEmpty) {
+//         throw Exception(
+//           'appVersion not found',
+//         );
+//       }
+
+//       debugPrint(
+//         'SERVER VERSION: $apiVersion',
+//       );
+
+//       final updateRequired =
+//           isVersionLower(
+//         installedVersion,
+//         apiVersion,
+//       );
+
+//       isCheckingVersion.value = false;
+
+//       if (updateRequired) {
+//         _versionCheckCompleted = true;
+
+//         await Future.delayed(
+//           const Duration(milliseconds: 300),
+//         );
+
+//         if (Get.context != null) {
+//           await Get.dialog(
+//             PopScope(
+//               canPop: false,
+//               child: AlertDialog(
+//                 title: const Text(
+//                   'Update Required',
+//                   style: TextStyle(
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//                 content: const Text(
+//                   'Please update the app to proceed further.\n\n'
+//                   'Close and reopen the app after you update it from the Google Play Store',
+//                   style: TextStyle(
+//                     fontSize: 15,
+//                     height: 1.4,
+//                   ),
+//                 ),
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius:
+//                       BorderRadius.circular(15),
+//                 ),
+//               ),
+//             ),
+//             barrierDismissible: false,
+//             barrierColor: Colors.black54,
+//           );
+//         }
+
+//         return;
+//       }
+
+//       _versionCheckCompleted = true;
+
+//       await goToNextScreen();
+//     } catch (e) {
+//       debugPrint(
+//         'VERSION CHECK ERROR: $e',
+//       );
+
+//       isCheckingVersion.value = false;
+
+//       _versionCheckCompleted = true;
+
+//       // Offline mode.
+//       await goToNextScreen();
+//     }
+//   }
+
+//   bool isVersionLower(
+//     String installed,
+//     String current,
+//   ) {
+//     final installedParts = installed
+//         .split('.')
+//         .map(
+//           (e) => int.tryParse(e) ?? 0,
+//         )
+//         .toList();
+
+//     final currentParts = current
+//         .split('.')
+//         .map(
+//           (e) => int.tryParse(e) ?? 0,
+//         )
+//         .toList();
+
+//     final length =
+//         installedParts.length >
+//                 currentParts.length
+//             ? installedParts.length
+//             : currentParts.length;
+
+//     for (int i = 0; i < length; i++) {
+//       final installedValue =
+//           i < installedParts.length
+//               ? installedParts[i]
+//               : 0;
+
+//       final currentValue =
+//           i < currentParts.length
+//               ? currentParts[i]
+//               : 0;
+
+//       if (installedValue < currentValue) {
+//         return true;
+//       }
+
+//       if (installedValue > currentValue) {
+//         return false;
+//       }
+//     }
+
+//     return false;
+//   }
+
+//   Future<void> goToNextScreen() async {
+//     final loggedIn =
+//         await AppSession.isLoggedIn();
+
+//     debugPrint(
+//       'LOGIN STATUS: $loggedIn',
+//     );
+
+//     if (loggedIn) {
+//       final data =
+//           await AppSession.getLoginData();
+
+//       Get.offAllNamed(
+//         AppRoutes.dashboard,
+//         arguments: data,
+//       );
+//     } else {
+//       Get.offAllNamed(
+//         AppRoutes.login,
+//       );
+//     }
+//   }
+// }
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -331,6 +529,18 @@ class SplashController extends GetxController {
   final isCheckingVersion = true.obs;
 
   bool _versionCheckCompleted = false;
+
+  // ===========================================================================
+  // DEBUG LOGIN BYPASS
+  // ===========================================================================
+  //
+  // true  -> In DEBUG mode, skip login and go directly to Dashboard.
+  // false -> Use the normal login/session flow.
+  //
+  // kDebugMode ensures this bypass can NEVER be active in a release build.
+  // ===========================================================================
+
+  static const bool debugBypassLogin = true;
 
   @override
   void onReady() {
@@ -386,6 +596,10 @@ class SplashController extends GetxController {
 
       isCheckingVersion.value = false;
 
+      // =======================================================================
+      // UPDATE REQUIRED
+      // =======================================================================
+
       if (updateRequired) {
         _versionCheckCompleted = true;
 
@@ -426,6 +640,10 @@ class SplashController extends GetxController {
         return;
       }
 
+      // =======================================================================
+      // VERSION CHECK COMPLETED
+      // =======================================================================
+
       _versionCheckCompleted = true;
 
       await goToNextScreen();
@@ -442,6 +660,10 @@ class SplashController extends GetxController {
       await goToNextScreen();
     }
   }
+
+  // ===========================================================================
+  // VERSION COMPARISON
+  // ===========================================================================
 
   bool isVersionLower(
     String installed,
@@ -490,7 +712,38 @@ class SplashController extends GetxController {
     return false;
   }
 
+  // ===========================================================================
+  // NEXT SCREEN
+  // ===========================================================================
+
   Future<void> goToNextScreen() async {
+    // =========================================================================
+    // DEBUG ONLY LOGIN BYPASS
+    // =========================================================================
+
+    if (kDebugMode && debugBypassLogin) {
+      debugPrint(
+        'DEBUG MODE: LOGIN BYPASSED',
+      );
+
+      Get.offAllNamed(
+        AppRoutes.dashboard,
+        arguments: {
+          'mobileNumber': '9876543210',
+          'districtName': 'Chikkamagaluru',
+          'districtCode': '17',
+          'talukName': 'Chikkamagaluru',
+          'talukCode': '1706',
+        },
+      );
+
+      return;
+    }
+
+    // =========================================================================
+    // NORMAL LOGIN FLOW
+    // =========================================================================
+
     final loggedIn =
         await AppSession.isLoggedIn();
 

@@ -1,17 +1,27 @@
 import 'package:get/get.dart';
+
 import 'package:namma_kaimagga_app/about_app_screen.dart';
 import 'package:namma_kaimagga_app/disclaimer_screen.dart';
+
 import 'package:namma_kaimagga_app/modules/geotagging/geotagging_binding.dart';
 import 'package:namma_kaimagga_app/modules/geotagging/geotagging_screen.dart';
+
 import 'package:namma_kaimagga_app/modules/login/login_binding.dart';
 import 'package:namma_kaimagga_app/modules/login/login_screen.dart';
-import 'package:namma_kaimagga_app/modules/saved-surveys/saved_surveys_screen.dart';
+
+import 'package:namma_kaimagga_app/modules/data_view/data_view_binding.dart';
+import 'package:namma_kaimagga_app/modules/data_view/data_view_screen.dart';
+
 import 'package:namma_kaimagga_app/modules/splash/splash_binding.dart';
 import 'package:namma_kaimagga_app/modules/splash/splash_screen.dart';
+
 import 'package:namma_kaimagga_app/modules/sync-data/sync_data_screen.dart';
+
 import 'package:namma_kaimagga_app/reset_password_screen.dart';
+
 import 'package:namma_kaimagga_app/sync-status/sync_status_binding.dart';
 import 'package:namma_kaimagga_app/sync-status/sync_status_screen.dart';
+
 import '../modules/dashboard/dashboard_screen.dart';
 import 'app_routes.dart';
 
@@ -45,22 +55,36 @@ class AppPages {
             Get.arguments as Map<String, dynamic>? ?? <String, dynamic>{};
 
         return DashboardScreen(
-          mobileNumber: arguments['mobileNumber']?.toString() ?? '',
-          districtName: arguments['districtName']?.toString() ?? '',
-          talukName: arguments['talukName']?.toString() ?? '',
+          mobileNumber:
+              arguments['mobileNumber']?.toString() ?? '',
+          districtName:
+              arguments['districtName']?.toString() ?? '',
+          districtCode:
+              arguments['districtCode']?.toString() ?? '',
+          talukName:
+              arguments['talukName']?.toString() ?? '',
+          talukCode:
+              arguments['talukCode']?.toString() ?? '',
         );
       },
     ),
 
     // -------------------------------------------------------------------------
-    // SAVED SURVEYS
+    // DATA VIEW
     // -------------------------------------------------------------------------
-    GetPage(name: AppRoutes.savedSurvey, page: () => const SavedSurveyScreen()),
+    GetPage(
+      name: AppRoutes.dataView,
+      page: () => const DataViewScreen(),
+      binding: DataViewBinding(),
+    ),
 
     // -------------------------------------------------------------------------
     // SYNC
     // -------------------------------------------------------------------------
-    GetPage(name: AppRoutes.sync, page: () => const SyncDataScreen()),
+    GetPage(
+      name: AppRoutes.sync,
+      page: () => const SyncDataScreen(),
+    ),
 
     // -------------------------------------------------------------------------
     // GEO TAGGING
@@ -82,12 +106,18 @@ class AppPages {
     // -------------------------------------------------------------------------
     // ABOUT APP
     // -------------------------------------------------------------------------
-    GetPage(name: AppRoutes.about, page: () => const AboutAppScreen()),
+    GetPage(
+      name: AppRoutes.about,
+      page: () => const AboutAppScreen(),
+    ),
 
     // -------------------------------------------------------------------------
     // DISCLAIMER
     // -------------------------------------------------------------------------
-    GetPage(name: AppRoutes.disclaimer, page: () => const DisclaimerScreen()),
+    GetPage(
+      name: AppRoutes.disclaimer,
+      page: () => const DisclaimerScreen(),
+    ),
 
     // -------------------------------------------------------------------------
     // SYNC STATUS
@@ -101,6 +131,9 @@ class AppPages {
     // -------------------------------------------------------------------------
     // SYNC DATA
     // -------------------------------------------------------------------------
-    GetPage(name: AppRoutes.syncData, page: () => const SyncDataScreen()),
+    GetPage(
+      name: AppRoutes.syncData,
+      page: () => const SyncDataScreen(),
+    ),
   ];
 }

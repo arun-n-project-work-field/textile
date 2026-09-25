@@ -933,14 +933,20 @@ import 'dashboard_controller.dart';
 
 class DashboardScreen extends StatelessWidget {
   final String mobileNumber;
+
   final String districtName;
+  final String districtCode;
+
   final String talukName;
+  final String talukCode;
 
   DashboardScreen({
     super.key,
     required this.mobileNumber,
     required this.districtName,
+    required this.districtCode,
     required this.talukName,
+    required this.talukCode,
   });
 
   final DashboardController controller =
@@ -953,10 +959,11 @@ class DashboardScreen extends StatelessWidget {
       top: false,
       child: Scaffold(
         drawer: const _AppDrawer(),
-      
+
         // =========================================================
         // APP BAR
         // =========================================================
+
         appBar: AppBar(
           elevation: 0,
           centerTitle: true,
@@ -970,16 +977,18 @@ class DashboardScreen extends StatelessWidget {
             ),
           ),
         ),
-      
+
         // =========================================================
         // BODY
         // =========================================================
+
         body: SingleChildScrollView(
           child: Column(
             children: [
               // ===================================================
               // COMMON HEADER
               // ===================================================
+
               Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
@@ -1001,10 +1010,11 @@ class DashboardScreen extends StatelessWidget {
                   talukName: talukName,
                 ),
               ),
-      
+
               // ===================================================
               // DASHBOARD CONTENT
               // ===================================================
+
               Padding(
                 padding: const EdgeInsets.fromLTRB(
                   16,
@@ -1013,11 +1023,13 @@ class DashboardScreen extends StatelessWidget {
                   16,
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
                   children: [
                     // ============================================
                     // QUICK ACTIONS
                     // ============================================
+
                     const Text(
                       "Quick Actions",
                       style: TextStyle(
@@ -1025,12 +1037,13 @@ class DashboardScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-      
+
                     const SizedBox(height: 12),
-      
+
                     // ============================================
                     // ACTION CARDS
                     // ============================================
+
                     GridView.count(
                       crossAxisCount: 2,
                       crossAxisSpacing: 15,
@@ -1040,18 +1053,43 @@ class DashboardScreen extends StatelessWidget {
                       physics:
                           const NeverScrollableScrollPhysics(),
                       children: [
+                        // ========================================
+                        // GEO TAGGING
+                        // ========================================
+
                         _DashboardCard(
                           icon: Icons.assignment_add,
                           title: "Start Geo-Tagging",
-                          subtitle: "Start Collecting Details",
+                          subtitle:
+                              "Start Collecting Details",
                           color: Colors.blue,
                           onTap: () {
                             Get.toNamed(
                               AppRoutes.geoTagging,
+                              arguments: {
+                                'mobileNumber':
+                                    mobileNumber,
+
+                                'districtName':
+                                    districtName,
+
+                                'districtCode':
+                                    districtCode,
+
+                                'talukName':
+                                    talukName,
+
+                                'talukCode':
+                                    talukCode,
+                              },
                             );
                           },
                         ),
-      
+
+                        // ========================================
+                        // VIEW DATA
+                        // ========================================
+
                         _DashboardCard(
                           icon: Icons.folder_copy,
                           title: "View Data",
@@ -1059,11 +1097,15 @@ class DashboardScreen extends StatelessWidget {
                           color: Colors.orange,
                           onTap: () {
                             Get.toNamed(
-                              AppRoutes.savedSurvey,
+                              AppRoutes.dataView,
                             );
                           },
                         ),
-      
+
+                        // ========================================
+                        // SYNC DATA
+                        // ========================================
+
                         _DashboardCard(
                           icon: Icons.sync,
                           title: "Sync Data",
@@ -1075,7 +1117,11 @@ class DashboardScreen extends StatelessWidget {
                             );
                           },
                         ),
-      
+
+                        // ========================================
+                        // LOGOUT
+                        // ========================================
+
                         _DashboardCard(
                           icon: Icons.exit_to_app,
                           title: "Log Out",
@@ -1089,12 +1135,13 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-      
+
                     const SizedBox(height: 30),
-      
+
                     // ============================================
                     // VERSION
                     // ============================================
+
                     Center(
                       child: Text(
                         "Version 1.0.0",
@@ -1104,12 +1151,13 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-      
+
                     const SizedBox(height: 20),
-      
+
                     // ============================================
                     // FOOTER
                     // ============================================
+
                     const CommonFooter(),
                   ],
                 ),
@@ -1146,10 +1194,12 @@ class _DashboardCard extends StatelessWidget {
     return Material(
       color: Colors.white,
       elevation: 4,
-      shadowColor: Colors.black.withValues(alpha: 0.12),
+      shadowColor:
+          Colors.black.withValues(alpha: 0.12),
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius:
+            BorderRadius.circular(20),
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -1157,14 +1207,17 @@ class _DashboardCard extends StatelessWidget {
             vertical: 16,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment:
+                MainAxisAlignment.center,
             children: [
               // ICON
+
               Container(
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
+                  color:
+                      color.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -1177,10 +1230,12 @@ class _DashboardCard extends StatelessWidget {
               const SizedBox(height: 14),
 
               // TITLE
+
               Text(
                 title,
                 maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                overflow:
+                    TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
@@ -1191,10 +1246,12 @@ class _DashboardCard extends StatelessWidget {
               const SizedBox(height: 6),
 
               // SUBTITLE
+
               Text(
                 subtitle,
                 maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                overflow:
+                    TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.grey.shade600,
@@ -1233,7 +1290,8 @@ class _AppDrawer extends StatelessWidget {
               ),
             ),
             accountEmail: Text("KSRSAC"),
-            currentAccountPicture: CircleAvatar(
+            currentAccountPicture:
+                CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(
                 Icons.person,
@@ -1298,4 +1356,3 @@ class _AppDrawer extends StatelessWidget {
     );
   }
 }
-
