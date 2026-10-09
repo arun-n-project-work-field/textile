@@ -15,6 +15,7 @@ import 'package:namma_kaimagga_app/modules/data_view/data_view_screen.dart';
 import 'package:namma_kaimagga_app/modules/splash/splash_binding.dart';
 import 'package:namma_kaimagga_app/modules/splash/splash_screen.dart';
 
+import 'package:namma_kaimagga_app/modules/sync-data/sync_data_controller.dart';
 import 'package:namma_kaimagga_app/modules/sync-data/sync_data_screen.dart';
 
 import 'package:namma_kaimagga_app/reset_password_screen.dart';
@@ -55,16 +56,11 @@ class AppPages {
             Get.arguments as Map<String, dynamic>? ?? <String, dynamic>{};
 
         return DashboardScreen(
-          mobileNumber:
-              arguments['mobileNumber']?.toString() ?? '',
-          districtName:
-              arguments['districtName']?.toString() ?? '',
-          districtCode:
-              arguments['districtCode']?.toString() ?? '',
-          talukName:
-              arguments['talukName']?.toString() ?? '',
-          talukCode:
-              arguments['talukCode']?.toString() ?? '',
+          mobileNumber: arguments['mobileNumber']?.toString() ?? '',
+          districtName: arguments['districtName']?.toString() ?? '',
+          districtCode: arguments['districtCode']?.toString() ?? '',
+          talukName: arguments['talukName']?.toString() ?? '',
+          talukCode: arguments['talukCode']?.toString() ?? '',
         );
       },
     ),
@@ -76,14 +72,6 @@ class AppPages {
       name: AppRoutes.dataView,
       page: () => const DataViewScreen(),
       binding: DataViewBinding(),
-    ),
-
-    // -------------------------------------------------------------------------
-    // SYNC
-    // -------------------------------------------------------------------------
-    GetPage(
-      name: AppRoutes.sync,
-      page: () => const SyncDataScreen(),
     ),
 
     // -------------------------------------------------------------------------
@@ -106,17 +94,23 @@ class AppPages {
     // -------------------------------------------------------------------------
     // ABOUT APP
     // -------------------------------------------------------------------------
-    GetPage(
-      name: AppRoutes.about,
-      page: () => const AboutAppScreen(),
-    ),
+    GetPage(name: AppRoutes.about, page: () => const AboutAppScreen()),
 
     // -------------------------------------------------------------------------
     // DISCLAIMER
     // -------------------------------------------------------------------------
+    GetPage(name: AppRoutes.disclaimer, page: () => const DisclaimerScreen()),
+
+    // -------------------------------------------------------------------------
+    // SYNC DATA
+    // -------------------------------------------------------------------------
     GetPage(
-      name: AppRoutes.disclaimer,
-      page: () => const DisclaimerScreen(),
+      name: AppRoutes.syncData,
+      page: () {
+        Get.put<SyncDataController>(SyncDataController());
+
+        return const SyncDataScreen();
+      },
     ),
 
     // -------------------------------------------------------------------------
@@ -126,14 +120,6 @@ class AppPages {
       name: AppRoutes.syncStatus,
       page: () => SyncStatusScreen(),
       binding: SyncStatusBinding(),
-    ),
-
-    // -------------------------------------------------------------------------
-    // SYNC DATA
-    // -------------------------------------------------------------------------
-    GetPage(
-      name: AppRoutes.syncData,
-      page: () => const SyncDataScreen(),
     ),
   ];
 }

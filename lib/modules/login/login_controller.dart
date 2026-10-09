@@ -1605,58 +1605,76 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:namma_kaimagga_app/core/services/app_session.dart';
 
 import '../../routes/app_routes.dart';
 import '../../services/api_service.dart';
 
+
 class LoginController extends GetxController {
   final ApiService apiService = ApiService();
 
-  // ============================================================
+  // ==========================================================
   // TEXT CONTROLLERS
-  // ============================================================
+  // ==========================================================
 
-  final mobileController = TextEditingController();
-  final otpController = TextEditingController();
+  final TextEditingController mobileController =
+      TextEditingController();
 
-  // ============================================================
-  // DISTRICT / TALUK
-  // ============================================================
+  final TextEditingController otpController =
+      TextEditingController();
 
-  final districts = <Map<String, dynamic>>[].obs;
-  final taluks = <Map<String, dynamic>>[].obs;
+  // ==========================================================
+  // DISTRICTS
+  // ==========================================================
 
-  final selectedDistrict = Rxn<Map<String, dynamic>>();
-  final selectedTaluk = Rxn<Map<String, dynamic>>();
+  final RxList<Map<String, dynamic>> districts =
+      <Map<String, dynamic>>[].obs;
 
-  final isLoadingDistricts = false.obs;
-  final isLoadingTaluks = false.obs;
+  final Rxn<Map<String, dynamic>> selectedDistrict =
+      Rxn<Map<String, dynamic>>();
 
-  // ============================================================
+  final RxBool isLoadingDistricts = false.obs;
+
+  // ==========================================================
+  // TALUKS
+  // ==========================================================
+
+  final RxList<Map<String, dynamic>> taluks =
+      <Map<String, dynamic>>[].obs;
+
+  final Rxn<Map<String, dynamic>> selectedTaluk =
+      Rxn<Map<String, dynamic>>();
+
+  final RxBool isLoadingTaluks = false.obs;
+
+  // ==========================================================
+  // LOADING
+  // ==========================================================
+
+  final RxBool isLoading = false.obs;
+
+  final RxBool isVerifyingOtp = false.obs;
+
+  // ==========================================================
   // OTP
-  // ============================================================
+  // ==========================================================
 
-  final otpSent = false.obs;
+  final RxBool otpSent = false.obs;
 
-  final apiOtp = ''.obs;
-  final enteredOtp = ''.obs;
+  final RxString enteredOtp = ''.obs;
 
-  final isLoading = false.obs;
-  final isVerifyingOtp = false.obs;
+  final RxBool isOtpObscured = true.obs;
 
-  final isOtpObscured = true.obs;
+  String receivedOtp = '';
 
-  // ============================================================
-  // RESEND TIMER
-  // ============================================================
-
-  final resendSeconds = 0.obs;
+  final RxInt resendSeconds = 0.obs;
 
   Timer? _resendTimer;
 
-  // ============================================================
-  // LIFECYCLE
-  // ============================================================
+  // ==========================================================
+  // INIT
+  // ==========================================================
 
   @override
   void onInit() {
@@ -1665,22 +1683,75 @@ class LoginController extends GetxController {
     loadDistricts();
   }
 
-  // ============================================================
-  // GET DISTRICTS
-  // ============================================================
+  // ==========================================================
+  // DISTRICT NAME
+  // ==========================================================
+
+  String get districtName {
+    return selectedDistrict.value?['Name']
+            ?.toString()
+            .trim() ??
+        '';
+  }
+
+  // ==========================================================
+  // DISTRICT CODE
+  // ==========================================================
+
+  String get districtCode {
+    return selectedDistrict.value?['Code']
+            ?.toString()
+            .trim() ??
+        '';
+  }
+
+  // ==========================================================
+  // TALUK NAME
+  // ==========================================================
+
+  String get talukName {
+    return selectedTaluk.value?['Name']
+            ?.toString()
+            .trim() ??
+        '';
+  }
+
+  // ==========================================================
+  // TALUK CODE
+  // ==========================================================
+
+  String get talukCode {
+    return selectedTaluk.value?['Code']
+            ?.toString()
+            .trim() ??
+        '';
+  }
+
+  // ==========================================================
+  // LOAD DISTRICTS
+  // ==========================================================
 
   Future<void> loadDistricts() async {
     try {
       isLoadingDistricts.value = true;
 
-      final response = await apiService.getDistricts();
+      debugPrint('LOADING DISTRICTS...');
 
-      districts.assignAll(response);
+      final result = await apiService.getDistricts();
 
-      debugPrint('DISTRICTS COUNT: ${districts.length}');
-      debugPrint('DISTRICTS: $districts');
+      debugPrint(
+        'DISTRICTS RESPONSE: $result',
+      );
+
+      districts.assignAll(result);
+
+      debugPrint(
+        'DISTRICTS COUNT: ${districts.length}',
+      );
     } catch (e) {
-      debugPrint('LOAD DISTRICTS ERROR: $e');
+      debugPrint(
+        'LOAD DISTRICTS ERROR: $e',
+      );
 
       Get.snackbar(
         'Error',
@@ -1692,62 +1763,75 @@ class LoginController extends GetxController {
     }
   }
 
-  // ============================================================
+  // ==========================================================
   // DISTRICT SELECTED
-  // ============================================================
+  // ==========================================================
 
   Future<void> onDistrictSelected(
     Map<String, dynamic>? district,
   ) async {
+    selectedDistrict.value = district;
+
+    selectedTaluk.value = null;
+
+    taluks.clear();
+
     if (district == null) {
       return;
     }
-
-    selectedDistrict.value = district;
-
-    // Clear previous taluk
-    selectedTaluk.value = null;
-    taluks.clear();
-
-    // Reset OTP state
-    resetOtpState();
-
-    final districtCode =
-        district['Code']?.toString().trim() ?? '';
 
     debugPrint(
       'SELECTED DISTRICT: ${district['Name']}',
     );
 
     debugPrint(
-      'DISTRICT CODE: $districtCode',
+      'DISTRICT CODE: ${district['Code']}',
     );
 
+    final districtCode =
+        district['Code']?.toString().trim() ?? '';
+
     if (districtCode.isEmpty) {
-      debugPrint('ERROR: District Code is empty');
       return;
     }
 
     await loadTaluks(districtCode);
   }
 
-  // ============================================================
-  // GET TALUKS
-  // ============================================================
+  // ==========================================================
+  // LOAD TALUKS
+  // ==========================================================
 
-  Future<void> loadTaluks(String districtCode) async {
+  Future<void> loadTaluks(
+    String districtCode,
+  ) async {
+    if (districtCode.isEmpty) {
+      return;
+    }
+
     try {
       isLoadingTaluks.value = true;
 
-      final response =
+      debugPrint(
+        'LOADING TALUKS FOR DISTRICT: $districtCode',
+      );
+
+      final result =
           await apiService.getTaluks(districtCode);
 
-      taluks.assignAll(response);
+      debugPrint(
+        'TALUKS RESPONSE: $result',
+      );
 
-      debugPrint('TALUKS COUNT: ${taluks.length}');
-      debugPrint('TALUKS: $taluks');
+      taluks.assignAll(result);
+
+      debugPrint(
+        'TALUKS COUNT: ${taluks.length}',
+      );
     } catch (e) {
-      debugPrint('LOAD TALUKS ERROR: $e');
+      debugPrint(
+        'LOAD TALUKS ERROR: $e',
+      );
 
       Get.snackbar(
         'Error',
@@ -1759,18 +1843,18 @@ class LoginController extends GetxController {
     }
   }
 
-  // ============================================================
+  // ==========================================================
   // TALUK SELECTED
-  // ============================================================
+  // ==========================================================
 
   void onTalukSelected(
     Map<String, dynamic>? taluk,
   ) {
+    selectedTaluk.value = taluk;
+
     if (taluk == null) {
       return;
     }
-
-    selectedTaluk.value = taluk;
 
     debugPrint(
       'SELECTED TALUK: ${taluk['Name']}',
@@ -1779,85 +1863,105 @@ class LoginController extends GetxController {
     debugPrint(
       'TALUK CODE: ${taluk['Code']}',
     );
-
-    // Reset OTP whenever taluk changes
-    resetOtpState();
   }
 
-  // ============================================================
+  // ==========================================================
   // SEND OTP
-  // ============================================================
+  // ==========================================================
 
   Future<void> sendOtp() async {
-    final mobile = mobileController.text.trim();
+    final mobileNumber =
+        mobileController.text.trim();
 
-    /*
-     * IMPORTANT:
-     *
-     * Send OTP button does NOT have to become active only
-     * after entering exactly 10 digits.
-     *
-     * Validation remains here when the user presses the button.
-     */
+    // --------------------------------------------------------
+    // MOBILE VALIDATION
+    // --------------------------------------------------------
 
-    if (mobile.isEmpty) {
+    if (mobileNumber.length != 10) {
       Get.snackbar(
-        'Error',
-        'Please enter mobile number.',
+        'Invalid Mobile Number',
+        'Please enter a valid 10-digit mobile number.',
         snackPosition: SnackPosition.BOTTOM,
       );
+
+      return;
+    }
+
+    // --------------------------------------------------------
+    // DISTRICT VALIDATION
+    // --------------------------------------------------------
+
+    if (selectedDistrict.value == null) {
+      Get.snackbar(
+        'Select District',
+        'Please select a district.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      return;
+    }
+
+    // --------------------------------------------------------
+    // TALUK VALIDATION
+    // --------------------------------------------------------
+
+    if (selectedTaluk.value == null) {
+      Get.snackbar(
+        'Select Taluk',
+        'Please select a taluk.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
       return;
     }
 
     try {
       isLoading.value = true;
 
-      final response =
-          await apiService.sendOtp(mobile);
-
       debugPrint(
-        'SEND OTP RESPONSE: $response',
+        'SENDING OTP TO: $mobileNumber',
       );
 
-      // --------------------------------------------------------
-      // API SERVICE returns Map<String, dynamic>
-      // --------------------------------------------------------
+      final response =
+          await apiService.sendOtp(mobileNumber);
 
-      String otp = '';
+      debugPrint(
+        'OTP RESPONSE: $response',
+      );
 
-      otp =
-          response['OTP']?.toString() ??
-          response['Otp']?.toString() ??
-          response['otp']?.toString() ??
-          '';
+      // ------------------------------------------------------
+      // EXTRACT OTP
+      // ------------------------------------------------------
 
-      debugPrint('API OTP: $otp');
+      receivedOtp = _extractOtp(response);
 
-      if (otp.isEmpty) {
+      debugPrint(
+        'RECEIVED OTP: $receivedOtp',
+      );
+
+      if (receivedOtp.isEmpty) {
         Get.snackbar(
-          'Error',
+          'OTP Error',
           'OTP was not received from the server.',
           snackPosition: SnackPosition.BOTTOM,
         );
+
         return;
       }
 
-      // Store API OTP
-      apiOtp.value = otp;
-
-      // Show OTP section
       otpSent.value = true;
 
-      // Clear previously entered OTP
       enteredOtp.value = '';
+
       otpController.clear();
 
-      // Start 30 second resend timer
+      isOtpObscured.value = true;
+
       startResendTimer();
 
       Get.snackbar(
-        'Success',
-        'OTP sent successfully.',
+        'OTP Sent',
+        'OTP has been sent to your mobile number.',
         snackPosition: SnackPosition.BOTTOM,
       );
     } catch (e) {
@@ -1866,8 +1970,8 @@ class LoginController extends GetxController {
       );
 
       Get.snackbar(
-        'Error',
-        'Failed to send OTP. Please try again.',
+        'OTP Error',
+        'Unable to send OTP. Please try again.',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
@@ -1875,174 +1979,353 @@ class LoginController extends GetxController {
     }
   }
 
-  // ============================================================
-  // START RESEND TIMER
-  // ============================================================
+  // ==========================================================
+  // EXTRACT OTP
+  // ==========================================================
+
+  String _extractOtp(
+    Map<String, dynamic> response,
+  ) {
+    debugPrint(
+      'OTP API MAP: $response',
+    );
+
+    // Common possible OTP field names.
+    const keys = [
+      'OTP',
+      'Otp',
+      'otp',
+      'OTPCode',
+      'OtpCode',
+      'otpCode',
+      'OTPNumber',
+      'OtpNumber',
+      'otpNumber',
+    ];
+
+    for (final key in keys) {
+      final value = response[key];
+
+      if (value != null) {
+        final text = value.toString().trim();
+
+        if (text.isNotEmpty) {
+          return text;
+        }
+      }
+    }
+
+    // --------------------------------------------------------
+    // NESTED DATA
+    // --------------------------------------------------------
+
+    final data = response['data'];
+
+    if (data is Map) {
+      for (final key in keys) {
+        final value = data[key];
+
+        if (value != null) {
+          final text = value.toString().trim();
+
+          if (text.isNotEmpty) {
+            return text;
+          }
+        }
+      }
+    }
+
+    // --------------------------------------------------------
+    // NESTED RESULT
+    // --------------------------------------------------------
+
+    final result = response['result'];
+
+    if (result is Map) {
+      for (final key in keys) {
+        final value = result[key];
+
+        if (value != null) {
+          final text = value.toString().trim();
+
+          if (text.isNotEmpty) {
+            return text;
+          }
+        }
+      }
+    }
+
+    return '';
+  }
+
+  // ==========================================================
+  // OTP TIMER
+  // ==========================================================
 
   void startResendTimer() {
     _resendTimer?.cancel();
 
     resendSeconds.value = 30;
 
-    _resendTimer =
-        Timer.periodic(
+    _resendTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
-        if (resendSeconds.value > 0) {
-          resendSeconds.value--;
-        } else {
+        if (resendSeconds.value <= 1) {
+          resendSeconds.value = 0;
+
           timer.cancel();
+        } else {
+          resendSeconds.value--;
         }
       },
     );
   }
 
-  // ============================================================
-  // OTP TEXT CHANGE
-  // ============================================================
+  // ==========================================================
+  // RESEND OTP
+  // ==========================================================
 
-  void onOtpChanged(String value) {
-    // Keep only numbers
-    String cleanedValue =
-        value.replaceAll(
-      RegExp(r'[^0-9]'),
-      '',
-    );
-
-    // Maximum 4 digits
-    if (cleanedValue.length > 4) {
-      cleanedValue =
-          cleanedValue.substring(0, 4);
+  Future<void> resendOtp() async {
+    if (resendSeconds.value > 0) {
+      return;
     }
 
-    enteredOtp.value = cleanedValue;
+    await sendOtp();
+  }
 
-    // Keep TextEditingController synchronized
-    if (otpController.text != cleanedValue) {
-      otpController.value =
-          TextEditingValue(
-        text: cleanedValue,
-        selection:
-            TextSelection.collapsed(
-          offset: cleanedValue.length,
+  // ==========================================================
+  // OTP CHANGED
+  // ==========================================================
+
+  void onOtpChanged(
+    String value,
+  ) {
+    var otp = value;
+
+    if (otp.length > 4) {
+      otp = otp.substring(0, 4);
+
+      otpController.text = otp;
+
+      otpController.selection =
+          TextSelection.fromPosition(
+        TextPosition(
+          offset: otp.length,
         ),
       );
     }
 
-    debugPrint(
-      'ENTERED OTP: ${enteredOtp.value}',
-    );
+    enteredOtp.value = otp;
   }
 
-  // ============================================================
+  // ==========================================================
+  // OTP VISIBILITY
+  // ==========================================================
+
+  void toggleOtpVisibility() {
+    isOtpObscured.value =
+        !isOtpObscured.value;
+  }
+
+  // ==========================================================
   // OTP VALIDATION
-  // ============================================================
+  // ==========================================================
 
   bool get isOtpValid {
     return enteredOtp.value.length == 4 &&
-        RegExp(r'^[0-9]{4}$')
-            .hasMatch(enteredOtp.value);
+        RegExp(
+          r'^[0-9]{4}$',
+        ).hasMatch(
+          enteredOtp.value,
+        );
   }
 
-  // ============================================================
-  // LOGIN / VERIFY OTP
-  // ============================================================
+  // ==========================================================
+  // LOGIN
+  // ==========================================================
 
   Future<void> login() async {
-    if (!isOtpValid) {
+    final mobileNumber =
+        mobileController.text.trim();
+
+    // --------------------------------------------------------
+    // VALIDATE MOBILE
+    // --------------------------------------------------------
+
+    if (mobileNumber.length != 10) {
       Get.snackbar(
-        'Error',
-        'Please enter a valid 4 digit OTP.',
+        'Invalid Mobile Number',
+        'Please enter a valid 10-digit mobile number.',
         snackPosition: SnackPosition.BOTTOM,
       );
+
+      return;
+    }
+
+    // --------------------------------------------------------
+    // VALIDATE DISTRICT
+    // --------------------------------------------------------
+
+    if (selectedDistrict.value == null) {
+      Get.snackbar(
+        'Select District',
+        'Please select a district.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      return;
+    }
+
+    // --------------------------------------------------------
+    // VALIDATE TALUK
+    // --------------------------------------------------------
+
+    if (selectedTaluk.value == null) {
+      Get.snackbar(
+        'Select Taluk',
+        'Please select a taluk.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      return;
+    }
+
+    // --------------------------------------------------------
+    // VALIDATE OTP
+    // --------------------------------------------------------
+
+    if (!otpSent.value) {
+      Get.snackbar(
+        'OTP Required',
+        'Please send OTP first.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      return;
+    }
+
+    if (!isOtpValid) {
+      Get.snackbar(
+        'Invalid OTP',
+        'Please enter the 4-digit OTP.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
       return;
     }
 
     try {
       isVerifyingOtp.value = true;
 
-      final entered = enteredOtp.value;
-      final apiOtpValue = apiOtp.value;
-
       debugPrint(
-        'ENTERED OTP: $entered',
+        'ENTERED OTP: ${enteredOtp.value}',
       );
 
       debugPrint(
-        'API OTP: $apiOtpValue',
+        'SERVER OTP: $receivedOtp',
       );
 
-      // --------------------------------------------------------
-      // Compare entered OTP with API OTP
-      // --------------------------------------------------------
+      // ------------------------------------------------------
+      // VERIFY OTP
+      // ------------------------------------------------------
 
-      if (entered == apiOtpValue) {
-        debugPrint(
-          'OTP VERIFIED SUCCESSFULLY',
-        );
-
-        // ------------------------------------------------------
-        // GET LOGIN DETAILS
-        // ------------------------------------------------------
-
-        final mobileNumber =
-            mobileController.text.trim();
-
-        final districtName =
-            selectedDistrict.value?['Name']
-                    ?.toString() ??
-                '';
-
-        final talukName =
-            selectedTaluk.value?['Name']
-                    ?.toString() ??
-                '';
-
-        debugPrint(
-          'LOGIN MOBILE: $mobileNumber',
-        );
-
-        debugPrint(
-          'LOGIN DISTRICT: $districtName',
-        );
-
-        debugPrint(
-          'LOGIN TALUK: $talukName',
-        );
-
-        // ------------------------------------------------------
-        // NAVIGATE TO DASHBOARD
-        //
-        // Pass the login details through Get.arguments.
-        // ------------------------------------------------------
-
-        await Get.offAllNamed(
-          AppRoutes.dashboard,
-          arguments: {
-            'mobileNumber': mobileNumber,
-            'districtName': districtName,
-            'talukName': talukName,
-          },
-        );
-      } else {
-        debugPrint(
-          'OTP VERIFICATION FAILED',
-        );
-
+      if (enteredOtp.value.trim() !=
+          receivedOtp.trim()) {
         Get.snackbar(
           'Invalid OTP',
-          'Please enter the correct OTP.',
+          'The OTP entered is incorrect.',
           snackPosition: SnackPosition.BOTTOM,
         );
+
+        return;
       }
+
+      debugPrint(
+        'OTP VERIFIED SUCCESSFULLY',
+      );
+
+      // ------------------------------------------------------
+      // GET SELECTED VALUES
+      // ------------------------------------------------------
+
+      final mobile = mobileNumber;
+
+      final district =
+          districtName;
+
+      final districtCodeValue =
+          districtCode;
+
+      final taluk =
+          talukName;
+
+      final talukCodeValue =
+          talukCode;
+
+      debugPrint(
+        'LOGIN MOBILE: $mobile',
+      );
+
+      debugPrint(
+        'LOGIN DISTRICT: $district',
+      );
+
+      debugPrint(
+        'LOGIN DISTRICT CODE: $districtCodeValue',
+      );
+
+      debugPrint(
+        'LOGIN TALUK: $taluk',
+      );
+
+      debugPrint(
+        'LOGIN TALUK CODE: $talukCodeValue',
+      );
+
+      // ------------------------------------------------------
+      // SAVE SESSION
+      // ------------------------------------------------------
+
+      await AppSession.saveLoginCredentials(
+        mobileNumber: mobile,
+        districtName: district,
+        districtCode: districtCodeValue,
+        talukName: taluk,
+        talukCode: talukCodeValue,
+      );
+
+      debugPrint(
+        'LOGIN SESSION SAVED',
+      );
+
+      // ------------------------------------------------------
+      // DASHBOARD ARGUMENTS
+      // ------------------------------------------------------
+
+      final loginData = {
+        'mobileNumber': mobile,
+        'districtName': district,
+        'districtCode': districtCodeValue,
+        'talukName': taluk,
+        'talukCode': talukCodeValue,
+      };
+
+      // ------------------------------------------------------
+      // DASHBOARD
+      // ------------------------------------------------------
+
+      Get.offAllNamed(
+        AppRoutes.dashboard,
+        arguments: loginData,
+      );
     } catch (e) {
       debugPrint(
-        'OTP verification error: $e',
+        'LOGIN ERROR: $e',
       );
 
       Get.snackbar(
-        'Error',
-        'Unable to verify OTP. Please try again.',
+        'Login Failed',
+        'Unable to complete login. Please try again.',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
@@ -2050,56 +2333,72 @@ class LoginController extends GetxController {
     }
   }
 
-  // ============================================================
-  // CHANGE MOBILE NUMBER
-  // ============================================================
+  // ==========================================================
+  // CHANGE MOBILE
+  // ==========================================================
 
   void changeMobile() {
-    resetOtpState();
-
-    mobileController.clear();
-
-    debugPrint(
-      'Mobile number changed',
-    );
-  }
-
-  // ============================================================
-  // TOGGLE OTP VISIBILITY
-  // ============================================================
-
-  void toggleOtpVisibility() {
-    isOtpObscured.value =
-        !isOtpObscured.value;
-  }
-
-  // ============================================================
-  // RESET OTP STATE
-  // ============================================================
-
-  void resetOtpState() {
     otpSent.value = false;
 
-    apiOtp.value = '';
+    receivedOtp = '';
+
     enteredOtp.value = '';
 
     otpController.clear();
 
+    isOtpObscured.value = true;
+
     resendSeconds.value = 0;
 
     _resendTimer?.cancel();
-    _resendTimer = null;
   }
 
-  // ============================================================
-  // CLEANUP
-  // ============================================================
+  // ==========================================================
+  // RESET OTP STATE
+  // ==========================================================
+
+  void resetOtpState() {
+    otpSent.value = false;
+
+    receivedOtp = '';
+
+    enteredOtp.value = '';
+
+    otpController.clear();
+
+    isOtpObscured.value = true;
+
+    resendSeconds.value = 0;
+
+    _resendTimer?.cancel();
+  }
+
+  // ==========================================================
+  // LOGOUT
+  // ==========================================================
+
+  Future<void> logout() async {
+    await AppSession.clearLoginCredentials();
+
+    debugPrint(
+      'LOGIN SESSION CLEARED',
+    );
+
+    Get.offAllNamed(
+      AppRoutes.login,
+    );
+  }
+
+  // ==========================================================
+  // CLOSE
+  // ==========================================================
 
   @override
   void onClose() {
     _resendTimer?.cancel();
 
     mobileController.dispose();
+
     otpController.dispose();
 
     super.onClose();

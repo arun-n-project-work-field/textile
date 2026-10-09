@@ -4699,7 +4699,7 @@ class GeoTaggingScreen extends StatelessWidget {
 
                 Text(
                   hasImage
-                      ? 'Tap to Retake'
+                      ? 'Tap on the Photo to Retake'
                       : enabled
                           ? 'Tap to Capture'
                           : 'Within 15 m required',

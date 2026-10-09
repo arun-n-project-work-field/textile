@@ -6,8 +6,7 @@ import 'sync_status_controller.dart';
 class SyncStatusScreen extends StatelessWidget {
   SyncStatusScreen({super.key});
 
-  final SyncStatusController controller =
-      Get.find<SyncStatusController>();
+  final SyncStatusController controller = Get.find<SyncStatusController>();
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +19,7 @@ class SyncStatusScreen extends StatelessWidget {
         centerTitle: true,
         title: const Text(
           "Sync Status",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
 
@@ -31,51 +28,39 @@ class SyncStatusScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           itemCount: controller.surveys.length,
           itemBuilder: (context, index) {
-
             final survey = controller.surveys[index];
 
             return Card(
               margin: const EdgeInsets.only(bottom: 16),
               elevation: 3,
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16),
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     Row(
                       children: [
-
                         Expanded(
                           child: Text(
                             survey.barcode,
                             style: const TextStyle(
-                              fontWeight:
-                                  FontWeight.bold,
+                              fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),
                           ),
                         ),
 
                         Chip(
-                          backgroundColor:
-                              survey.synced
-                                  ? Colors.green
-                                  : Colors.orange,
+                          backgroundColor: survey.synced
+                              ? Colors.green
+                              : Colors.orange,
 
                           label: Text(
-                            survey.synced
-                                ? "Synced"
-                                : "Pending",
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                            survey.synced ? "Synced" : "Pending",
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
                       ],
@@ -83,32 +68,25 @@ class SyncStatusScreen extends StatelessWidget {
 
                     const SizedBox(height: 12),
 
-                    Text(
-                        "Products : ${survey.productCount}"),
+                    Text("Products : ${survey.productCount}"),
 
-                    Text(
-                        "Latitude : ${survey.latitude}"),
+                    Text("Latitude : ${survey.latitude}"),
 
-                    Text(
-                        "Longitude : ${survey.longitude}"),
+                    Text("Longitude : ${survey.longitude}"),
 
                     const SizedBox(height: 20),
-                                        Row(
+                    Row(
                       children: [
-
                         Expanded(
                           child: OutlinedButton.icon(
-                            onPressed: () =>
-                                controller.deleteSurvey(index),
+                            onPressed: () => controller.deleteSurvey(index),
                             icon: const Icon(
                               Icons.delete_outline,
                               color: Colors.red,
                             ),
                             label: const Text(
                               "Delete",
-                              style: TextStyle(
-                                color: Colors.red,
-                              ),
+                              style: TextStyle(color: Colors.red),
                             ),
                           ),
                         ),
@@ -121,14 +99,9 @@ class SyncStatusScreen extends StatelessWidget {
                                 ? null
                                 : () => controller.syncSurvey(index),
                             icon: const Icon(Icons.cloud_upload),
-                            label: Text(
-                              survey.synced
-                                  ? "Uploaded"
-                                  : "Upload",
-                            ),
+                            label: Text(survey.synced ? "Uploaded" : "Upload"),
                             style: ElevatedButton.styleFrom(
-                              minimumSize:
-                                  const Size.fromHeight(45),
+                              minimumSize: const Size.fromHeight(45),
                               backgroundColor: Colors.green,
                               foregroundColor: Colors.white,
                             ),
@@ -147,7 +120,6 @@ class SyncStatusScreen extends StatelessWidget {
       //-----------------------------------------
       // SYNC ALL BUTTON
       //-----------------------------------------
-
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -158,10 +130,7 @@ class SyncStatusScreen extends StatelessWidget {
               icon: const Icon(Icons.cloud_sync),
               label: const Text(
                 "Sync All Pending Surveys",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
