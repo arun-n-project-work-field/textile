@@ -1601,11 +1601,1620 @@
 // }
 
 
+// import 'dart:async';
+
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:namma_kaimagga_app/core/services/app_session.dart';
+
+// import '../../routes/app_routes.dart';
+// import '../../services/api_service.dart';
+
+
+// class LoginController extends GetxController {
+//   final ApiService apiService = ApiService();
+
+//   // ==========================================================
+//   // TEXT CONTROLLERS
+//   // ==========================================================
+
+//   final TextEditingController mobileController =
+//       TextEditingController();
+
+//   final TextEditingController otpController =
+//       TextEditingController();
+
+//   // ==========================================================
+//   // DISTRICTS
+//   // ==========================================================
+
+//   final RxList<Map<String, dynamic>> districts =
+//       <Map<String, dynamic>>[].obs;
+
+//   final Rxn<Map<String, dynamic>> selectedDistrict =
+//       Rxn<Map<String, dynamic>>();
+
+//   final RxBool isLoadingDistricts = false.obs;
+
+//   // ==========================================================
+//   // TALUKS
+//   // ==========================================================
+
+//   final RxList<Map<String, dynamic>> taluks =
+//       <Map<String, dynamic>>[].obs;
+
+//   final Rxn<Map<String, dynamic>> selectedTaluk =
+//       Rxn<Map<String, dynamic>>();
+
+//   final RxBool isLoadingTaluks = false.obs;
+
+//   // ==========================================================
+//   // LOADING
+//   // ==========================================================
+
+//   final RxBool isLoading = false.obs;
+
+//   final RxBool isVerifyingOtp = false.obs;
+
+//   // ==========================================================
+//   // OTP
+//   // ==========================================================
+
+//   final RxBool otpSent = false.obs;
+
+//   final RxString enteredOtp = ''.obs;
+
+//   final RxBool isOtpObscured = true.obs;
+
+//   String receivedOtp = '';
+
+//   final RxInt resendSeconds = 0.obs;
+
+//   Timer? _resendTimer;
+
+//   // ==========================================================
+//   // INIT
+//   // ==========================================================
+
+//   @override
+//   void onInit() {
+//     super.onInit();
+
+//     loadDistricts();
+//   }
+
+//   // ==========================================================
+//   // DISTRICT NAME
+//   // ==========================================================
+
+//   String get districtName {
+//     return selectedDistrict.value?['Name']
+//             ?.toString()
+//             .trim() ??
+//         '';
+//   }
+
+//   // ==========================================================
+//   // DISTRICT CODE
+//   // ==========================================================
+
+//   String get districtCode {
+//     return selectedDistrict.value?['Code']
+//             ?.toString()
+//             .trim() ??
+//         '';
+//   }
+
+//   // ==========================================================
+//   // TALUK NAME
+//   // ==========================================================
+
+//   String get talukName {
+//     return selectedTaluk.value?['Name']
+//             ?.toString()
+//             .trim() ??
+//         '';
+//   }
+
+//   // ==========================================================
+//   // TALUK CODE
+//   // ==========================================================
+
+//   String get talukCode {
+//     return selectedTaluk.value?['Code']
+//             ?.toString()
+//             .trim() ??
+//         '';
+//   }
+
+//   // ==========================================================
+//   // LOAD DISTRICTS
+//   // ==========================================================
+
+//   Future<void> loadDistricts() async {
+//     try {
+//       isLoadingDistricts.value = true;
+
+//       debugPrint('LOADING DISTRICTS...');
+
+//       final result = await apiService.getDistricts();
+
+//       debugPrint(
+//         'DISTRICTS RESPONSE: $result',
+//       );
+
+//       districts.assignAll(result);
+
+//       debugPrint(
+//         'DISTRICTS COUNT: ${districts.length}',
+//       );
+//     } catch (e) {
+//       debugPrint(
+//         'LOAD DISTRICTS ERROR: $e',
+//       );
+
+//       Get.snackbar(
+//         'Error',
+//         'Unable to load districts.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+//     } finally {
+//       isLoadingDistricts.value = false;
+//     }
+//   }
+
+//   // ==========================================================
+//   // DISTRICT SELECTED
+//   // ==========================================================
+
+//   Future<void> onDistrictSelected(
+//     Map<String, dynamic>? district,
+//   ) async {
+//     selectedDistrict.value = district;
+
+//     selectedTaluk.value = null;
+
+//     taluks.clear();
+
+//     if (district == null) {
+//       return;
+//     }
+
+//     debugPrint(
+//       'SELECTED DISTRICT: ${district['Name']}',
+//     );
+
+//     debugPrint(
+//       'DISTRICT CODE: ${district['Code']}',
+//     );
+
+//     final districtCode =
+//         district['Code']?.toString().trim() ?? '';
+
+//     if (districtCode.isEmpty) {
+//       return;
+//     }
+
+//     await loadTaluks(districtCode);
+//   }
+
+//   // ==========================================================
+//   // LOAD TALUKS
+//   // ==========================================================
+
+//   Future<void> loadTaluks(
+//     String districtCode,
+//   ) async {
+//     if (districtCode.isEmpty) {
+//       return;
+//     }
+
+//     try {
+//       isLoadingTaluks.value = true;
+
+//       debugPrint(
+//         'LOADING TALUKS FOR DISTRICT: $districtCode',
+//       );
+
+//       final result =
+//           await apiService.getTaluks(districtCode);
+
+//       debugPrint(
+//         'TALUKS RESPONSE: $result',
+//       );
+
+//       taluks.assignAll(result);
+
+//       debugPrint(
+//         'TALUKS COUNT: ${taluks.length}',
+//       );
+//     } catch (e) {
+//       debugPrint(
+//         'LOAD TALUKS ERROR: $e',
+//       );
+
+//       Get.snackbar(
+//         'Error',
+//         'Unable to load taluks.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+//     } finally {
+//       isLoadingTaluks.value = false;
+//     }
+//   }
+
+//   // ==========================================================
+//   // TALUK SELECTED
+//   // ==========================================================
+
+//   void onTalukSelected(
+//     Map<String, dynamic>? taluk,
+//   ) {
+//     selectedTaluk.value = taluk;
+
+//     if (taluk == null) {
+//       return;
+//     }
+
+//     debugPrint(
+//       'SELECTED TALUK: ${taluk['Name']}',
+//     );
+
+//     debugPrint(
+//       'TALUK CODE: ${taluk['Code']}',
+//     );
+//   }
+
+//   // ==========================================================
+//   // SEND OTP
+//   // ==========================================================
+
+//   Future<void> sendOtp() async {
+//     final mobileNumber =
+//         mobileController.text.trim();
+
+//     // --------------------------------------------------------
+//     // MOBILE VALIDATION
+//     // --------------------------------------------------------
+
+//     if (mobileNumber.length != 10) {
+//       Get.snackbar(
+//         'Invalid Mobile Number',
+//         'Please enter a valid 10-digit mobile number.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     // --------------------------------------------------------
+//     // DISTRICT VALIDATION
+//     // --------------------------------------------------------
+
+//     if (selectedDistrict.value == null) {
+//       Get.snackbar(
+//         'Select District',
+//         'Please select a district.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     // --------------------------------------------------------
+//     // TALUK VALIDATION
+//     // --------------------------------------------------------
+
+//     if (selectedTaluk.value == null) {
+//       Get.snackbar(
+//         'Select Taluk',
+//         'Please select a taluk.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     try {
+//       isLoading.value = true;
+
+//       debugPrint(
+//         'SENDING OTP TO: $mobileNumber',
+//       );
+
+//       final response =
+//           await apiService.sendOtp(mobileNumber);
+
+//       debugPrint(
+//         'OTP RESPONSE: $response',
+//       );
+
+//       // ------------------------------------------------------
+//       // EXTRACT OTP
+//       // ------------------------------------------------------
+
+//       receivedOtp = _extractOtp(response);
+
+//       debugPrint(
+//         'RECEIVED OTP: $receivedOtp',
+//       );
+
+//       if (receivedOtp.isEmpty) {
+//         Get.snackbar(
+//           'OTP Error',
+//           'OTP was not received from the server.',
+//           snackPosition: SnackPosition.BOTTOM,
+//         );
+
+//         return;
+//       }
+
+//       otpSent.value = true;
+
+//       enteredOtp.value = '';
+
+//       otpController.clear();
+
+//       isOtpObscured.value = true;
+
+//       startResendTimer();
+
+//       Get.snackbar(
+//         'OTP Sent',
+//         'OTP has been sent to your mobile number.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+//     } catch (e) {
+//       debugPrint(
+//         'SEND OTP ERROR: $e',
+//       );
+
+//       Get.snackbar(
+//         'OTP Error',
+//         'Unable to send OTP. Please try again.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+//     } finally {
+//       isLoading.value = false;
+//     }
+//   }
+
+//   // ==========================================================
+//   // EXTRACT OTP
+//   // ==========================================================
+
+//   String _extractOtp(
+//     Map<String, dynamic> response,
+//   ) {
+//     debugPrint(
+//       'OTP API MAP: $response',
+//     );
+
+//     // Common possible OTP field names.
+//     const keys = [
+//       'OTP',
+//       'Otp',
+//       'otp',
+//       'OTPCode',
+//       'OtpCode',
+//       'otpCode',
+//       'OTPNumber',
+//       'OtpNumber',
+//       'otpNumber',
+//     ];
+
+//     for (final key in keys) {
+//       final value = response[key];
+
+//       if (value != null) {
+//         final text = value.toString().trim();
+
+//         if (text.isNotEmpty) {
+//           return text;
+//         }
+//       }
+//     }
+
+//     // --------------------------------------------------------
+//     // NESTED DATA
+//     // --------------------------------------------------------
+
+//     final data = response['data'];
+
+//     if (data is Map) {
+//       for (final key in keys) {
+//         final value = data[key];
+
+//         if (value != null) {
+//           final text = value.toString().trim();
+
+//           if (text.isNotEmpty) {
+//             return text;
+//           }
+//         }
+//       }
+//     }
+
+//     // --------------------------------------------------------
+//     // NESTED RESULT
+//     // --------------------------------------------------------
+
+//     final result = response['result'];
+
+//     if (result is Map) {
+//       for (final key in keys) {
+//         final value = result[key];
+
+//         if (value != null) {
+//           final text = value.toString().trim();
+
+//           if (text.isNotEmpty) {
+//             return text;
+//           }
+//         }
+//       }
+//     }
+
+//     return '';
+//   }
+
+//   // ==========================================================
+//   // OTP TIMER
+//   // ==========================================================
+
+//   void startResendTimer() {
+//     _resendTimer?.cancel();
+
+//     resendSeconds.value = 30;
+
+//     _resendTimer = Timer.periodic(
+//       const Duration(seconds: 1),
+//       (timer) {
+//         if (resendSeconds.value <= 1) {
+//           resendSeconds.value = 0;
+
+//           timer.cancel();
+//         } else {
+//           resendSeconds.value--;
+//         }
+//       },
+//     );
+//   }
+
+//   // ==========================================================
+//   // RESEND OTP
+//   // ==========================================================
+
+//   Future<void> resendOtp() async {
+//     if (resendSeconds.value > 0) {
+//       return;
+//     }
+
+//     await sendOtp();
+//   }
+
+//   // ==========================================================
+//   // OTP CHANGED
+//   // ==========================================================
+
+//   void onOtpChanged(
+//     String value,
+//   ) {
+//     var otp = value;
+
+//     if (otp.length > 4) {
+//       otp = otp.substring(0, 4);
+
+//       otpController.text = otp;
+
+//       otpController.selection =
+//           TextSelection.fromPosition(
+//         TextPosition(
+//           offset: otp.length,
+//         ),
+//       );
+//     }
+
+//     enteredOtp.value = otp;
+//   }
+
+//   // ==========================================================
+//   // OTP VISIBILITY
+//   // ==========================================================
+
+//   void toggleOtpVisibility() {
+//     isOtpObscured.value =
+//         !isOtpObscured.value;
+//   }
+
+//   // ==========================================================
+//   // OTP VALIDATION
+//   // ==========================================================
+
+//   bool get isOtpValid {
+//     return enteredOtp.value.length == 4 &&
+//         RegExp(
+//           r'^[0-9]{4}$',
+//         ).hasMatch(
+//           enteredOtp.value,
+//         );
+//   }
+
+//   // ==========================================================
+//   // LOGIN
+//   // ==========================================================
+
+//   Future<void> login() async {
+//     final mobileNumber =
+//         mobileController.text.trim();
+
+//     // --------------------------------------------------------
+//     // VALIDATE MOBILE
+//     // --------------------------------------------------------
+
+//     if (mobileNumber.length != 10) {
+//       Get.snackbar(
+//         'Invalid Mobile Number',
+//         'Please enter a valid 10-digit mobile number.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     // --------------------------------------------------------
+//     // VALIDATE DISTRICT
+//     // --------------------------------------------------------
+
+//     if (selectedDistrict.value == null) {
+//       Get.snackbar(
+//         'Select District',
+//         'Please select a district.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     // --------------------------------------------------------
+//     // VALIDATE TALUK
+//     // --------------------------------------------------------
+
+//     if (selectedTaluk.value == null) {
+//       Get.snackbar(
+//         'Select Taluk',
+//         'Please select a taluk.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     // --------------------------------------------------------
+//     // VALIDATE OTP
+//     // --------------------------------------------------------
+
+//     if (!otpSent.value) {
+//       Get.snackbar(
+//         'OTP Required',
+//         'Please send OTP first.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     if (!isOtpValid) {
+//       Get.snackbar(
+//         'Invalid OTP',
+//         'Please enter the 4-digit OTP.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     try {
+//       isVerifyingOtp.value = true;
+
+//       debugPrint(
+//         'ENTERED OTP: ${enteredOtp.value}',
+//       );
+
+//       debugPrint(
+//         'SERVER OTP: $receivedOtp',
+//       );
+
+//       // ------------------------------------------------------
+//       // VERIFY OTP
+//       // ------------------------------------------------------
+
+//       if (enteredOtp.value.trim() !=
+//           receivedOtp.trim()) {
+//         Get.snackbar(
+//           'Invalid OTP',
+//           'The OTP entered is incorrect.',
+//           snackPosition: SnackPosition.BOTTOM,
+//         );
+
+//         return;
+//       }
+
+//       debugPrint(
+//         'OTP VERIFIED SUCCESSFULLY',
+//       );
+
+//       // ------------------------------------------------------
+//       // GET SELECTED VALUES
+//       // ------------------------------------------------------
+
+//       final mobile = mobileNumber;
+
+//       final district =
+//           districtName;
+
+//       final districtCodeValue =
+//           districtCode;
+
+//       final taluk =
+//           talukName;
+
+//       final talukCodeValue =
+//           talukCode;
+
+//       debugPrint(
+//         'LOGIN MOBILE: $mobile',
+//       );
+
+//       debugPrint(
+//         'LOGIN DISTRICT: $district',
+//       );
+
+//       debugPrint(
+//         'LOGIN DISTRICT CODE: $districtCodeValue',
+//       );
+
+//       debugPrint(
+//         'LOGIN TALUK: $taluk',
+//       );
+
+//       debugPrint(
+//         'LOGIN TALUK CODE: $talukCodeValue',
+//       );
+
+//       // ------------------------------------------------------
+//       // SAVE SESSION
+//       // ------------------------------------------------------
+
+//       await AppSession.saveLoginCredentials(
+//         mobileNumber: mobile,
+//         districtName: district,
+//         districtCode: districtCodeValue,
+//         talukName: taluk,
+//         talukCode: talukCodeValue,
+//       );
+
+//       debugPrint(
+//         'LOGIN SESSION SAVED',
+//       );
+
+//       // ------------------------------------------------------
+//       // DASHBOARD ARGUMENTS
+//       // ------------------------------------------------------
+
+//       final loginData = {
+//         'mobileNumber': mobile,
+//         'districtName': district,
+//         'districtCode': districtCodeValue,
+//         'talukName': taluk,
+//         'talukCode': talukCodeValue,
+//       };
+
+//       // ------------------------------------------------------
+//       // DASHBOARD
+//       // ------------------------------------------------------
+
+//       Get.offAllNamed(
+//         AppRoutes.dashboard,
+//         arguments: loginData,
+//       );
+//     } catch (e) {
+//       debugPrint(
+//         'LOGIN ERROR: $e',
+//       );
+
+//       Get.snackbar(
+//         'Login Failed',
+//         'Unable to complete login. Please try again.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+//     } finally {
+//       isVerifyingOtp.value = false;
+//     }
+//   }
+
+//   // ==========================================================
+//   // CHANGE MOBILE
+//   // ==========================================================
+
+//   void changeMobile() {
+//     otpSent.value = false;
+
+//     receivedOtp = '';
+
+//     enteredOtp.value = '';
+
+//     otpController.clear();
+
+//     isOtpObscured.value = true;
+
+//     resendSeconds.value = 0;
+
+//     _resendTimer?.cancel();
+//   }
+
+//   // ==========================================================
+//   // RESET OTP STATE
+//   // ==========================================================
+
+//   void resetOtpState() {
+//     otpSent.value = false;
+
+//     receivedOtp = '';
+
+//     enteredOtp.value = '';
+
+//     otpController.clear();
+
+//     isOtpObscured.value = true;
+
+//     resendSeconds.value = 0;
+
+//     _resendTimer?.cancel();
+//   }
+
+//   // ==========================================================
+//   // LOGOUT
+//   // ==========================================================
+
+//   Future<void> logout() async {
+//     await AppSession.clearLoginCredentials();
+
+//     debugPrint(
+//       'LOGIN SESSION CLEARED',
+//     );
+
+//     Get.offAllNamed(
+//       AppRoutes.login,
+//     );
+//   }
+
+//   // ==========================================================
+//   // CLOSE
+//   // ==========================================================
+
+//   @override
+//   void onClose() {
+//     _resendTimer?.cancel();
+
+//     mobileController.dispose();
+
+//     otpController.dispose();
+
+//     super.onClose();
+//   }
+// }
+
+
+// import 'dart:async';
+
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:namma_kaimagga_app/services/app_session.dart';
+
+// import '../../routes/app_routes.dart';
+// import '../../services/api_service.dart';
+
+
+// class LoginController extends GetxController {
+//   final ApiService apiService = ApiService();
+
+//   // ==========================================================
+//   // TEXT CONTROLLERS
+//   // ==========================================================
+
+//   final TextEditingController mobileController =
+//       TextEditingController();
+
+//   final TextEditingController otpController =
+//       TextEditingController();
+
+//   // ==========================================================
+//   // DISTRICTS
+//   // ==========================================================
+
+//   final RxList<Map<String, dynamic>> districts =
+//       <Map<String, dynamic>>[].obs;
+
+//   final Rxn<Map<String, dynamic>> selectedDistrict =
+//       Rxn<Map<String, dynamic>>();
+
+//   final RxBool isLoadingDistricts = false.obs;
+
+//   // ==========================================================
+//   // TALUKS
+//   // ==========================================================
+
+//   final RxList<Map<String, dynamic>> taluks =
+//       <Map<String, dynamic>>[].obs;
+
+//   final Rxn<Map<String, dynamic>> selectedTaluk =
+//       Rxn<Map<String, dynamic>>();
+
+//   final RxBool isLoadingTaluks = false.obs;
+
+//   // ==========================================================
+//   // LOADING
+//   // ==========================================================
+
+//   final RxBool isLoading = false.obs;
+
+//   final RxBool isVerifyingOtp = false.obs;
+
+//   // ==========================================================
+//   // OTP
+//   // ==========================================================
+
+//   final RxBool otpSent = false.obs;
+
+//   final RxString enteredOtp = ''.obs;
+
+//   final RxBool isOtpObscured = true.obs;
+
+//   String receivedOtp = '';
+
+//   final RxInt resendSeconds = 0.obs;
+
+//   Timer? _resendTimer;
+
+//   // ==========================================================
+//   // INIT
+//   // ==========================================================
+
+//   @override
+//   void onInit() {
+//     super.onInit();
+
+//     loadDistricts();
+//   }
+
+//   // ==========================================================
+//   // DISTRICT NAME
+//   // ==========================================================
+
+//   String get districtName {
+//     return selectedDistrict.value?['Name']
+//             ?.toString()
+//             .trim() ??
+//         '';
+//   }
+
+//   // ==========================================================
+//   // DISTRICT CODE
+//   // ==========================================================
+
+//   String get districtCode {
+//     return selectedDistrict.value?['Code']
+//             ?.toString()
+//             .trim() ??
+//         '';
+//   }
+
+//   // ==========================================================
+//   // TALUK NAME
+//   // ==========================================================
+
+//   String get talukName {
+//     return selectedTaluk.value?['Name']
+//             ?.toString()
+//             .trim() ??
+//         '';
+//   }
+
+//   // ==========================================================
+//   // TALUK CODE
+//   // ==========================================================
+
+//   String get talukCode {
+//     return selectedTaluk.value?['Code']
+//             ?.toString()
+//             .trim() ??
+//         '';
+//   }
+
+//   // ==========================================================
+//   // LOAD DISTRICTS
+//   // ==========================================================
+
+//   Future<void> loadDistricts() async {
+//     try {
+//       isLoadingDistricts.value = true;
+
+//       debugPrint('LOADING DISTRICTS...');
+
+//       final result = await apiService.getDistricts();
+
+//       debugPrint(
+//         'DISTRICTS RESPONSE: $result',
+//       );
+
+//       districts.assignAll(result);
+
+//       debugPrint(
+//         'DISTRICTS COUNT: ${districts.length}',
+//       );
+//     } catch (e) {
+//       debugPrint(
+//         'LOAD DISTRICTS ERROR: $e',
+//       );
+
+//       Get.snackbar(
+//         'Error',
+//         'Unable to load districts.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+//     } finally {
+//       isLoadingDistricts.value = false;
+//     }
+//   }
+
+//   // ==========================================================
+//   // DISTRICT SELECTED
+//   // ==========================================================
+
+//   Future<void> onDistrictSelected(
+//     Map<String, dynamic>? district,
+//   ) async {
+//     selectedDistrict.value = district;
+
+//     selectedTaluk.value = null;
+
+//     taluks.clear();
+
+//     if (district == null) {
+//       return;
+//     }
+
+//     debugPrint(
+//       'SELECTED DISTRICT: ${district['Name']}',
+//     );
+
+//     debugPrint(
+//       'DISTRICT CODE: ${district['Code']}',
+//     );
+
+//     final districtCode =
+//         district['Code']?.toString().trim() ?? '';
+
+//     if (districtCode.isEmpty) {
+//       return;
+//     }
+
+//     await loadTaluks(districtCode);
+//   }
+
+//   // ==========================================================
+//   // LOAD TALUKS
+//   // ==========================================================
+
+//   Future<void> loadTaluks(
+//     String districtCode,
+//   ) async {
+//     if (districtCode.isEmpty) {
+//       return;
+//     }
+
+//     try {
+//       isLoadingTaluks.value = true;
+
+//       debugPrint(
+//         'LOADING TALUKS FOR DISTRICT: $districtCode',
+//       );
+
+//       final result =
+//           await apiService.getTaluks(districtCode);
+
+//       debugPrint(
+//         'TALUKS RESPONSE: $result',
+//       );
+
+//       taluks.assignAll(result);
+
+//       debugPrint(
+//         'TALUKS COUNT: ${taluks.length}',
+//       );
+//     } catch (e) {
+//       debugPrint(
+//         'LOAD TALUKS ERROR: $e',
+//       );
+
+//       Get.snackbar(
+//         'Error',
+//         'Unable to load taluks.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+//     } finally {
+//       isLoadingTaluks.value = false;
+//     }
+//   }
+
+//   // ==========================================================
+//   // TALUK SELECTED
+//   // ==========================================================
+
+//   void onTalukSelected(
+//     Map<String, dynamic>? taluk,
+//   ) {
+//     selectedTaluk.value = taluk;
+
+//     if (taluk == null) {
+//       return;
+//     }
+
+//     debugPrint(
+//       'SELECTED TALUK: ${taluk['Name']}',
+//     );
+
+//     debugPrint(
+//       'TALUK CODE: ${taluk['Code']}',
+//     );
+//   }
+
+//   // ==========================================================
+//   // SEND OTP
+//   // ==========================================================
+
+//   Future<void> sendOtp() async {
+//     final mobileNumber =
+//         mobileController.text.trim();
+
+//     // --------------------------------------------------------
+//     // MOBILE VALIDATION
+//     // --------------------------------------------------------
+
+//     if (mobileNumber.length != 10) {
+//       Get.snackbar(
+//         'Invalid Mobile Number',
+//         'Please enter a valid 10-digit mobile number.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     // --------------------------------------------------------
+//     // DISTRICT VALIDATION
+//     // --------------------------------------------------------
+
+//     if (selectedDistrict.value == null) {
+//       Get.snackbar(
+//         'Select District',
+//         'Please select a district.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     // --------------------------------------------------------
+//     // TALUK VALIDATION
+//     // --------------------------------------------------------
+
+//     if (selectedTaluk.value == null) {
+//       Get.snackbar(
+//         'Select Taluk',
+//         'Please select a taluk.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     try {
+//       isLoading.value = true;
+
+//       debugPrint(
+//         'SENDING OTP TO: $mobileNumber',
+//       );
+
+//       final response =
+//           await apiService.sendOtp(mobileNumber);
+
+//       debugPrint(
+//         'OTP RESPONSE: $response',
+//       );
+
+//       // ------------------------------------------------------
+//       // EXTRACT OTP
+//       // ------------------------------------------------------
+
+//       receivedOtp = _extractOtp(response);
+
+//       debugPrint(
+//         'RECEIVED OTP: $receivedOtp',
+//       );
+
+//       if (receivedOtp.isEmpty) {
+//         Get.snackbar(
+//           'OTP Error',
+//           'OTP was not received from the server.',
+//           snackPosition: SnackPosition.BOTTOM,
+//         );
+
+//         return;
+//       }
+
+//       otpSent.value = true;
+
+//       enteredOtp.value = '';
+
+//       otpController.clear();
+
+//       isOtpObscured.value = true;
+
+//       startResendTimer();
+
+//       Get.snackbar(
+//         'OTP Sent',
+//         'OTP has been sent to your mobile number.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+//     } catch (e) {
+//       debugPrint(
+//         'SEND OTP ERROR: $e',
+//       );
+
+//       Get.snackbar(
+//         'OTP Error',
+//         'Unable to send OTP. Please try again.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+//     } finally {
+//       isLoading.value = false;
+//     }
+//   }
+
+//   // ==========================================================
+//   // EXTRACT OTP
+//   // ==========================================================
+
+//   String _extractOtp(
+//     Map<String, dynamic> response,
+//   ) {
+//     debugPrint(
+//       'OTP API MAP: $response',
+//     );
+
+//     // Common possible OTP field names.
+//     const keys = [
+//       'OTP',
+//       'Otp',
+//       'otp',
+//       'OTPCode',
+//       'OtpCode',
+//       'otpCode',
+//       'OTPNumber',
+//       'OtpNumber',
+//       'otpNumber',
+//     ];
+
+//     for (final key in keys) {
+//       final value = response[key];
+
+//       if (value != null) {
+//         final text = value.toString().trim();
+
+//         if (text.isNotEmpty) {
+//           return text;
+//         }
+//       }
+//     }
+
+//     // --------------------------------------------------------
+//     // NESTED DATA
+//     // --------------------------------------------------------
+
+//     final data = response['data'];
+
+//     if (data is Map) {
+//       for (final key in keys) {
+//         final value = data[key];
+
+//         if (value != null) {
+//           final text = value.toString().trim();
+
+//           if (text.isNotEmpty) {
+//             return text;
+//           }
+//         }
+//       }
+//     }
+
+//     // --------------------------------------------------------
+//     // NESTED RESULT
+//     // --------------------------------------------------------
+
+//     final result = response['result'];
+
+//     if (result is Map) {
+//       for (final key in keys) {
+//         final value = result[key];
+
+//         if (value != null) {
+//           final text = value.toString().trim();
+
+//           if (text.isNotEmpty) {
+//             return text;
+//           }
+//         }
+//       }
+//     }
+
+//     return '';
+//   }
+
+//   // ==========================================================
+//   // OTP TIMER
+//   // ==========================================================
+
+//   void startResendTimer() {
+//     _resendTimer?.cancel();
+
+//     resendSeconds.value = 30;
+
+//     _resendTimer = Timer.periodic(
+//       const Duration(seconds: 1),
+//       (timer) {
+//         if (resendSeconds.value <= 1) {
+//           resendSeconds.value = 0;
+
+//           timer.cancel();
+//         } else {
+//           resendSeconds.value--;
+//         }
+//       },
+//     );
+//   }
+
+//   // ==========================================================
+//   // RESEND OTP
+//   // ==========================================================
+
+//   Future<void> resendOtp() async {
+//     if (resendSeconds.value > 0) {
+//       return;
+//     }
+
+//     await sendOtp();
+//   }
+
+//   // ==========================================================
+//   // OTP CHANGED
+//   // ==========================================================
+
+//   void onOtpChanged(
+//     String value,
+//   ) {
+//     var otp = value;
+
+//     if (otp.length > 4) {
+//       otp = otp.substring(0, 4);
+
+//       otpController.text = otp;
+
+//       otpController.selection =
+//           TextSelection.fromPosition(
+//         TextPosition(
+//           offset: otp.length,
+//         ),
+//       );
+//     }
+
+//     enteredOtp.value = otp;
+//   }
+
+//   // ==========================================================
+//   // OTP VISIBILITY
+//   // ==========================================================
+
+//   void toggleOtpVisibility() {
+//     isOtpObscured.value =
+//         !isOtpObscured.value;
+//   }
+
+//   // ==========================================================
+//   // OTP VALIDATION
+//   // ==========================================================
+
+//   bool get isOtpValid {
+//     return enteredOtp.value.length == 4 &&
+//         RegExp(
+//           r'^[0-9]{4}$',
+//         ).hasMatch(
+//           enteredOtp.value,
+//         );
+//   }
+
+//   // ==========================================================
+//   // LOGIN
+//   // ==========================================================
+
+//   Future<void> login() async {
+//     final mobileNumber =
+//         mobileController.text.trim();
+
+//     // --------------------------------------------------------
+//     // VALIDATE MOBILE
+//     // --------------------------------------------------------
+
+//     if (mobileNumber.length != 10) {
+//       Get.snackbar(
+//         'Invalid Mobile Number',
+//         'Please enter a valid 10-digit mobile number.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     // --------------------------------------------------------
+//     // VALIDATE DISTRICT
+//     // --------------------------------------------------------
+
+//     if (selectedDistrict.value == null) {
+//       Get.snackbar(
+//         'Select District',
+//         'Please select a district.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     // --------------------------------------------------------
+//     // VALIDATE TALUK
+//     // --------------------------------------------------------
+
+//     if (selectedTaluk.value == null) {
+//       Get.snackbar(
+//         'Select Taluk',
+//         'Please select a taluk.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     // --------------------------------------------------------
+//     // VALIDATE OTP
+//     // --------------------------------------------------------
+
+//     if (!otpSent.value) {
+//       Get.snackbar(
+//         'OTP Required',
+//         'Please send OTP first.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     if (!isOtpValid) {
+//       Get.snackbar(
+//         'Invalid OTP',
+//         'Please enter the 4-digit OTP.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+
+//       return;
+//     }
+
+//     try {
+//       isVerifyingOtp.value = true;
+
+//       debugPrint(
+//         'ENTERED OTP: ${enteredOtp.value}',
+//       );
+
+//       debugPrint(
+//         'SERVER OTP: $receivedOtp',
+//       );
+
+//       // ------------------------------------------------------
+//       // VERIFY OTP
+//       // ------------------------------------------------------
+
+//       if (enteredOtp.value.trim() !=
+//           receivedOtp.trim()) {
+//         Get.snackbar(
+//           'Invalid OTP',
+//           'The OTP entered is incorrect.',
+//           snackPosition: SnackPosition.BOTTOM,
+//         );
+
+//         return;
+//       }
+
+//       debugPrint(
+//         'OTP VERIFIED SUCCESSFULLY',
+//       );
+
+//       // ------------------------------------------------------
+//       // GET SELECTED VALUES
+//       // ------------------------------------------------------
+
+//       final mobile = mobileNumber;
+
+//       final district =
+//           districtName;
+
+//       final districtCodeValue =
+//           districtCode;
+
+//       final taluk =
+//           talukName;
+
+//       final talukCodeValue =
+//           talukCode;
+
+//       debugPrint(
+//         'LOGIN MOBILE: $mobile',
+//       );
+
+//       debugPrint(
+//         'LOGIN DISTRICT: $district',
+//       );
+
+//       debugPrint(
+//         'LOGIN DISTRICT CODE: $districtCodeValue',
+//       );
+
+//       debugPrint(
+//         'LOGIN TALUK: $taluk',
+//       );
+
+//       debugPrint(
+//         'LOGIN TALUK CODE: $talukCodeValue',
+//       );
+
+//       // ------------------------------------------------------
+//       // SAVE SESSION
+//       // ------------------------------------------------------
+
+//       await AppSession.saveLoginCredentials(
+//         mobileNumber: mobile,
+//         districtName: district,
+//         districtCode: districtCodeValue,
+//         talukName: taluk,
+//         talukCode: talukCodeValue,
+//       );
+
+//       debugPrint(
+//         'LOGIN SESSION SAVED',
+//       );
+
+//       // ------------------------------------------------------
+//       // DASHBOARD ARGUMENTS
+//       // ------------------------------------------------------
+
+//       final loginData = {
+//         'mobileNumber': mobile,
+//         'districtName': district,
+//         'districtCode': districtCodeValue,
+//         'talukName': taluk,
+//         'talukCode': talukCodeValue,
+//       };
+
+//       // ------------------------------------------------------
+//       // DASHBOARD
+//       // ------------------------------------------------------
+
+//       Get.offAllNamed(
+//         AppRoutes.dashboard,
+//         arguments: loginData,
+//       );
+//     } catch (e) {
+//       debugPrint(
+//         'LOGIN ERROR: $e',
+//       );
+
+//       Get.snackbar(
+//         'Login Failed',
+//         'Unable to complete login. Please try again.',
+//         snackPosition: SnackPosition.BOTTOM,
+//       );
+//     } finally {
+//       isVerifyingOtp.value = false;
+//     }
+//   }
+
+//   // ==========================================================
+//   // CHANGE MOBILE
+//   // ==========================================================
+
+//   void changeMobile() {
+//     otpSent.value = false;
+
+//     receivedOtp = '';
+
+//     enteredOtp.value = '';
+
+//     otpController.clear();
+
+//     isOtpObscured.value = true;
+
+//     resendSeconds.value = 0;
+
+//     _resendTimer?.cancel();
+//   }
+
+//   // ==========================================================
+//   // RESET OTP STATE
+//   // ==========================================================
+
+//   void resetOtpState() {
+//     otpSent.value = false;
+
+//     receivedOtp = '';
+
+//     enteredOtp.value = '';
+
+//     otpController.clear();
+
+//     isOtpObscured.value = true;
+
+//     resendSeconds.value = 0;
+
+//     _resendTimer?.cancel();
+//   }
+
+//   // ==========================================================
+//   // LOGOUT
+//   // ==========================================================
+
+//   Future<void> logout() async {
+//     await AppSession.clearLoginCredentials();
+
+//     debugPrint(
+//       'LOGIN SESSION CLEARED',
+//     );
+
+//     Get.offAllNamed(
+//       AppRoutes.login,
+//     );
+//   }
+
+//   // ==========================================================
+//   // CLOSE
+//   // ==========================================================
+
+//   @override
+//   void onClose() {
+//     _resendTimer?.cancel();
+
+//     mobileController.dispose();
+
+//     otpController.dispose();
+
+//     super.onClose();
+//   }
+// }
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:namma_kaimagga_app/core/services/app_session.dart';
+import 'package:namma_kaimagga_app/services/app_session.dart';
 
 import '../../routes/app_routes.dart';
 import '../../services/api_service.dart';
@@ -1623,6 +3232,55 @@ class LoginController extends GetxController {
 
   final TextEditingController otpController =
       TextEditingController();
+
+  final TextEditingController districtTalukPasswordController =
+      TextEditingController();
+
+  final RxBool passwordVerified = false.obs;
+  final RxBool usedGoogleTestPassword = false.obs;
+  final RxBool isPasswordObscured = true.obs;
+
+  /// The production survey password and Google Play review/test password.
+  static const String surveyPassword = 'Nmkg@1234';
+  static const String googleTestPassword = '1234';
+  static const String googleTestMobile = '9999999999';
+
+  void verifyDistrictTalukPassword() {
+    final value = districtTalukPasswordController.text;
+    if (value == surveyPassword || value == googleTestPassword) {
+      passwordVerified.value = true;
+      usedGoogleTestPassword.value = value == googleTestPassword;
+      if (value == googleTestPassword) {
+        // Prefill the reserved Play review account for faster reviewer testing.
+        mobileController.text = googleTestMobile;
+      }
+      Get.snackbar(
+        'Password Verified',
+        'Password verified. You can continue with your mobile number and OTP.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } else {
+      passwordVerified.value = false;
+      usedGoogleTestPassword.value = false;
+      Get.dialog<void>(
+        AlertDialog(
+          title: const Text('Incorrect Password'),
+          content: const Text('Please enter the correct password.'),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+        barrierDismissible: false,
+      );
+    }
+  }
+
+  void togglePasswordVisibility() {
+    isPasswordObscured.value = !isPasswordObscured.value;
+  }
 
   // ==========================================================
   // DISTRICTS
@@ -1773,6 +3431,10 @@ class LoginController extends GetxController {
     selectedDistrict.value = district;
 
     selectedTaluk.value = null;
+    passwordVerified.value = false;
+    usedGoogleTestPassword.value = false;
+    districtTalukPasswordController.clear();
+    resetOtpState();
 
     taluks.clear();
 
@@ -1851,6 +3513,10 @@ class LoginController extends GetxController {
     Map<String, dynamic>? taluk,
   ) {
     selectedTaluk.value = taluk;
+    passwordVerified.value = false;
+    usedGoogleTestPassword.value = false;
+    districtTalukPasswordController.clear();
+    resetOtpState();
 
     if (taluk == null) {
       return;
@@ -1887,6 +3553,15 @@ class LoginController extends GetxController {
       return;
     }
 
+    if (usedGoogleTestPassword.value && mobileNumber != googleTestMobile) {
+      Get.snackbar(
+        'Test Account Only',
+        'Password 1234 is reserved for the Google test account 9999999999.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
     // --------------------------------------------------------
     // DISTRICT VALIDATION
     // --------------------------------------------------------
@@ -1912,6 +3587,23 @@ class LoginController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
 
+      return;
+    }
+
+    // Google Play review/test account: no SMS can be delivered to the
+    // reserved test number, so use the documented fixed test OTP.
+    if (mobileNumber == googleTestMobile) {
+      receivedOtp = '1234';
+      otpSent.value = true;
+      enteredOtp.value = '';
+      otpController.clear();
+      isOtpObscured.value = true;
+      startResendTimer();
+      Get.snackbar(
+        'Test OTP Ready',
+        'For the Google test account, enter OTP 1234.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
       return;
     }
 
@@ -2400,7 +4092,13 @@ class LoginController extends GetxController {
     mobileController.dispose();
 
     otpController.dispose();
+    districtTalukPasswordController.dispose();
 
     super.onClose();
   }
 }
+
+
+
+
+

@@ -28,6 +28,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:namma_kaimagga_app/widgets/common_footer.dart';
 
 class DisclaimerScreen extends StatelessWidget {
   const DisclaimerScreen({super.key});
@@ -49,6 +50,7 @@ class DisclaimerScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: CommonFooter(),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

@@ -36,7 +36,7 @@ abstract class AppRoutes {
   // SETTINGS / INFORMATION
   // ==========================================================
 
-  static const resetPassword = "/reset-password";
+  static const contact = "/contact";
   static const about = "/about";
   static const disclaimer = "/disclaimer";
 }

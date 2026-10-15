@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:namma_kaimagga_app/widgets/common_footer.dart';
 
 import 'sync_data_controller.dart';
 
@@ -16,18 +17,19 @@ class SyncDataScreen
     return Scaffold(
       backgroundColor:
           const Color(0xFFF5F7FA),
-
+    
       appBar: AppBar(
-        title: const Text(
-          'Sync Data',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: true,
-        elevation: 0,
+      title: const Text(
+        'Sync Data',
+        style: TextStyle(fontWeight: FontWeight.w600),
       ),
-
+      centerTitle: true,
+      backgroundColor: const Color(0xff1565C0),
+      foregroundColor: Colors.white,
+      elevation: 0,
+    ),
+    bottomNavigationBar: CommonFooter(),
+    
       body: Obx(
         () {
           if (controller.isLoading.value &&
@@ -37,65 +39,65 @@ class SyncDataScreen
                   CircularProgressIndicator(),
             );
           }
-
+    
           return RefreshIndicator(
             onRefresh:
                 controller.refresh,
-
+    
             child: ListView(
               physics:
                   const AlwaysScrollableScrollPhysics(),
-
+    
               padding:
                   const EdgeInsets.all(16),
-
+    
               children: [
                 // -------------------------------------------------------------
                 // HEADER
                 // -------------------------------------------------------------
-
+    
                 _buildHeaderCard(),
-
+    
                 const SizedBox(
                   height: 16,
                 ),
-
+    
                 // -------------------------------------------------------------
                 // SUMMARY
                 // -------------------------------------------------------------
-
+    
                 _buildSummaryCard(),
-
+    
                 const SizedBox(
                   height: 16,
                 ),
-
+    
                 // -------------------------------------------------------------
                 // CURRENT STATUS
                 // -------------------------------------------------------------
-
+    
                 _buildStatusCard(),
-
+    
                 const SizedBox(
                   height: 16,
                 ),
-
+    
                 // -------------------------------------------------------------
                 // PENDING RECORDS
                 // -------------------------------------------------------------
-
+    
                 _buildPendingRecordsCard(),
-
+    
                 const SizedBox(
                   height: 20,
                 ),
-
+    
                 // -------------------------------------------------------------
                 // SYNC BUTTON
                 // -------------------------------------------------------------
-
+    
                 _buildSyncButton(),
-
+    
                 const SizedBox(
                   height: 16,
                 ),

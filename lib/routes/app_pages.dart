@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import 'package:namma_kaimagga_app/about_app_screen.dart';
+import 'package:namma_kaimagga_app/contact_us_screen.dart';
 import 'package:namma_kaimagga_app/disclaimer_screen.dart';
 
 import 'package:namma_kaimagga_app/modules/geotagging/geotagging_binding.dart';
@@ -87,8 +88,8 @@ class AppPages {
     // RESET PASSWORD
     // -------------------------------------------------------------------------
     GetPage(
-      name: AppRoutes.resetPassword,
-      page: () => const ResetPasswordScreen(),
+      name: AppRoutes.contact,
+      page: () => const ContactUsScreen()
     ),
 
     // -------------------------------------------------------------------------
