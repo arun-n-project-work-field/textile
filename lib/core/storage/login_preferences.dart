@@ -35,16 +35,11 @@ class LoginPreferences {
     final prefs = await SharedPreferences.getInstance();
 
     return {
-      'mobileNumber':
-          prefs.getString(_mobileNumberKey) ?? '',
-      'districtName':
-          prefs.getString(_districtNameKey) ?? '',
-      'talukName':
-          prefs.getString(_talukNameKey) ?? '',
-      'districtCode':
-          prefs.getString(_districtCodeKey) ?? '',
-      'talukCode':
-          prefs.getString(_talukCodeKey) ?? '',
+      'mobileNumber': prefs.getString(_mobileNumberKey) ?? '',
+      'districtName': prefs.getString(_districtNameKey) ?? '',
+      'talukName': prefs.getString(_talukNameKey) ?? '',
+      'districtCode': prefs.getString(_districtCodeKey) ?? '',
+      'talukCode': prefs.getString(_talukCodeKey) ?? '',
     };
   }
 

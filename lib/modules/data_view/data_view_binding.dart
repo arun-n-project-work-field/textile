@@ -5,8 +5,6 @@ import 'data_view_controller.dart';
 class DataViewBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<DataViewController>(
-      () => DataViewController(),
-    );
+    Get.lazyPut<DataViewController>(() => DataViewController());
   }
 }

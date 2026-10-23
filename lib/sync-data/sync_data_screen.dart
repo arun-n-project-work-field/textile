@@ -15,9 +15,7 @@ class SyncDataScreen extends StatelessWidget {
         centerTitle: true,
         title: const Text(
           "Synchronize Handloom Data",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
 
@@ -25,26 +23,20 @@ class SyncDataScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
             //--------------------------------------------------
             // HEADER
             //--------------------------------------------------
-
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(22),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 gradient: LinearGradient(
-                  colors: [
-                    Colors.green.shade800,
-                    Colors.green.shade500,
-                  ],
+                  colors: [Colors.green.shade800, Colors.green.shade500],
                 ),
               ),
               child: const Column(
                 children: [
-
                   CircleAvatar(
                     radius: 35,
                     backgroundColor: Colors.white,
@@ -71,9 +63,7 @@ class SyncDataScreen extends StatelessWidget {
                   Text(
                     "Upload geo-tagged handloom records,\nproducts and QR codes to the server.",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white70,
-                    ),
+                    style: TextStyle(color: Colors.white70),
                   ),
                 ],
               ),
@@ -84,10 +74,8 @@ class SyncDataScreen extends StatelessWidget {
             //--------------------------------------------------
             // SUMMARY
             //--------------------------------------------------
-
             Row(
               children: [
-
                 Expanded(
                   child: _summaryCard(
                     title: "Handlooms",
@@ -114,7 +102,6 @@ class SyncDataScreen extends StatelessWidget {
 
             Row(
               children: [
-
                 Expanded(
                   child: _summaryCard(
                     title: "Pending",
@@ -161,31 +148,24 @@ class SyncDataScreen extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 14),
                     elevation: 2,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: Padding(
-                      padding:
-                          const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                                                  //--------------------------------------------------
+                          //--------------------------------------------------
                           // HANDLOOM HEADER
                           //--------------------------------------------------
-
                           Row(
                             children: [
-
                               CircleAvatar(
                                 radius: 26,
-                                backgroundColor:
-                                    Colors.green.shade100,
+                                backgroundColor: Colors.green.shade100,
                                 child: Icon(
                                   Icons.home_work,
-                                  color:
-                                      Colors.green.shade800,
+                                  color: Colors.green.shade800,
                                 ),
                               ),
 
@@ -193,15 +173,12 @@ class SyncDataScreen extends StatelessWidget {
 
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-
                                     Text(
                                       "Handloom ID : HLM2026${(index + 1).toString().padLeft(4, '0')}",
                                       style: const TextStyle(
-                                        fontWeight:
-                                            FontWeight.bold,
+                                        fontWeight: FontWeight.bold,
                                         fontSize: 17,
                                       ),
                                     ),
@@ -211,8 +188,7 @@ class SyncDataScreen extends StatelessWidget {
                                     Text(
                                       "Geo Tagged Handloom",
                                       style: TextStyle(
-                                        color:
-                                            Colors.grey.shade700,
+                                        color: Colors.grey.shade700,
                                       ),
                                     ),
                                   ],
@@ -220,23 +196,19 @@ class SyncDataScreen extends StatelessWidget {
                               ),
 
                               Container(
-                                padding:
-                                    const EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   horizontal: 12,
                                   vertical: 6,
                                 ),
                                 decoration: BoxDecoration(
                                   color: Colors.orange.shade100,
-                                  borderRadius:
-                                      BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
                                   "Pending",
                                   style: TextStyle(
-                                    color:
-                                        Colors.orange.shade800,
-                                    fontWeight:
-                                        FontWeight.bold,
+                                    color: Colors.orange.shade800,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
@@ -252,10 +224,8 @@ class SyncDataScreen extends StatelessWidget {
                           //--------------------------------------------------
                           // INFORMATION
                           //--------------------------------------------------
-
                           Row(
                             children: [
-
                               Expanded(
                                 child: _infoTile(
                                   Icons.shopping_bag,
@@ -278,7 +248,6 @@ class SyncDataScreen extends StatelessWidget {
 
                           Row(
                             children: [
-
                               Expanded(
                                 child: _infoTile(
                                   Icons.location_on,
@@ -301,22 +270,16 @@ class SyncDataScreen extends StatelessWidget {
 
                           Container(
                             width: double.infinity,
-                            padding:
-                                const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color:
-                                  Colors.green.shade50,
-                              borderRadius:
-                                  BorderRadius.circular(
-                                      12),
+                              color: Colors.green.shade50,
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
                               children: [
-
                                 Icon(
                                   Icons.check_circle,
-                                  color:
-                                      Colors.green.shade700,
+                                  color: Colors.green.shade700,
                                 ),
 
                                 const SizedBox(width: 10),
@@ -325,18 +288,15 @@ class SyncDataScreen extends StatelessWidget {
                                   child: Text(
                                     "Ready for synchronization",
                                     style: TextStyle(
-                                      color:
-                                          Colors.green.shade800,
-                                      fontWeight:
-                                          FontWeight.w600,
+                                      color: Colors.green.shade800,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ),
 
                                 Icon(
                                   Icons.cloud_upload,
-                                  color:
-                                      Colors.green.shade700,
+                                  color: Colors.green.shade700,
                                 ),
                               ],
                             ),
@@ -348,10 +308,10 @@ class SyncDataScreen extends StatelessWidget {
                 },
               ),
             ),
-                        //--------------------------------------------------
+
+            //--------------------------------------------------
             // SYNC PROGRESS
             //--------------------------------------------------
-
             Card(
               elevation: 3,
               shape: RoundedRectangleBorder(
@@ -361,14 +321,9 @@ class SyncDataScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(18),
                 child: Column(
                   children: [
-
                     Row(
                       children: const [
-
-                        Icon(
-                          Icons.sync,
-                          color: Colors.green,
-                        ),
+                        Icon(Icons.sync, color: Colors.green),
 
                         SizedBox(width: 10),
 
@@ -384,21 +339,13 @@ class SyncDataScreen extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    const LinearProgressIndicator(
-                      value: 0.65,
-                      minHeight: 10,
-                    ),
+                    const LinearProgressIndicator(value: 0.65, minHeight: 10),
 
                     const SizedBox(height: 12),
 
                     const Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                      children: [
-
-                        Text("Uploaded"),
-                        Text("8 / 12"),
-                      ],
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text("Uploaded"), Text("8 / 12")],
                     ),
                   ],
                 ),
@@ -410,7 +357,6 @@ class SyncDataScreen extends StatelessWidget {
             //--------------------------------------------------
             // SYNC BUTTON
             //--------------------------------------------------
-
             SizedBox(
               width: double.infinity,
               height: 58,
@@ -418,25 +364,19 @@ class SyncDataScreen extends StatelessWidget {
                 icon: const Icon(Icons.cloud_upload),
                 label: const Text(
                   "Sync Now",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () {
-
                   showDialog(
                     context: context,
                     builder: (_) {
                       return AlertDialog(
-
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20),
                         ),
 
                         title: const Center(
@@ -450,13 +390,11 @@ class SyncDataScreen extends StatelessWidget {
                         content: const Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-
                             Text(
                               "Synchronization Completed",
                               style: TextStyle(
                                 fontSize: 20,
-                                fontWeight:
-                                    FontWeight.bold,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
 
@@ -467,8 +405,7 @@ class SyncDataScreen extends StatelessWidget {
                                 Icons.home_work,
                                 color: Colors.green,
                               ),
-                              title: Text(
-                                  "12 Handloom Records Uploaded"),
+                              title: Text("12 Handloom Records Uploaded"),
                             ),
 
                             ListTile(
@@ -476,17 +413,12 @@ class SyncDataScreen extends StatelessWidget {
                                 Icons.shopping_bag,
                                 color: Colors.orange,
                               ),
-                              title:
-                                  Text("53 Products Uploaded"),
+                              title: Text("53 Products Uploaded"),
                             ),
 
                             ListTile(
-                              leading: Icon(
-                                Icons.qr_code,
-                                color: Colors.blue,
-                              ),
-                              title:
-                                  Text("53 QR Codes Linked"),
+                              leading: Icon(Icons.qr_code, color: Colors.blue),
+                              title: Text("53 QR Codes Linked"),
                             ),
 
                             ListTile(
@@ -494,21 +426,17 @@ class SyncDataScreen extends StatelessWidget {
                                 Icons.cloud_done,
                                 color: Colors.green,
                               ),
-                              title: Text(
-                                  "Successfully Synced"),
+                              title: Text("Successfully Synced"),
                             ),
                           ],
                         ),
 
                         actions: [
-
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-
                                 Navigator.pop(context);
-
                               },
                               child: const Text("OK"),
                             ),
@@ -540,21 +468,14 @@ class SyncDataScreen extends StatelessWidget {
   }) {
     return Card(
       elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Column(
           children: [
-
             CircleAvatar(
-              backgroundColor:
-                  color.withOpacity(0.15),
-              child: Icon(
-                icon,
-                color: color,
-              ),
+              backgroundColor: color.withOpacity(0.15),
+              child: Icon(icon, color: color),
             ),
 
             const SizedBox(height: 10),
@@ -570,12 +491,7 @@ class SyncDataScreen extends StatelessWidget {
 
             const SizedBox(height: 5),
 
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
           ],
         ),
       ),
@@ -586,34 +502,20 @@ class SyncDataScreen extends StatelessWidget {
   // INFO TILE
   //--------------------------------------------------
 
-  Widget _infoTile(
-    IconData icon,
-    String title,
-    String value,
-  ) {
+  Widget _infoTile(IconData icon, String title, String value) {
     return Row(
       children: [
-
-        Icon(
-          icon,
-          color: Colors.green,
-          size: 22,
-        ),
+        Icon(icon, color: Colors.green, size: 22),
 
         const SizedBox(width: 10),
 
         Expanded(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Text(
                 title,
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 13,
-                ),
+                style: const TextStyle(color: Colors.grey, fontSize: 13),
               ),
 
               const SizedBox(height: 4),

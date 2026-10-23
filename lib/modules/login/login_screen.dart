@@ -1080,7 +1080,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -1089,340 +1088,355 @@ import 'login_controller.dart';
 import '../../widgets/common_footer.dart';
 
 class LoginScreen extends GetView<LoginController> {
-  const LoginScreen({
-    super.key,
-  });
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF5F7FA),
-      bottomNavigationBar: const CommonFooter(),
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(
+            'assets/images/background.jpg',
+          ), // Or NetworkImage('url')
+          fit: BoxFit.cover, // Ensures the image fills the entire screen
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        bottomNavigationBar: const CommonFooter(),
 
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
 
-            child: Container(
-              constraints: const BoxConstraints(
-                maxWidth: 430,
-              ),
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 430),
 
-              padding: const EdgeInsets.all(28),
+                padding: const EdgeInsets.all(28),
 
-              decoration: BoxDecoration(
-                color: Colors.white,
+                decoration: BoxDecoration(
+                  color: Colors.white,
 
-                borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(24),
 
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(
-                      alpha: 0.08,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
                     ),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
-              child: Column(
-                children: [
+                child: Column(
+                  children: [
+                    // ==================================================
+                    // LOGO
+                    // ==================================================
+                    const CircleAvatar(
+                      radius: 45,
 
-                  // ==================================================
-                  // LOGO
-                  // ==================================================
+                      backgroundColor: Color(0xff1565C0),
 
-                  const CircleAvatar(
-                    radius: 45,
-
-                    backgroundColor:
-                        Color(0xff1565C0),
-
-                    child: Icon(
-                      Icons.handshake,
-                      color: Colors.white,
-                      size: 42,
+                      child: Icon(
+                        Icons.handshake,
+                        color: Colors.white,
+                        size: 42,
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(
-                    height: 20,
-                  ),
+                    const SizedBox(height: 20),
 
-                  // ==================================================
-                  // APP NAME
-                  // ==================================================
+                    // ==================================================
+                    // APP NAME
+                    // ==================================================
+                    const Text(
+                      'Namma Kaimagga',
 
-                  const Text(
-                    'Namma Kaimagga',
-
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(
-                    height: 8,
-                  ),
+                    const SizedBox(height: 8),
 
-                  Text(
-                    'Handloom Survey Application',
+                    Text(
+                      'Handloom Survey Application',
 
-                    style: TextStyle(
-                      color: Colors.grey.shade700,
+                      style: TextStyle(color: Colors.grey.shade700),
                     ),
-                  ),
 
-                  const SizedBox(
-                    height: 35,
-                  ),
+                    const SizedBox(height: 35),
 
-                  // ==================================================
-                  // DISTRICT DROPDOWN
-                  // ==================================================
+                    // ==================================================
+                    // DISTRICT DROPDOWN
+                    // ==================================================
+                    Obx(() {
+                      final bool loading = controller.isLoadingDistricts.value;
+                      final String error = controller.districtError.value;
 
-                  Obx(
-                    () {
-                      final bool loading =
-                          controller
-                              .isLoadingDistricts
-                              .value;
-
-                      return DropdownButtonFormField<
-                          Map<String, dynamic>>(
-                        initialValue:
-                            controller.selectedDistrict.value,
-
-                        isExpanded: true,
-
-                        decoration:
-                            InputDecoration(
-                          prefixIcon:
-                              const Icon(
-                            Icons.location_city,
-                          ),
-
-                          labelText:
-                              'District',
-
-                          hintText:
-                              loading
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          DropdownButtonFormField<Map<String, dynamic>>(
+                            initialValue: controller.selectedDistrict.value,
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.location_city),
+                              labelText: 'District',
+                              hintText: loading
                                   ? 'Loading districts...'
                                   : 'Select District',
-
-                          filled: true,
-
-                          fillColor:
-                              Colors.grey.shade100,
-
-                          border:
-                              OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(
-                              14,
-                            ),
-                          ),
-                        ),
-
-                        items: loading
-                            ? null
-                            : controller.districts
-                                .map(
-                                (
-                                  district,
-                                ) {
-                                  return DropdownMenuItem<
-                                      Map<String, dynamic>>(
-                                    value: district,
-
-                                    child: Text(
-                                      district[
-                                              'Name']
-                                          ?.toString()
-                                          .trim() ??
-                                          '',
-                                    ),
-                                  );
-                                },
-                              ).toList(),
-
-                        onChanged:
-                            loading
-                                ? null
-                                : controller
-                                    .onDistrictSelected,
-                      );
-                    },
-                  ),
-
-                  // ==================================================
-                  // TALUK DROPDOWN
-                  // ==================================================
-
-                  Obx(
-                    () {
-                      // Don't show Taluk until District is selected
-                      if (controller
-                              .selectedDistrict
-                              .value ==
-                          null) {
-                        return const SizedBox
-                            .shrink();
-                      }
-
-                      final bool loading =
-                          controller
-                              .isLoadingTaluks
-                              .value;
-
-                      return Padding(
-                        padding:
-                            const EdgeInsets.only(
-                          top: 15,
-                        ),
-
-                        child:
-                            DropdownButtonFormField<
-                                Map<String, dynamic>>(
-                          value:
-                              controller
-                                  .selectedTaluk
-                                  .value,
-
-                          isExpanded: true,
-
-                          decoration:
-                              InputDecoration(
-                            prefixIcon:
-                                const Icon(
-                              Icons.location_on,
-                            ),
-
-                            labelText:
-                                'Taluk',
-
-                            hintText:
-                                loading
-                                    ? 'Loading taluks...'
-                                    : 'Select Taluk',
-
-                            filled: true,
-
-                            fillColor:
-                                Colors.grey.shade100,
-
-                            border:
-                                OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius
-                                      .circular(
-                                14,
-                              ),
-                            ),
-                          ),
-
-                          items: loading
-                              ? null
-                              : controller
-                                  .taluks
-                                  .map(
-                                  (
-                                    taluk,
-                                  ) {
-                                    return DropdownMenuItem<
-                                        Map<String, dynamic>>(
-                                      value:
-                                          taluk,
-
-                                      child: Text(
-                                        taluk[
-                                                'Name']
-                                            ?.toString()
-                                            .trim() ??
-                                            '',
-                                      ),
-                                    );
-                                  },
-                                ).toList(),
-
-                          onChanged:
-                              loading
-                                  ? null
-                                  : controller
-                                      .onTalukSelected,
-                        ),
-                      );
-                    },
-                  ),
-
-                  // ==================================================
-                  // DISTRICT/TALUK PASSWORD
-                  // ==================================================
-
-                  Obx(() {
-                    if (controller.selectedTaluk.value == null ||
-                        controller.passwordVerified.value) {
-                      return const SizedBox.shrink();
-                    }
-
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 22),
-                      child: Column(
-                        children: [
-                          TextField(
-                            controller: controller.districtTalukPasswordController,
-                            obscureText: controller.isPasswordObscured.value,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.lock_outline),
-                              labelText: 'Password',
-                              hintText: 'Enter password',
                               filled: true,
                               fillColor: Colors.grey.shade100,
-                              suffixIcon: IconButton(
-                                onPressed: controller.togglePasswordVisibility,
-                                icon: Icon(controller.isPasswordObscured.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                              ),
+                              suffixIcon: loading
+                                  ? const Padding(
+                                      padding: EdgeInsets.all(12),
+                                      child: SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                    )
+                                  : IconButton(
+                                      tooltip: 'Refresh districts',
+                                      onPressed: () => controller.loadDistricts(
+                                        manualRefresh: true,
+                                      ),
+                                      icon: const Icon(Icons.refresh),
+                                    ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(14),
                               ),
                             ),
+                            items: loading
+                                ? null
+                                : controller.districts.map((district) {
+                                    return DropdownMenuItem<
+                                      Map<String, dynamic>
+                                    >(
+                                      value: district,
+                                      child: Text(
+                                        district['Name']?.toString().trim() ??
+                                            '',
+                                      ),
+                                    );
+                                  }).toList(),
+                            onChanged: loading
+                                ? null
+                                : controller.onDistrictSelected,
                           ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: controller.verifyDistrictTalukPassword,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xff1565C0),
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
+                          if (error.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.error_outline,
+                                  color: Colors.red,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    error,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: loading
+                                      ? null
+                                      : () => controller.loadDistricts(
+                                          manualRefresh: true,
+                                        ),
+                                  child: const Text('Retry'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ],
+                      );
+                    }),
+
+                    // ==================================================
+                    // TALUK DROPDOWN
+                    // ==================================================
+                    Obx(() {
+                      // Don't show Taluk until District is selected
+                      if (controller.selectedDistrict.value == null) {
+                        return const SizedBox.shrink();
+                      }
+
+                      final bool loading = controller.isLoadingTaluks.value;
+                      final String error = controller.talukError.value;
+                      final String districtCode = controller.districtCode;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            DropdownButtonFormField<Map<String, dynamic>>(
+                              initialValue: controller.selectedTaluk.value,
+                              isExpanded: true,
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.location_on),
+                                labelText: 'Taluk',
+                                hintText: loading
+                                    ? 'Loading taluks...'
+                                    : 'Select Taluk',
+                                filled: true,
+                                fillColor: Colors.grey.shade100,
+                                suffixIcon: loading
+                                    ? const Padding(
+                                        padding: EdgeInsets.all(12),
+                                        child: SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                      )
+                                    : IconButton(
+                                        tooltip: 'Refresh taluks',
+                                        onPressed: loading
+                                            ? null
+                                            : controller.refreshTaluks,
+                                        icon: const Icon(Icons.refresh),
+                                      ),
+                                border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                               ),
-                              child: const Text(
-                                'Verify Password',
-                                style: TextStyle(fontWeight: FontWeight.w600),
+                              items: loading
+                                  ? null
+                                  : controller.taluks.map((taluk) {
+                                      return DropdownMenuItem<
+                                        Map<String, dynamic>
+                                      >(
+                                        value: taluk,
+                                        child: Text(
+                                          taluk['Name']?.toString().trim() ??
+                                              '',
+                                        ),
+                                      );
+                                    }).toList(),
+                              onChanged: loading
+                                  ? null
+                                  : controller.onTalukSelected,
+                            ),
+                            if (error.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(
+                                    Icons.error_outline,
+                                    color: Colors.red,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: Text(
+                                      error,
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: loading || districtCode.isEmpty
+                                        ? null
+                                        : () => controller.loadTaluks(
+                                            districtCode,
+                                            manualRefresh: true,
+                                          ),
+                                    child: const Text('Retry'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ],
+                        ),
+                      );
+                    }),
+
+                    // ==================================================
+                    // DISTRICT/TALUK PASSWORD
+                    // ==================================================
+                    Obx(() {
+                      if (controller.selectedTaluk.value == null ||
+                          controller.passwordVerified.value) {
+                        return const SizedBox.shrink();
+                      }
+
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 22),
+                        child: Column(
+                          children: [
+                            TextField(
+                              controller:
+                                  controller.districtTalukPasswordController,
+                              obscureText: controller.isPasswordObscured.value,
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.lock_outline),
+                                labelText: 'Password',
+                                hintText: 'Enter password',
+                                filled: true,
+                                fillColor: Colors.grey.shade100,
+                                suffixIcon: IconButton(
+                                  onPressed:
+                                      controller.togglePasswordVisibility,
+                                  icon: Icon(
+                                    controller.isPasswordObscured.value
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
+                            const SizedBox(height: 16),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed:
+                                    controller.verifyDistrictTalukPassword,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xff1565C0),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Verify Password',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
 
-                  // ==================================================
-                  // MOBILE + OTP
-                  // ONLY AFTER TALUK IS SELECTED
-                  // ==================================================
-
-                  Obx(
-                    () {
+                    // ==================================================
+                    // MOBILE + OTP
+                    // ONLY AFTER TALUK IS SELECTED
+                    // ==================================================
+                    Obx(() {
                       if (controller.selectedTaluk.value == null ||
                           !controller.passwordVerified.value) {
                         return const SizedBox.shrink();
@@ -1430,434 +1444,265 @@ class LoginScreen extends GetView<LoginController> {
 
                       return Column(
                         children: [
-
-                          const SizedBox(
-                            height: 25,
-                          ),
+                          const SizedBox(height: 25),
 
                           // ==========================================
                           // MOBILE NUMBER
                           // ==========================================
-
                           TextField(
-                            controller:
-                                controller
-                                    .mobileController,
+                            controller: controller.mobileController,
 
-                            keyboardType:
-                                TextInputType.phone,
+                            keyboardType: TextInputType.phone,
 
                             maxLength: 10,
 
                             inputFormatters: [
-                              FilteringTextInputFormatter
-                                  .digitsOnly,
+                              FilteringTextInputFormatter.digitsOnly,
 
-                              LengthLimitingTextInputFormatter(
-                                10,
-                              ),
+                              LengthLimitingTextInputFormatter(10),
                             ],
 
-                            decoration:
-                                InputDecoration(
+                            decoration: InputDecoration(
                               counterText: '',
 
-                              prefixIcon:
-                                  const Icon(
-                                Icons.phone_android,
-                              ),
+                              prefixIcon: const Icon(Icons.phone_android),
 
-                              labelText:
-                                  'Mobile Number',
+                              labelText: 'Mobile Number',
 
-                              hintText:
-                                  'Enter 10 digit mobile number',
+                              hintText: 'Enter 10 digit mobile number',
 
                               filled: true,
 
-                              fillColor:
-                                  Colors.grey.shade100,
+                              fillColor: Colors.grey.shade100,
 
-                              border:
-                                  OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius
-                                        .circular(
-                                  14,
-                                ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
                               ),
                             ),
                           ),
 
-                          const SizedBox(
-                            height: 15,
-                          ),
+                          const SizedBox(height: 15),
 
                           // ==========================================
                           // SEND / RESEND OTP
                           // ==========================================
+                          Obx(() {
+                            final bool timerRunning =
+                                controller.resendSeconds.value > 0;
 
-                          Obx(
-                            () {
-                              final bool timerRunning =
-                                  controller
-                                          .resendSeconds
-                                          .value >
-                                      0;
+                            final bool loading = controller.isLoading.value;
 
-                              final bool loading =
-                                  controller
-                                      .isLoading
-                                      .value;
+                            final bool disabled = loading || timerRunning;
 
-                              final bool disabled =
-                                  loading ||
-                                      timerRunning;
+                            return SizedBox(
+                              width: double.infinity,
 
-                              return SizedBox(
-                                width:
-                                    double.infinity,
+                              height: 50,
 
-                                height: 50,
+                              child: ElevatedButton.icon(
+                                onPressed: disabled ? null : controller.sendOtp,
 
-                                child:
-                                    ElevatedButton.icon(
-                                  onPressed:
-                                      disabled
-                                          ? null
-                                          : controller
-                                              .sendOtp,
+                                icon: loading
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
 
-                                  icon:
-                                      loading
-                                          ? const SizedBox(
-                                              width: 20,
-                                              height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
 
-                                              child:
-                                                  CircularProgressIndicator(
-                                                strokeWidth:
-                                                    2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : const Icon(Icons.sms),
 
-                                                color:
-                                                    Colors.white,
-                                              ),
-                                            )
-                                          : const Icon(
-                                              Icons.sms,
-                                            ),
+                                label: Text(
+                                  loading
+                                      ? 'Sending OTP...'
+                                      : timerRunning
+                                      ? 'Resend OTP in ${controller.resendSeconds.value} secs'
+                                      : controller.otpSent.value
+                                      ? 'Resend OTP'
+                                      : 'Send OTP',
+                                ),
 
-                                  label: Text(
-                                    loading
-                                        ? 'Sending OTP...'
-                                        : timerRunning
-                                            ? 'Resend OTP in ${controller.resendSeconds.value} secs'
-                                            : controller
-                                                    .otpSent
-                                                    .value
-                                                ? 'Resend OTP'
-                                                : 'Send OTP',
-                                  ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xff1565C0),
 
-                                  style:
-                                      ElevatedButton
-                                          .styleFrom(
-                                    backgroundColor:
-                                        const Color(
-                                      0xff1565C0,
-                                    ),
+                                  disabledBackgroundColor: Colors.grey.shade400,
 
-                                    disabledBackgroundColor:
-                                        Colors.grey
-                                            .shade400,
+                                  foregroundColor: Colors.white,
 
-                                    foregroundColor:
-                                        Colors.white,
+                                  disabledForegroundColor: Colors.white,
 
-                                    disabledForegroundColor:
-                                        Colors.white,
-
-                                    shape:
-                                        RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius
-                                              .circular(
-                                        14,
-                                      ),
-                                    ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14),
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          }),
 
                           // ==========================================
                           // OTP SECTION
                           // ==========================================
+                          Obx(() {
+                            if (!controller.otpSent.value) {
+                              return const SizedBox.shrink();
+                            }
 
-                          Obx(
-                            () {
-                              if (!controller
-                                  .otpSent
-                                  .value) {
-                                return const SizedBox
-                                    .shrink();
-                              }
+                            final String otp = controller.enteredOtp.value;
 
-                              final String otp =
-                                  controller
-                                      .enteredOtp
-                                      .value;
+                            final bool otpValid =
+                                otp.length == 4 &&
+                                RegExp(r'^[0-9]{4}$').hasMatch(otp);
 
-                              final bool otpValid =
-                                  otp.length == 4 &&
-                                      RegExp(
-                                        r'^[0-9]{4}$',
-                                      ).hasMatch(
-                                        otp,
-                                      );
+                            final bool verifying =
+                                controller.isVerifyingOtp.value;
 
-                              final bool verifying =
-                                  controller
-                                      .isVerifyingOtp
-                                      .value;
+                            return Column(
+                              children: [
+                                const SizedBox(height: 25),
 
-                              return Column(
-                                children: [
+                                // ==================================
+                                // OTP TEXT FIELD
+                                // ==================================
+                                TextField(
+                                  controller: controller.otpController,
 
-                                  const SizedBox(
-                                    height: 25,
+                                  keyboardType: TextInputType.number,
+
+                                  maxLength: 4,
+
+                                  obscureText: controller.isOtpObscured.value,
+
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+
+                                    LengthLimitingTextInputFormatter(4),
+                                  ],
+
+                                  onChanged: controller.onOtpChanged,
+
+                                  decoration: InputDecoration(
+                                    counterText: '',
+
+                                    prefixIcon: const Icon(Icons.lock_outline),
+
+                                    suffixIcon: IconButton(
+                                      onPressed: controller.toggleOtpVisibility,
+
+                                      icon: Icon(
+                                        controller.isOtpObscured.value
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                    ),
+
+                                    labelText: 'OTP',
+
+                                    hintText: 'Enter 4 digit OTP',
+
+                                    filled: true,
+
+                                    fillColor: Colors.grey.shade100,
+
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
                                   ),
+                                ),
 
-                                  // ==================================
-                                  // OTP TEXT FIELD
-                                  // ==================================
+                                // ==================================
+                                // OTP VALIDATION MESSAGE
+                                // ==================================
+                                if (otp.isNotEmpty && otp.length < 4)
+                                  const Align(
+                                    alignment: Alignment.centerLeft,
 
-                                  TextField(
-                                    controller:
-                                        controller
-                                            .otpController,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 6, left: 4),
 
-                                    keyboardType:
-                                        TextInputType
-                                            .number,
+                                      child: Text(
+                                        'OTP must be exactly 4 digits.',
 
-                                    maxLength: 4,
-
-                                    obscureText:
-                                        controller
-                                            .isOtpObscured
-                                            .value,
-
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter
-                                          .digitsOnly,
-
-                                      LengthLimitingTextInputFormatter(
-                                        4,
-                                      ),
-                                    ],
-
-                                    onChanged:
-                                        controller
-                                            .onOtpChanged,
-
-                                    decoration:
-                                        InputDecoration(
-                                      counterText:
-                                          '',
-
-                                      prefixIcon:
-                                          const Icon(
-                                        Icons
-                                            .lock_outline,
-                                      ),
-
-                                      suffixIcon:
-                                          IconButton(
-                                        onPressed:
-                                            controller
-                                                .toggleOtpVisibility,
-
-                                        icon:
-                                            Icon(
-                                          controller
-                                                  .isOtpObscured
-                                                  .value
-                                              ? Icons
-                                                  .visibility
-                                              : Icons
-                                                  .visibility_off,
-                                        ),
-                                      ),
-
-                                      labelText:
-                                          'OTP',
-
-                                      hintText:
-                                          'Enter 4 digit OTP',
-
-                                      filled:
-                                          true,
-
-                                      fillColor:
-                                          Colors
-                                              .grey
-                                              .shade100,
-
-                                      border:
-                                          OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius
-                                                .circular(
-                                          14,
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 12,
                                         ),
                                       ),
                                     ),
                                   ),
 
-                                  // ==================================
-                                  // OTP VALIDATION MESSAGE
-                                  // ==================================
+                                const SizedBox(height: 20),
 
-                                  if (otp.isNotEmpty &&
-                                      otp.length < 4)
-                                    const Align(
-                                      alignment:
-                                          Alignment
-                                              .centerLeft,
+                                // ==================================
+                                // LOGIN BUTTON
+                                // ==================================
+                                SizedBox(
+                                  width: double.infinity,
 
-                                      child:
-                                          Padding(
-                                        padding:
-                                            EdgeInsets
-                                                .only(
-                                          top: 6,
-                                          left: 4,
-                                        ),
+                                  height: 55,
 
-                                        child: Text(
-                                          'OTP must be exactly 4 digits.',
+                                  child: ElevatedButton(
+                                    onPressed: (!otpValid || verifying)
+                                        ? null
+                                        : controller.login,
 
-                                          style:
-                                              TextStyle(
-                                            color:
-                                                Colors.red,
-                                            fontSize:
-                                                12,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xff1565C0),
+
+                                      disabledBackgroundColor:
+                                          Colors.grey.shade400,
+
+                                      foregroundColor: Colors.white,
+
+                                      disabledForegroundColor: Colors.white,
+
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                    ),
+
+                                    child: verifying
+                                        ? const SizedBox(
+                                            width: 22,
+                                            height: 22,
+
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : const Text(
+                                            'LOGIN',
+
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    ),
-
-                                  const SizedBox(
-                                    height: 20,
                                   ),
+                                ),
 
-                                  // ==================================
-                                  // LOGIN BUTTON
-                                  // ==================================
+                                const SizedBox(height: 10),
 
-                                  SizedBox(
-                                    width:
-                                        double.infinity,
+                                // ==================================
+                                // CHANGE MOBILE
+                                // ==================================
+                                TextButton(
+                                  onPressed: controller.changeMobile,
 
-                                    height: 55,
-
-                                    child:
-                                        ElevatedButton(
-                                      onPressed:
-                                          (!otpValid ||
-                                                  verifying)
-                                              ? null
-                                              : controller
-                                                  .login,
-
-                                      style:
-                                          ElevatedButton
-                                              .styleFrom(
-                                        backgroundColor:
-                                            const Color(0xff1565C0),
-
-                                        disabledBackgroundColor:
-                                            Colors.grey
-                                                .shade400,
-
-                                        foregroundColor:
-                                            Colors.white,
-
-                                        disabledForegroundColor:
-                                            Colors.white,
-
-                                        shape:
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius
-                                                  .circular(
-                                            15,
-                                          ),
-                                        ),
-                                      ),
-
-                                      child:
-                                          verifying
-                                              ? const SizedBox(
-                                                  width:
-                                                      22,
-                                                  height:
-                                                      22,
-
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    strokeWidth:
-                                                        2,
-
-                                                    color:
-                                                        Colors.white,
-                                                  ),
-                                                )
-                                              : const Text(
-                                                  'LOGIN',
-
-                                                  style:
-                                                      TextStyle(
-                                                    fontSize:
-                                                        17,
-                                                    fontWeight:
-                                                        FontWeight
-                                                            .bold,
-                                                  ),
-                                                ),
-                                    ),
-                                  ),
-
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-
-                                  // ==================================
-                                  // CHANGE MOBILE
-                                  // ==================================
-
-                                  TextButton(
-                                    onPressed:
-                                        controller
-                                            .changeMobile,
-
-                                    child:
-                                        const Text(
-                                      'Change Mobile Number',
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
+                                  child: const Text('Change Mobile Number'),
+                                ),
+                              ],
+                            );
+                          }),
                         ],
                       );
-                    },
-                  ),
-                ],
+                    }),
+                  ],
+                ),
               ),
             ),
           ),

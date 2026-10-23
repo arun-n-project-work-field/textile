@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:namma_kaimagga_app/widgets/common_footer.dart';
 
 class ContactUsScreen extends StatelessWidget {
@@ -9,81 +8,92 @@ class ContactUsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar:AppBar(
-        title: const Text(
-          "Contact Us",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(
+            'assets/images/background.jpg',
+          ), // Or NetworkImage('url')
+          fit: BoxFit.cover, // Ensures the image fills the entire screen
         ),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-        centerTitle: true,
-        elevation: 0,
       ),
-      bottomNavigationBar: CommonFooter(),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          Container(
-            padding: const EdgeInsets.all(22),
-            decoration: BoxDecoration(
-              color: blue.withValues(alpha: 0.07),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: blue.withValues(alpha: 0.18)),
-            ),
-            child: const Column(
-              children: [
-                CircleAvatar(
-                  radius: 32,
-                  backgroundColor: blue,
-                  child: Icon(
-                    Icons.contact_phone,
-                    color: Colors.white,
-                    size: 32,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          title: const Text(
+            "Contact Us",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          centerTitle: true,
+          elevation: 0,
+        ),
+        bottomNavigationBar: CommonFooter(),
+        body: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            Container(
+              padding: const EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: blue.withValues(alpha: 0.18)),
+              ),
+              child: const Column(
+                children: [
+                  CircleAvatar(
+                    radius: 32,
+                    backgroundColor: blue,
+                    child: Icon(
+                      Icons.contact_phone,
+                      color: Colors.white,
+                      size: 32,
+                    ),
                   ),
-                ),
-                SizedBox(height: 14),
-                Text(
-                  'Karnataka State Remote Sensing Applications Centre',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: blue,
+                  SizedBox(height: 14),
+                  Text(
+                    'Karnataka State Remote Sensing Applications Centre',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: blue,
+                    ),
                   ),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  'Department of Personnel and Administrative Reforms'
-                  ' (e-Governance), Government of Karnataka',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                ),
-              ],
+                  SizedBox(height: 5),
+                  Text(
+                    'Department of Personnel and Administrative Reforms'
+                    ' (e-Governance), Government of Karnataka',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 18),
-          _ContactCard(
-            icon: Icons.location_on_outlined,
-            title: 'Address',
-            value:
-                'Doora Samvedi Bhavana, Major Sandeep Unnikrishnan Road, '
-                'Doddabettahalli, Bengaluru-560 097.',
-          ),
-          const SizedBox(height: 12),
-          _ContactCard(
-            icon: Icons.phone_outlined,
-            title: 'Telephone',
-            value: '+91-80-2972 0557',
-            onTap: () => Get.snackbar('Telephone', '+91-80-2972 0557'),
-          ),
-          const SizedBox(height: 12),
-          _ContactCard(
-            icon: Icons.email_outlined,
-            title: 'Email',
-            value: 'ksrsac-gok@karnataka.gov.in',
-          ),
-        ],
+            const SizedBox(height: 18),
+            _ContactCard(
+              icon: Icons.location_on_outlined,
+              title: 'Address',
+              value:
+                  'Doora Samvedi Bhavana, Major Sandeep Unnikrishnan Road, '
+                  'Doddabettahalli, Bengaluru-560 097.',
+            ),
+            const SizedBox(height: 12),
+            _ContactCard(
+              icon: Icons.phone_outlined,
+              title: 'Telephone',
+              value: '+91-80-2972 0557',
+              // onTap: () => Get.snackbar('Telephone', '+91-80-2972 0557'),
+            ),
+            const SizedBox(height: 12),
+            _ContactCard(
+              icon: Icons.email_outlined,
+              title: 'Email',
+              value: 'ksrsac-gok@karnataka.gov.in',
+            ),
+          ],
+        ),
       ),
     );
   }

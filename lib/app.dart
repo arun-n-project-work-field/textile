@@ -19,4 +19,3 @@ class NammaKaimaggaApp extends StatelessWidget {
     );
   }
 }
-

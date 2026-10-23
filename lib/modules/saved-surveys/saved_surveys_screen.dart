@@ -6,9 +6,7 @@ class SavedSurveyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Saved Surveys"),
-      ),
+      appBar: AppBar(title: const Text("Saved Surveys")),
 
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
@@ -18,7 +16,6 @@ class SavedSurveyScreen extends StatelessWidget {
 
       body: Column(
         children: [
-
           Padding(
             padding: const EdgeInsets.all(16),
             child: TextField(
@@ -45,9 +42,7 @@ class SavedSurveyScreen extends StatelessWidget {
                 SizedBox(width: 10),
                 Text(
                   "Total Offline Records : 12",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -72,24 +67,13 @@ class SavedSurveyScreen extends StatelessWidget {
 
                     title: Text("Pechan ID : 1000${index + 1}"),
 
-                    subtitle: const Text(
-                      "Ramesh Kumar\nCotton Weaver",
-                    ),
+                    subtitle: const Text("Ramesh Kumar\nCotton Weaver"),
 
                     trailing: PopupMenuButton(
                       itemBuilder: (context) => const [
-                        PopupMenuItem(
-                          value: 1,
-                          child: Text("View"),
-                        ),
-                        PopupMenuItem(
-                          value: 2,
-                          child: Text("Delete"),
-                        ),
-                        PopupMenuItem(
-                          value: 3,
-                          child: Text("Sync"),
-                        ),
+                        PopupMenuItem(value: 1, child: Text("View")),
+                        PopupMenuItem(value: 2, child: Text("Delete")),
+                        PopupMenuItem(value: 3, child: Text("Sync")),
                       ],
                     ),
                   ),

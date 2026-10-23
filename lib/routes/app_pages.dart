@@ -19,8 +19,6 @@ import 'package:namma_kaimagga_app/modules/splash/splash_screen.dart';
 import 'package:namma_kaimagga_app/modules/sync-data/sync_data_controller.dart';
 import 'package:namma_kaimagga_app/modules/sync-data/sync_data_screen.dart';
 
-import 'package:namma_kaimagga_app/reset_password_screen.dart';
-
 import 'package:namma_kaimagga_app/sync-status/sync_status_binding.dart';
 import 'package:namma_kaimagga_app/sync-status/sync_status_screen.dart';
 
@@ -87,10 +85,7 @@ class AppPages {
     // -------------------------------------------------------------------------
     // RESET PASSWORD
     // -------------------------------------------------------------------------
-    GetPage(
-      name: AppRoutes.contact,
-      page: () => const ContactUsScreen()
-    ),
+    GetPage(name: AppRoutes.contact, page: () => const ContactUsScreen()),
 
     // -------------------------------------------------------------------------
     // ABOUT APP

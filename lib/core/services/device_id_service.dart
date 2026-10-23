@@ -19,10 +19,7 @@ class DeviceIdService {
 
     final id = _uuid.v4();
 
-    await prefs.setString(
-      _key,
-      id,
-    );
+    await prefs.setString(_key, id);
 
     return id;
   }

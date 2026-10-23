@@ -1,4820 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-
-// import 'geotagging_controller.dart';
-
-// class GeoTaggingScreen extends StatelessWidget {
-//   GeoTaggingScreen({super.key});
-
-//   final GeoTaggingController controller = Get.find<GeoTaggingController>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xffF4F7FA),
-
-//       appBar: AppBar(
-//         elevation: 0,
-//         backgroundColor: Colors.green.shade800,
-//         foregroundColor: Colors.white,
-//         centerTitle: true,
-//         title: const Text(
-//           "Geo Tagging",
-//           style: TextStyle(fontWeight: FontWeight.bold),
-//         ),
-//       ),
-
-//       body: SafeArea(
-//         child: SingleChildScrollView(
-//           padding: const EdgeInsets.all(16),
-//           child: Column(
-//             children: [
-//               Container(
-//                 height: 300,
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(18),
-//                   color: Colors.white,
-//                   boxShadow: [
-//                     BoxShadow(color: Colors.grey.shade300, blurRadius: 10),
-//                   ],
-//                 ),
-//                 child: Stack(
-//                   children: [
-//                     Container(
-//                       decoration: BoxDecoration(
-//                         borderRadius: BorderRadius.circular(18),
-//                         color: Colors.grey.shade300,
-//                       ),
-//                       child: const Center(
-//                         child: Text(
-//                           "ArcGIS Map Here",
-//                           style: TextStyle(fontSize: 18),
-//                         ),
-//                       ),
-//                     ),
-//                     Positioned(
-//                       left: 15,
-//                       top: 15,
-//                       child: Column(
-//                         children: [
-//                           FloatingActionButton.small(
-//                             heroTag: "gps",
-//                             backgroundColor: Colors.green,
-//                             onPressed: controller.getCurrentLocation,
-//                             child: const Icon(Icons.my_location),
-//                           ),
-//                           const SizedBox(height: 12),
-//                           FloatingActionButton.small(
-//                             heroTag: "layer",
-//                             backgroundColor: Colors.green,
-//                             onPressed: controller.changeMapType,
-//                             child: const Icon(Icons.layers),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               const SizedBox(height: 20),
-
-//               Card(
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(15),
-//                 ),
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(18),
-//                   child: Obx(
-//                     () => Column(
-//                       children: [
-//                         Row(
-//                           children: [
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.location_on,
-//                                 "Latitude",
-//                                 controller.latitude.value,
-//                               ),
-//                             ),
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.location_searching,
-//                                 "Longitude",
-//                                 controller.longitude.value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                         const Divider(),
-//                         Row(
-//                           children: [
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.gps_fixed,
-//                                 "Accuracy",
-//                                 controller.accuracy.value,
-//                               ),
-//                             ),
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.access_time,
-//                                 "Time",
-//                                 controller.time.value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(height: 20),
-//               Row(
-//                 children: [
-//                   Expanded(
-//                     child: _photoCard("Photo 1", controller.capturePhoto1),
-//                   ),
-//                   const SizedBox(width: 15),
-//                   Expanded(
-//                     child: _photoCard("Photo 2", controller.capturePhoto2),
-//                   ),
-//                 ],
-//               ),
-//               const SizedBox(height: 20),
-//               Card(
-//                 elevation: 3,
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(18),
-//                 ),
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(18),
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       const Text(
-//                         "Barcode",
-//                         style: TextStyle(
-//                           fontSize: 18,
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                       ),
-//                       const SizedBox(height: 15),
-//                       TextField(
-//                         controller: controller.barcodeController,
-//                         readOnly: true,
-//                         decoration: InputDecoration(
-//                           border: OutlineInputBorder(
-//                             borderRadius: BorderRadius.circular(12),
-//                           ),
-//                           suffixIcon: IconButton(
-//                             icon: const Icon(Icons.qr_code_scanner),
-//                             onPressed: controller.scanBarcode,
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(height: 20),
-//               Card(
-//                 elevation: 3,
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(18),
-//                 ),
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(18),
-//                   child: Column(
-//                     children: [
-//                       TextField(
-//                         controller: controller.weightController,
-//                         keyboardType: TextInputType.number,
-//                         decoration: InputDecoration(
-//                           labelText: "Product Weight (Kg)",
-//                           border: OutlineInputBorder(
-//                             borderRadius: BorderRadius.circular(12),
-//                           ),
-//                         ),
-//                       ),
-//                       const SizedBox(height: 15),
-//                       TextField(
-//                         controller: controller.remarksController,
-//                         maxLines: 3,
-//                         decoration: InputDecoration(
-//                           labelText: "Remarks",
-//                           border: OutlineInputBorder(
-//                             borderRadius: BorderRadius.circular(12),
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(height: 30),
-//               Row(
-//                 children: [
-//                   Expanded(
-//                     child: ElevatedButton.icon(
-//                       onPressed: controller.saveDraft,
-//                       icon: const Icon(Icons.save),
-//                       label: const Text("Save Draft"),
-//                       style: ElevatedButton.styleFrom(
-//                         minimumSize: const Size.fromHeight(55),
-//                       ),
-//                     ),
-//                   ),
-//                   const SizedBox(width: 15),
-//                   Expanded(
-//                     child: ElevatedButton.icon(
-//                       onPressed: controller.submitData,
-//                       icon: const Icon(Icons.cloud_upload),
-//                       label: const Text("Submit"),
-//                       style: ElevatedButton.styleFrom(
-//                         backgroundColor: Colors.green,
-//                         foregroundColor: Colors.white,
-//                         minimumSize: const Size.fromHeight(55),
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//               const SizedBox(height: 20),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _infoTile(IconData icon, String title, String value) {
-//     return Column(
-//       children: [
-//         Icon(icon, color: Colors.green),
-//         const SizedBox(height: 8),
-//         Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-//         const SizedBox(height: 6),
-//         Text(value, textAlign: TextAlign.center),
-//       ],
-//     );
-//   }
-
-//   Widget _photoCard(String title, VoidCallback onTap) {
-//     return Card(
-//       elevation: 4,
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-//       child: InkWell(
-//         borderRadius: BorderRadius.circular(18),
-//         onTap: onTap,
-//         child: SizedBox(
-//           height: 230,
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               const Icon(Icons.camera_alt, size: 70, color: Colors.green),
-//               const SizedBox(height: 20),
-//               Text(
-//                 title,
-//                 style: const TextStyle(
-//                   fontSize: 18,
-//                   fontWeight: FontWeight.bold,
-//                 ),
-//               ),
-//               const SizedBox(height: 8),
-//               const Text("Tap to Capture"),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:namma_kaimagga_app/routes/app_routes.dart';
-
-// import 'geotagging_controller.dart';
-
-// class GeoTaggingScreen extends StatelessWidget {
-//   GeoTaggingScreen({super.key});
-
-//   final GeoTaggingController controller = Get.find<GeoTaggingController>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xffF4F7FA),
-
-//       appBar: AppBar(
-//         elevation: 0,
-//         centerTitle: true,
-//         backgroundColor: Colors.green.shade800,
-//         foregroundColor: Colors.white,
-//         title: const Text(
-//           "Geo Tagging",
-//           style: TextStyle(fontWeight: FontWeight.bold),
-//         ),
-//       ),
-
-//       body: SafeArea(
-//         child: SingleChildScrollView(
-//           padding: const EdgeInsets.all(16),
-//           child: Column(
-//             children: [
-//               //------------------------------------------------
-//               // MAP
-//               //------------------------------------------------
-//               Container(
-//                 height: 300,
-//                 decoration: BoxDecoration(
-//                   color: Colors.white,
-//                   borderRadius: BorderRadius.circular(18),
-//                   boxShadow: [
-//                     BoxShadow(color: Colors.grey.shade300, blurRadius: 10),
-//                   ],
-//                 ),
-//                 child: Stack(
-//                   children: [
-//                     Container(
-//                       decoration: BoxDecoration(
-//                         color: Colors.grey.shade300,
-//                         borderRadius: BorderRadius.circular(18),
-//                       ),
-//                       child: const Center(
-//                         child: Text(
-//                           "ArcGIS Map",
-//                           style: TextStyle(fontSize: 18),
-//                         ),
-//                       ),
-//                     ),
-
-//                     Positioned(
-//                       left: 15,
-//                       top: 15,
-//                       child: Column(
-//                         children: [
-//                           FloatingActionButton.small(
-//                             heroTag: "gps",
-//                             backgroundColor: Colors.green,
-//                             onPressed: controller.getCurrentLocation,
-//                             child: const Icon(Icons.my_location),
-//                           ),
-
-//                           const SizedBox(height: 12),
-
-//                           FloatingActionButton.small(
-//                             heroTag: "layer",
-//                             backgroundColor: Colors.green,
-//                             onPressed: controller.changeMapType,
-//                             child: const Icon(Icons.layers),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-
-//               const SizedBox(height: 20),
-
-//               //------------------------------------------------
-//               // LOCATION DETAILS
-//               //------------------------------------------------
-//               Card(
-//                 elevation: 3,
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(18),
-//                 ),
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(18),
-//                   child: Obx(
-//                     () => Column(
-//                       children: [
-//                         Row(
-//                           children: [
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.location_on,
-//                                 "Latitude",
-//                                 controller.latitude.value,
-//                               ),
-//                             ),
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.location_searching,
-//                                 "Longitude",
-//                                 controller.longitude.value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-
-//                         const Divider(height: 30),
-
-//                         Row(
-//                           children: [
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.gps_fixed,
-//                                 "Accuracy",
-//                                 controller.accuracy.value,
-//                               ),
-//                             ),
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.access_time,
-//                                 "Captured Time",
-//                                 controller.time.value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ),
-
-//               const SizedBox(height: 20),
-
-//               //------------------------------------------------
-//               // PHOTOS
-//               //------------------------------------------------
-//               Row(
-//                 children: [
-//                   Expanded(
-//                     child: _photoCard(
-//                       "Handloom Photo",
-//                       controller.capturePhoto1,
-//                     ),
-//                   ),
-
-//                   const SizedBox(width: 15),
-
-//                   Expanded(
-//                     child: _photoCard(
-//                       "Weaver + Handloom",
-//                       controller.capturePhoto2,
-//                     ),
-//                   ),
-//                 ],
-//               ),
-
-//               const SizedBox(height: 20),
-
-//               //------------------------------------------------
-//               // REMARKS
-//               //------------------------------------------------
-//               Card(
-//                 elevation: 3,
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(18),
-//                 ),
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(18),
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       const Text(
-//                         "Remarks",
-//                         style: TextStyle(
-//                           fontWeight: FontWeight.bold,
-//                           fontSize: 18,
-//                         ),
-//                       ),
-
-//                       const SizedBox(height: 15),
-
-//                       TextField(
-//                         controller: controller.remarksController,
-//                         maxLines: 4,
-//                         decoration: InputDecoration(
-//                           hintText: "Enter remarks (Optional)",
-//                           border: OutlineInputBorder(
-//                             borderRadius: BorderRadius.circular(12),
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-
-//               const SizedBox(height: 30),
-
-//               //------------------------------------------
-//               // BUTTONS
-//               //------------------------------------------
-//               Row(
-//                 children: [
-//                   Expanded(
-//                     child: ElevatedButton.icon(
-//                       onPressed: controller.saveDraft,
-//                       icon: const Icon(Icons.save),
-//                       label: const Text("Save Draft"),
-//                       style: ElevatedButton.styleFrom(
-//                         minimumSize: const Size.fromHeight(55),
-//                       ),
-//                     ),
-//                   ),
-
-//                   const SizedBox(width: 15),
-
-//                   Expanded(
-//                     child: ElevatedButton.icon(
-//                       onPressed: () {
-//                         Get.toNamed(AppRoutes.productList);
-//                       },
-//                       icon: const Icon(Icons.arrow_forward),
-//                       label: const Text("Next"),
-//                       style: ElevatedButton.styleFrom(
-//                         backgroundColor: Colors.green,
-//                         foregroundColor: Colors.white,
-//                         minimumSize: const Size.fromHeight(55),
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-
-//               const SizedBox(height: 30),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _infoTile(IconData icon, String title, String value) {
-//     return Column(
-//       children: [
-//         CircleAvatar(
-//           radius: 24,
-//           backgroundColor: Colors.green.shade50,
-//           child: Icon(icon, color: Colors.green),
-//         ),
-
-//         const SizedBox(height: 10),
-
-//         Text(
-//           title,
-//           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-//           textAlign: TextAlign.center,
-//         ),
-
-//         const SizedBox(height: 6),
-
-//         Text(
-//           value,
-//           textAlign: TextAlign.center,
-//           style: const TextStyle(color: Colors.black87),
-//         ),
-//       ],
-//     );
-//   }
-
-//   Widget _photoCard(String title, VoidCallback onTap) {
-//     return Card(
-//       elevation: 3,
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-//       child: InkWell(
-//         borderRadius: BorderRadius.circular(18),
-//         onTap: onTap,
-//         child: SizedBox(
-//           height: 230,
-//           child: Padding(
-//             padding: const EdgeInsets.all(16),
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 CircleAvatar(
-//                   radius: 38,
-//                   backgroundColor: Colors.green.shade50,
-//                   child: const Icon(
-//                     Icons.camera_alt,
-//                     size: 40,
-//                     color: Colors.green,
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 18),
-
-//                 Text(
-//                   title,
-//                   textAlign: TextAlign.center,
-//                   style: const TextStyle(
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 17,
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 10),
-
-//                 const Text(
-//                   "Tap to Capture",
-//                   style: TextStyle(color: Colors.grey),
-//                 ),
-
-//                 const SizedBox(height: 12),
-
-//                 const Icon(Icons.add_a_photo, color: Colors.green),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// import 'dart:io';
-
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-
-// import 'geotagging_controller.dart';
-
-// class GeoTaggingScreen extends StatelessWidget {
-//   GeoTaggingScreen({super.key});
-
-//   final GeoTaggingController controller =
-//       Get.find<GeoTaggingController>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xffF4F7FA),
-
-//       appBar: AppBar(
-//         elevation: 0,
-//         centerTitle: true,
-//         backgroundColor: Colors.green.shade800,
-//         foregroundColor: Colors.white,
-//         title: const Text(
-//           "Geo Tagging",
-//           style: TextStyle(
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//       ),
-
-//       body: Obx(
-//         () => SafeArea(
-//           child: SingleChildScrollView(
-//             padding: const EdgeInsets.all(16),
-//             child: Column(
-//               children: [
-
-//                 // ==================================================
-//                 // MAP
-//                 // ==================================================
-
-//                 Container(
-//                   height: 300,
-//                   width: double.infinity,
-//                   decoration: BoxDecoration(
-//                     color: Colors.white,
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color: Colors.grey.shade300,
-//                         blurRadius: 10,
-//                       ),
-//                     ],
-//                   ),
-//                   child: Stack(
-//                     children: [
-
-//                       Container(
-//                         width: double.infinity,
-//                         height: double.infinity,
-//                         decoration: BoxDecoration(
-//                           color: Colors.grey.shade300,
-//                           borderRadius:
-//                               BorderRadius.circular(18),
-//                         ),
-//                         child: const Center(
-//                           child: Text(
-//                             "ArcGIS Map",
-//                             style: TextStyle(
-//                               fontSize: 18,
-//                               fontWeight:
-//                                   FontWeight.bold,
-//                             ),
-//                           ),
-//                         ),
-//                       ),
-
-//                       Positioned(
-//                         left: 15,
-//                         top: 15,
-//                         child: Column(
-//                           children: [
-
-//                             FloatingActionButton.small(
-//                               heroTag: "gps",
-//                               backgroundColor:
-//                                   Colors.green,
-//                               foregroundColor:
-//                                   Colors.white,
-//                               onPressed:
-//                                   controller
-//                                       .getCurrentLocation,
-//                               child: const Icon(
-//                                 Icons.my_location,
-//                               ),
-//                             ),
-
-//                             const SizedBox(height: 12),
-
-//                             FloatingActionButton.small(
-//                               heroTag: "layer",
-//                               backgroundColor:
-//                                   Colors.green,
-//                               foregroundColor:
-//                                   Colors.white,
-//                               onPressed:
-//                                   controller
-//                                       .changeMapType,
-//                               child: const Icon(
-//                                 Icons.layers,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-
-//                       if (controller.isLoading.value)
-//                         const Center(
-//                           child:
-//                               CircularProgressIndicator(),
-//                         ),
-//                     ],
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 20),
-
-//                 // ==================================================
-//                 // LOCATION DETAILS
-//                 // ==================================================
-
-//                 Card(
-//                   elevation: 3,
-//                   shape:
-//                       RoundedRectangleBorder(
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                   ),
-//                   child: Padding(
-//                     padding:
-//                         const EdgeInsets.all(18),
-//                     child: Column(
-//                       children: [
-
-//                         const Align(
-//                           alignment:
-//                               Alignment.centerLeft,
-//                           child: Text(
-//                             "Location Details",
-//                             style: TextStyle(
-//                               fontSize: 19,
-//                               fontWeight:
-//                                   FontWeight.bold,
-//                             ),
-//                           ),
-//                         ),
-
-//                         const SizedBox(height: 20),
-
-//                         Row(
-//                           children: [
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.location_on,
-//                                 "Latitude",
-//                                 controller
-//                                     .latitude.value,
-//                               ),
-//                             ),
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons
-//                                     .location_searching,
-//                                 "Longitude",
-//                                 controller
-//                                     .longitude.value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-
-//                         const Divider(
-//                           height: 30,
-//                         ),
-
-//                         Row(
-//                           children: [
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.gps_fixed,
-//                                 "Accuracy",
-//                                 controller
-//                                     .accuracy.value,
-//                               ),
-//                             ),
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.access_time,
-//                                 "Captured Time",
-//                                 controller
-//                                     .time.value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 20),
-
-//                 // ==================================================
-//                 // PHOTOS
-//                 // ==================================================
-
-//                 Row(
-//                   crossAxisAlignment:
-//                       CrossAxisAlignment.start,
-//                   children: [
-
-//                     Expanded(
-//                       child: _photoCard(
-//                         title: "Handloom Photo",
-//                         imagePath:
-//                             controller
-//                                 .photo1Path.value,
-//                         onTap:
-//                             controller
-//                                 .capturePhoto1,
-//                         onRemove:
-//                             controller.removePhoto1,
-//                       ),
-//                     ),
-
-//                     const SizedBox(width: 15),
-
-//                     Expanded(
-//                       child: _photoCard(
-//                         title:
-//                             "Weaver + Handloom",
-//                         imagePath:
-//                             controller
-//                                 .photo2Path.value,
-//                         onTap:
-//                             controller
-//                                 .capturePhoto2,
-//                         onRemove:
-//                             controller.removePhoto2,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-
-//                 const SizedBox(height: 20),
-
-//                 // ==================================================
-//                 // REMARKS
-//                 // ==================================================
-
-//                 Card(
-//                   elevation: 3,
-//                   shape:
-//                       RoundedRectangleBorder(
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                   ),
-//                   child: Padding(
-//                     padding:
-//                         const EdgeInsets.all(18),
-//                     child: Column(
-//                       crossAxisAlignment:
-//                           CrossAxisAlignment.start,
-//                       children: [
-
-//                         const Text(
-//                           "Remarks",
-//                           style: TextStyle(
-//                             fontWeight:
-//                                 FontWeight.bold,
-//                             fontSize: 18,
-//                           ),
-//                         ),
-
-//                         const SizedBox(height: 15),
-
-//                         TextField(
-//                           controller: controller
-//                               .remarksController,
-//                           maxLines: 4,
-//                           decoration:
-//                               InputDecoration(
-//                             hintText:
-//                                 "Enter remarks (Optional)",
-//                             border:
-//                                 OutlineInputBorder(
-//                               borderRadius:
-//                                   BorderRadius
-//                                       .circular(12),
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 30),
-
-//                 // ==================================================
-//                 // BUTTONS
-//                 // ==================================================
-
-//                 Row(
-//                   children: [
-
-//                     Expanded(
-//                       child:
-//                           OutlinedButton.icon(
-//                         onPressed:
-//                             controller.saveDraft,
-//                         icon: const Icon(
-//                           Icons.save,
-//                         ),
-//                         label: const Text(
-//                           "Save Draft",
-//                         ),
-//                         style:
-//                             OutlinedButton
-//                                 .styleFrom(
-//                           minimumSize:
-//                               const Size
-//                                   .fromHeight(
-//                             55,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-
-//                     const SizedBox(width: 15),
-
-//                     Expanded(
-//                       child:
-//                           ElevatedButton.icon(
-//                         onPressed:
-//                             controller.next,
-//                         icon: const Icon(
-//                           Icons.arrow_forward,
-//                         ),
-//                         label: const Text(
-//                           "Next",
-//                         ),
-//                         style:
-//                             ElevatedButton
-//                                 .styleFrom(
-//                           backgroundColor:
-//                               Colors.green,
-//                           foregroundColor:
-//                               Colors.white,
-//                           minimumSize:
-//                               const Size
-//                                   .fromHeight(
-//                             55,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-
-//                 const SizedBox(height: 30),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   // ==========================================================
-//   // LOCATION TILE
-//   // ==========================================================
-
-//   Widget _infoTile(
-//     IconData icon,
-//     String title,
-//     String value,
-//   ) {
-//     return Column(
-//       children: [
-
-//         CircleAvatar(
-//           radius: 24,
-//           backgroundColor:
-//               Colors.green.shade50,
-//           child: Icon(
-//             icon,
-//             color: Colors.green,
-//           ),
-//         ),
-
-//         const SizedBox(height: 10),
-
-//         Text(
-//           title,
-//           textAlign: TextAlign.center,
-//           style: const TextStyle(
-//             fontWeight: FontWeight.bold,
-//             fontSize: 14,
-//           ),
-//         ),
-
-//         const SizedBox(height: 6),
-
-//         Text(
-//           value.isEmpty ? "--" : value,
-//           textAlign: TextAlign.center,
-//           style: const TextStyle(
-//             color: Colors.black87,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-
-//   // ==========================================================
-//   // PHOTO CARD
-//   // ==========================================================
-
-//   Widget _photoCard({
-//     required String title,
-//     required String imagePath,
-//     required VoidCallback onTap,
-//     required VoidCallback onRemove,
-//   }) {
-//     final bool hasImage =
-//         imagePath.isNotEmpty;
-
-//     return Card(
-//       elevation: 3,
-//       shape:
-//           RoundedRectangleBorder(
-//         borderRadius:
-//             BorderRadius.circular(18),
-//       ),
-//       child: InkWell(
-//         borderRadius:
-//             BorderRadius.circular(18),
-//         onTap: onTap,
-//         child: Padding(
-//           padding:
-//               const EdgeInsets.all(12),
-//           child: Column(
-//             children: [
-
-//               SizedBox(
-//                 height: 170,
-//                 width: double.infinity,
-//                 child: hasImage
-//                     ? ClipRRect(
-//                         borderRadius:
-//                             BorderRadius.circular(
-//                                 12),
-//                         child: Image.file(
-//                           File(imagePath),
-//                           fit: BoxFit.cover,
-//                         ),
-//                       )
-//                     : Container(
-//                         decoration:
-//                             BoxDecoration(
-//                           color:
-//                               Colors.green.shade50,
-//                           borderRadius:
-//                               BorderRadius
-//                                   .circular(12),
-//                         ),
-//                         child: const Center(
-//                           child: Icon(
-//                             Icons.camera_alt,
-//                             size: 50,
-//                             color:
-//                                 Colors.green,
-//                           ),
-//                         ),
-//                       ),
-//               ),
-
-//               const SizedBox(height: 12),
-
-//               Text(
-//                 title,
-//                 textAlign:
-//                     TextAlign.center,
-//                 style: const TextStyle(
-//                   fontWeight:
-//                       FontWeight.bold,
-//                   fontSize: 16,
-//                 ),
-//               ),
-
-//               const SizedBox(height: 8),
-
-//               Text(
-//                 hasImage
-//                     ? "Tap to Retake"
-//                     : "Tap to Capture",
-//                 style: const TextStyle(
-//                   color: Colors.grey,
-//                 ),
-//               ),
-
-//               if (hasImage) ...[
-//                 const SizedBox(height: 5),
-
-//                 TextButton.icon(
-//                   onPressed: onRemove,
-//                   icon: const Icon(
-//                     Icons.delete_outline,
-//                     color: Colors.red,
-//                   ),
-//                   label: const Text(
-//                     "Remove",
-//                     style: TextStyle(
-//                       color: Colors.red,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// import 'dart:io';
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter_map/flutter_map.dart';
-// import 'package:get/get.dart';
-// import 'package:latlong2/latlong.dart';
-
-// import 'geotagging_controller.dart';
-
-// class GeoTaggingScreen extends StatelessWidget {
-//   GeoTaggingScreen({super.key});
-
-//   final GeoTaggingController controller =
-//       Get.find<GeoTaggingController>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor:
-//           const Color(0xffF4F7FA),
-
-//       // ========================================================
-//       // APP BAR
-//       // ========================================================
-
-//       appBar: AppBar(
-//         elevation: 0,
-//         centerTitle: true,
-//         backgroundColor:
-//             Colors.green.shade800,
-//         foregroundColor: Colors.white,
-//         title: const Text(
-//           "Geo Tagging",
-//           style: TextStyle(
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//       ),
-
-//       // ========================================================
-//       // BODY
-//       // ========================================================
-
-//       body: Obx(
-//         () => SafeArea(
-//           child: SingleChildScrollView(
-//             padding:
-//                 const EdgeInsets.all(16),
-//             child: Column(
-//               children: [
-
-//                 // ==================================================
-//                 // OSM MAP
-//                 // ==================================================
-
-//                 Container(
-//                   height: 300,
-//                   width: double.infinity,
-//                   clipBehavior:
-//                       Clip.antiAlias,
-//                   decoration:
-//                       BoxDecoration(
-//                     color: Colors.white,
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color:
-//                             Colors.grey.shade300,
-//                         blurRadius: 10,
-//                       ),
-//                     ],
-//                   ),
-//                   child: Stack(
-//                     children: [
-
-//                       // ------------------------------------------
-//                       // MAP
-//                       // ------------------------------------------
-
-//                       FlutterMap(
-//                         mapController:
-//                             controller.mapController,
-//                         options: MapOptions(
-//                           initialCenter:
-//                               controller
-//                                       .currentLocation
-//                                       .value ??
-//                                   const LatLng(
-//                                     15.3173,
-//                                     75.7139,
-//                                   ),
-//                           initialZoom:
-//                               controller.initialZoom,
-
-//                           onTap:
-//                               (_, point) {
-//                             // Map tap is currently
-//                             // intentionally not changing
-//                             // the captured GPS location.
-//                           },
-//                         ),
-
-//                         children: [
-
-//                           // ----------------------------------------
-//                           // NORMAL / SATELLITE TILE LAYER
-//                           // ----------------------------------------
-
-//                           TileLayer(
-//                             urlTemplate: controller
-//                                     .satelliteMap
-//                                     .value
-//                                 ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-//                                 : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-
-//                             userAgentPackageName:
-//                                 'com.example.namma_kaimagga_app',
-//                           ),
-
-//                           // ----------------------------------------
-//                           // CURRENT LOCATION MARKER
-//                           // ----------------------------------------
-
-//                           if (controller
-//                                   .currentLocation
-//                                   .value !=
-//                               null)
-//                             MarkerLayer(
-//                               markers: [
-//                                 Marker(
-//                                   point: controller
-//                                       .currentLocation
-//                                       .value!,
-//                                   width: 55,
-//                                   height: 55,
-//                                   child:
-//                                       const Icon(
-//                                     Icons.location_pin,
-//                                     color:
-//                                         Colors.red,
-//                                     size: 50,
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-//                         ],
-//                       ),
-
-//                       // ------------------------------------------
-//                       // GPS + LAYER BUTTONS
-//                       // ------------------------------------------
-
-//                       Positioned(
-//                         left: 15,
-//                         top: 15,
-//                         child: Column(
-//                           children: [
-
-//                             // GPS BUTTON
-//                             FloatingActionButton.small(
-//                               heroTag:
-//                                   "geo_gps",
-//                               backgroundColor:
-//                                   Colors.green,
-//                               foregroundColor:
-//                                   Colors.white,
-//                               onPressed:
-//                                   controller
-//                                       .moveToCurrentLocation,
-//                               child:
-//                                   const Icon(
-//                                 Icons.my_location,
-//                               ),
-//                             ),
-
-//                             const SizedBox(
-//                               height: 12,
-//                             ),
-
-//                             // LAYER BUTTON
-//                             FloatingActionButton.small(
-//                               heroTag:
-//                                   "geo_layer",
-//                               backgroundColor:
-//                                   Colors.green,
-//                               foregroundColor:
-//                                   Colors.white,
-//                               onPressed:
-//                                   controller
-//                                       .changeMapType,
-//                               child:
-//                                   const Icon(
-//                                 Icons.layers,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-
-//                       // ------------------------------------------
-//                       // MAP LOADING
-//                       // ------------------------------------------
-
-//                       if (controller
-//                           .isLoading
-//                           .value)
-//                         Container(
-//                           color: Colors.black
-//                               .withValues(
-//                             alpha: 0.15,
-//                           ),
-//                           child:
-//                               const Center(
-//                             child:
-//                                 CircularProgressIndicator(),
-//                           ),
-//                         ),
-//                     ],
-//                   ),
-//                 ),
-
-//                 const SizedBox(
-//                   height: 20,
-//                 ),
-
-//                 // ==================================================
-//                 // LOCATION DETAILS
-//                 // ==================================================
-
-//                 Card(
-//                   elevation: 3,
-//                   shape:
-//                       RoundedRectangleBorder(
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                   ),
-//                   child: Padding(
-//                     padding:
-//                         const EdgeInsets.all(18),
-//                     child: Column(
-//                       children: [
-
-//                         const Align(
-//                           alignment:
-//                               Alignment.centerLeft,
-//                           child: Text(
-//                             "Location Details",
-//                             style: TextStyle(
-//                               fontSize: 19,
-//                               fontWeight:
-//                                   FontWeight.bold,
-//                             ),
-//                           ),
-//                         ),
-
-//                         const SizedBox(
-//                           height: 20,
-//                         ),
-
-//                         Row(
-//                           children: [
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.location_on,
-//                                 "Latitude",
-//                                 controller
-//                                     .latitude
-//                                     .value,
-//                               ),
-//                             ),
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons
-//                                     .location_searching,
-//                                 "Longitude",
-//                                 controller
-//                                     .longitude
-//                                     .value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-
-//                         const Divider(
-//                           height: 30,
-//                         ),
-
-//                         Row(
-//                           children: [
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.gps_fixed,
-//                                 "Accuracy",
-//                                 controller
-//                                     .accuracy
-//                                     .value,
-//                               ),
-//                             ),
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.access_time,
-//                                 "Captured Time",
-//                                 controller
-//                                     .time
-//                                     .value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(
-//                   height: 20,
-//                 ),
-
-//                 // ==================================================
-//                 // PHOTOS
-//                 // ==================================================
-
-//                 Row(
-//                   crossAxisAlignment:
-//                       CrossAxisAlignment.start,
-//                   children: [
-
-//                     Expanded(
-//                       child: _photoCard(
-//                         title:
-//                             "Handloom Photo",
-//                         imagePath:
-//                             controller
-//                                 .photo1Path
-//                                 .value,
-//                         onTap:
-//                             controller
-//                                 .capturePhoto1,
-//                         onRemove:
-//                             controller
-//                                 .removePhoto1,
-//                       ),
-//                     ),
-
-//                     const SizedBox(
-//                       width: 15,
-//                     ),
-
-//                     Expanded(
-//                       child: _photoCard(
-//                         title:
-//                             "Weaver + Handloom",
-//                         imagePath:
-//                             controller
-//                                 .photo2Path
-//                                 .value,
-//                         onTap:
-//                             controller
-//                                 .capturePhoto2,
-//                         onRemove:
-//                             controller
-//                                 .removePhoto2,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-
-//                 const SizedBox(
-//                   height: 20,
-//                 ),
-
-//                 // ==================================================
-//                 // REMARKS
-//                 // ==================================================
-
-//                 Card(
-//                   elevation: 3,
-//                   shape:
-//                       RoundedRectangleBorder(
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                   ),
-//                   child: Padding(
-//                     padding:
-//                         const EdgeInsets.all(18),
-//                     child: Column(
-//                       crossAxisAlignment:
-//                           CrossAxisAlignment.start,
-//                       children: [
-
-//                         const Text(
-//                           "Remarks",
-//                           style: TextStyle(
-//                             fontWeight:
-//                                 FontWeight.bold,
-//                             fontSize: 18,
-//                           ),
-//                         ),
-
-//                         const SizedBox(
-//                           height: 15,
-//                         ),
-
-//                         TextField(
-//                           controller:
-//                               controller
-//                                   .remarksController,
-//                           maxLines: 4,
-//                           decoration:
-//                               InputDecoration(
-//                             hintText:
-//                                 "Enter remarks (Optional)",
-//                             border:
-//                                 OutlineInputBorder(
-//                               borderRadius:
-//                                   BorderRadius
-//                                       .circular(12),
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(
-//                   height: 30,
-//                 ),
-
-//                 // ==================================================
-//                 // BUTTONS
-//                 // ==================================================
-
-//                 Row(
-//                   children: [
-
-//                     // SAVE DRAFT
-//                     Expanded(
-//                       child:
-//                           OutlinedButton.icon(
-//                         onPressed:
-//                             controller
-//                                 .saveDraft,
-//                         icon:
-//                             const Icon(
-//                           Icons.save,
-//                         ),
-//                         label:
-//                             const Text(
-//                           "Save Draft",
-//                         ),
-//                         style:
-//                             OutlinedButton
-//                                 .styleFrom(
-//                           minimumSize:
-//                               const Size
-//                                   .fromHeight(
-//                             55,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-
-//                     const SizedBox(
-//                       width: 15,
-//                     ),
-
-//                     // NEXT
-//                     Expanded(
-//                       child:
-//                           ElevatedButton.icon(
-//                         onPressed:
-//                             controller
-//                                 .next,
-//                         icon:
-//                             const Icon(
-//                           Icons.arrow_forward,
-//                         ),
-//                         label:
-//                             const Text(
-//                           "Next",
-//                         ),
-//                         style:
-//                             ElevatedButton
-//                                 .styleFrom(
-//                           backgroundColor:
-//                               Colors.green,
-//                           foregroundColor:
-//                               Colors.white,
-//                           minimumSize:
-//                               const Size
-//                                   .fromHeight(
-//                             55,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-
-//                 const SizedBox(
-//                   height: 30,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   // ==========================================================
-//   // LOCATION TILE
-//   // ==========================================================
-
-//   Widget _infoTile(
-//     IconData icon,
-//     String title,
-//     String value,
-//   ) {
-//     return Column(
-//       children: [
-
-//         CircleAvatar(
-//           radius: 24,
-//           backgroundColor:
-//               Colors.green.shade50,
-//           child: Icon(
-//             icon,
-//             color: Colors.green,
-//           ),
-//         ),
-
-//         const SizedBox(
-//           height: 10,
-//         ),
-
-//         Text(
-//           title,
-//           textAlign:
-//               TextAlign.center,
-//           style:
-//               const TextStyle(
-//             fontWeight:
-//                 FontWeight.bold,
-//             fontSize: 14,
-//           ),
-//         ),
-
-//         const SizedBox(
-//           height: 6,
-//         ),
-
-//         Text(
-//           value.isEmpty
-//               ? "--"
-//               : value,
-//           textAlign:
-//               TextAlign.center,
-//           style:
-//               const TextStyle(
-//             color:
-//                 Colors.black87,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-
-//   // ==========================================================
-//   // PHOTO CARD
-//   // ==========================================================
-
-//   Widget _photoCard({
-//     required String title,
-//     required String imagePath,
-//     required VoidCallback onTap,
-//     required VoidCallback onRemove,
-//   }) {
-//     final bool hasImage =
-//         imagePath.isNotEmpty;
-
-//     return Card(
-//       elevation: 3,
-//       shape:
-//           RoundedRectangleBorder(
-//         borderRadius:
-//             BorderRadius.circular(18),
-//       ),
-//       child: InkWell(
-//         borderRadius:
-//             BorderRadius.circular(18),
-//         onTap: onTap,
-//         child: Padding(
-//           padding:
-//               const EdgeInsets.all(12),
-//           child: Column(
-//             children: [
-
-//               SizedBox(
-//                 height: 170,
-//                 width: double.infinity,
-//                 child: hasImage
-//                     ? ClipRRect(
-//                         borderRadius:
-//                             BorderRadius.circular(
-//                           12,
-//                         ),
-//                         child:
-//                             Image.file(
-//                           File(imagePath),
-//                           fit:
-//                               BoxFit.cover,
-//                         ),
-//                       )
-//                     : Container(
-//                         decoration:
-//                             BoxDecoration(
-//                           color:
-//                               Colors.green.shade50,
-//                           borderRadius:
-//                               BorderRadius.circular(
-//                             12,
-//                           ),
-//                         ),
-//                         child:
-//                             const Center(
-//                           child:
-//                               Icon(
-//                             Icons.camera_alt,
-//                             size: 50,
-//                             color:
-//                                 Colors.green,
-//                           ),
-//                         ),
-//                       ),
-//               ),
-
-//               const SizedBox(
-//                 height: 12,
-//               ),
-
-//               Text(
-//                 title,
-//                 textAlign:
-//                     TextAlign.center,
-//                 style:
-//                     const TextStyle(
-//                   fontWeight:
-//                       FontWeight.bold,
-//                   fontSize: 16,
-//                 ),
-//               ),
-
-//               const SizedBox(
-//                 height: 8,
-//               ),
-
-//               Text(
-//                 hasImage
-//                     ? "Tap to Retake"
-//                     : "Tap to Capture",
-//                 style:
-//                     const TextStyle(
-//                   color:
-//                       Colors.grey,
-//                 ),
-//               ),
-
-//               if (hasImage) ...[
-//                 const SizedBox(
-//                   height: 5,
-//                 ),
-
-//                 TextButton.icon(
-//                   onPressed:
-//                       onRemove,
-//                   icon:
-//                       const Icon(
-//                     Icons.delete_outline,
-//                     color:
-//                         Colors.red,
-//                   ),
-//                   label:
-//                       const Text(
-//                     "Remove",
-//                     style:
-//                         TextStyle(
-//                       color:
-//                           Colors.red,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-// import 'dart:io';
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter_map/flutter_map.dart';
-// import 'package:get/get.dart';
-// import 'package:latlong2/latlong.dart';
-
-// import 'geotagging_controller.dart';
-
-// class GeoTaggingScreen extends StatelessWidget {
-//   GeoTaggingScreen({super.key});
-
-//   final GeoTaggingController controller =
-//       Get.find<GeoTaggingController>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor:
-//           const Color(0xffF4F7FA),
-
-//       // ========================================================
-//       // APP BAR
-//       // ========================================================
-
-//       appBar: AppBar(
-//         elevation: 0,
-//         centerTitle: true,
-//         backgroundColor:
-//             Colors.green.shade800,
-//         foregroundColor:
-//             Colors.white,
-//         title: const Text(
-//           "Geo Tagging",
-//           style: TextStyle(
-//             fontWeight:
-//                 FontWeight.bold,
-//           ),
-//         ),
-//       ),
-
-//       // ========================================================
-//       // BODY
-//       // ========================================================
-
-//       body: Obx(
-//         () => SafeArea(
-//           child: SingleChildScrollView(
-//             padding:
-//                 const EdgeInsets.all(16),
-//             child: Column(
-//               children: [
-
-//                 // ==================================================
-//                 // OSM MAP
-//                 // ==================================================
-
-//                 Container(
-//                   height: 300,
-//                   width: double.infinity,
-//                   clipBehavior:
-//                       Clip.antiAlias,
-//                   decoration:
-//                       BoxDecoration(
-//                     color:
-//                         Colors.white,
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color:
-//                             Colors.grey.shade300,
-//                         blurRadius: 10,
-//                       ),
-//                     ],
-//                   ),
-//                   child: Stack(
-//                     children: [
-
-//                       FlutterMap(
-//                         mapController:
-//                             controller.mapController,
-//                         options:
-//                             MapOptions(
-//                           initialCenter:
-//                               controller
-//                                       .currentLocation
-//                                       .value ??
-//                                   const LatLng(
-//                                     15.3173,
-//                                     75.7139,
-//                                   ),
-//                           initialZoom:
-//                               controller
-//                                   .initialZoom,
-//                         ),
-//                         children: [
-
-//                           // ========================================
-//                           // MAP TILE
-//                           // ========================================
-
-//                           TileLayer(
-//                             urlTemplate: controller
-//                                     .satelliteMap
-//                                     .value
-//                                 ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-//                                 : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-//                             userAgentPackageName:
-//                                 'com.example.namma_kaimagga_app',
-//                           ),
-
-//                           // ========================================
-//                           // CURRENT LOCATION
-//                           // ========================================
-
-//                           if (controller
-//                                   .currentLocation
-//                                   .value !=
-//                               null)
-//                             MarkerLayer(
-//                               markers: [
-//                                 Marker(
-//                                   point:
-//                                       controller
-//                                           .currentLocation
-//                                           .value!,
-//                                   width: 55,
-//                                   height: 55,
-//                                   child:
-//                                       const Icon(
-//                                     Icons.location_pin,
-//                                     color:
-//                                         Colors.red,
-//                                     size: 50,
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-//                         ],
-//                       ),
-
-//                       // ==========================================
-//                       // GPS + LAYER BUTTONS
-//                       // ==========================================
-
-//                       Positioned(
-//                         left: 15,
-//                         top: 15,
-//                         child: Column(
-//                           children: [
-
-//                             FloatingActionButton.small(
-//                               heroTag:
-//                                   "geo_gps",
-//                               backgroundColor:
-//                                   Colors.green,
-//                               foregroundColor:
-//                                   Colors.white,
-//                               onPressed:
-//                                   controller
-//                                       .moveToCurrentLocation,
-//                               child:
-//                                   const Icon(
-//                                 Icons.my_location,
-//                               ),
-//                             ),
-
-//                             const SizedBox(
-//                               height: 12,
-//                             ),
-
-//                             FloatingActionButton.small(
-//                               heroTag:
-//                                   "geo_layer",
-//                               backgroundColor:
-//                                   Colors.green,
-//                               foregroundColor:
-//                                   Colors.white,
-//                               onPressed:
-//                                   controller
-//                                       .changeMapType,
-//                               child:
-//                                   const Icon(
-//                                 Icons.layers,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-
-//                       // ==========================================
-//                       // LOADING
-//                       // ==========================================
-
-//                       if (controller
-//                           .isLoading
-//                           .value)
-//                         Container(
-//                           color:
-//                               Colors.black.withValues(
-//                             alpha: 0.15,
-//                           ),
-//                           child:
-//                               const Center(
-//                             child:
-//                                 CircularProgressIndicator(),
-//                           ),
-//                         ),
-//                     ],
-//                   ),
-//                 ),
-
-//                 const SizedBox(
-//                   height: 20,
-//                 ),
-
-//                 // ==================================================
-//                 // LOCATION DETAILS
-//                 // ==================================================
-
-//                 Card(
-//                   elevation: 3,
-//                   shape:
-//                       RoundedRectangleBorder(
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                   ),
-//                   child: Padding(
-//                     padding:
-//                         const EdgeInsets.all(18),
-//                     child: Column(
-//                       children: [
-
-//                         const Align(
-//                           alignment:
-//                               Alignment.centerLeft,
-//                           child: Text(
-//                             "Location Details",
-//                             style: TextStyle(
-//                               fontSize: 19,
-//                               fontWeight:
-//                                   FontWeight.bold,
-//                             ),
-//                           ),
-//                         ),
-
-//                         const SizedBox(
-//                           height: 20,
-//                         ),
-
-//                         Row(
-//                           children: [
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.location_on,
-//                                 "Latitude",
-//                                 controller
-//                                     .latitude
-//                                     .value,
-//                               ),
-//                             ),
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons
-//                                     .location_searching,
-//                                 "Longitude",
-//                                 controller
-//                                     .longitude
-//                                     .value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-
-//                         const Divider(
-//                           height: 30,
-//                         ),
-
-//                         Row(
-//                           children: [
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.gps_fixed,
-//                                 "Accuracy",
-//                                 controller
-//                                     .accuracy
-//                                     .value,
-//                               ),
-//                             ),
-
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.access_time,
-//                                 "Captured Time",
-//                                 controller
-//                                     .time
-//                                     .value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(
-//                   height: 20,
-//                 ),
-
-//                 // ==================================================
-//                 // PHOTOS
-//                 // ==================================================
-
-//                 Row(
-//                   crossAxisAlignment:
-//                       CrossAxisAlignment.start,
-//                   children: [
-
-//                     // ==============================================
-//                     // PHOTO 1
-//                     // ==============================================
-
-//                     Expanded(
-//                       child: _photoCard(
-//                         title:
-//                             "Handloom Photo",
-//                         imagePath:
-//                             controller
-//                                 .photo1Path
-//                                 .value,
-//                         latitude:
-//                             controller
-//                                 .photo1Latitude
-//                                 .value,
-//                         longitude:
-//                             controller
-//                                 .photo1Longitude
-//                                 .value,
-//                         dateTime:
-//                             controller
-//                                 .photo1DateTime
-//                                 .value,
-//                         onTap:
-//                             controller
-//                                 .capturePhoto1,
-//                         onRemove:
-//                             controller
-//                                 .removePhoto1,
-//                       ),
-//                     ),
-
-//                     const SizedBox(
-//                       width: 15,
-//                     ),
-
-//                     // ==============================================
-//                     // PHOTO 2
-//                     // ==============================================
-
-//                     Expanded(
-//                       child: _photoCard(
-//                         title:
-//                             "Weaver + Handloom",
-//                         imagePath:
-//                             controller
-//                                 .photo2Path
-//                                 .value,
-//                         latitude:
-//                             controller
-//                                 .photo2Latitude
-//                                 .value,
-//                         longitude:
-//                             controller
-//                                 .photo2Longitude
-//                                 .value,
-//                         dateTime:
-//                             controller
-//                                 .photo2DateTime
-//                                 .value,
-//                         onTap:
-//                             controller
-//                                 .capturePhoto2,
-//                         onRemove:
-//                             controller
-//                                 .removePhoto2,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-
-//                 const SizedBox(
-//                   height: 20,
-//                 ),
-
-//                 // ==================================================
-//                 // REMARKS
-//                 // ==================================================
-
-//                 Card(
-//                   elevation: 3,
-//                   shape:
-//                       RoundedRectangleBorder(
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                   ),
-//                   child: Padding(
-//                     padding:
-//                         const EdgeInsets.all(18),
-//                     child: Column(
-//                       crossAxisAlignment:
-//                           CrossAxisAlignment.start,
-//                       children: [
-
-//                         const Text(
-//                           "Remarks",
-//                           style: TextStyle(
-//                             fontWeight:
-//                                 FontWeight.bold,
-//                             fontSize: 18,
-//                           ),
-//                         ),
-
-//                         const SizedBox(
-//                           height: 15,
-//                         ),
-
-//                         TextField(
-//                           controller:
-//                               controller
-//                                   .remarksController,
-//                           maxLines: 4,
-//                           decoration:
-//                               InputDecoration(
-//                             hintText:
-//                                 "Enter remarks (Optional)",
-//                             border:
-//                                 OutlineInputBorder(
-//                               borderRadius:
-//                                   BorderRadius
-//                                       .circular(12),
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(
-//                   height: 30,
-//                 ),
-
-//                 // ==================================================
-//                 // BUTTONS
-//                 // ==================================================
-
-//                 Row(
-//                   children: [
-
-//                     Expanded(
-//                       child:
-//                           OutlinedButton.icon(
-//                         onPressed:
-//                             controller
-//                                 .saveDraft,
-//                         icon:
-//                             const Icon(
-//                           Icons.save,
-//                         ),
-//                         label:
-//                             const Text(
-//                           "Save Draft",
-//                         ),
-//                         style:
-//                             OutlinedButton
-//                                 .styleFrom(
-//                           minimumSize:
-//                               const Size
-//                                   .fromHeight(
-//                             55,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-
-//                     const SizedBox(
-//                       width: 15,
-//                     ),
-
-//                     Expanded(
-//                       child:
-//                           ElevatedButton.icon(
-//                         onPressed:
-//                             controller
-//                                 .next,
-//                         icon:
-//                             const Icon(
-//                           Icons.arrow_forward,
-//                         ),
-//                         label:
-//                             const Text(
-//                           "Next",
-//                         ),
-//                         style:
-//                             ElevatedButton
-//                                 .styleFrom(
-//                           backgroundColor:
-//                               Colors.green,
-//                           foregroundColor:
-//                               Colors.white,
-//                           minimumSize:
-//                               const Size
-//                                   .fromHeight(
-//                             55,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-
-//                 const SizedBox(
-//                   height: 30,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   // ==========================================================
-//   // LOCATION TILE
-//   // ==========================================================
-
-//   Widget _infoTile(
-//     IconData icon,
-//     String title,
-//     String value,
-//   ) {
-//     return Column(
-//       children: [
-
-//         CircleAvatar(
-//           radius: 24,
-//           backgroundColor:
-//               Colors.green.shade50,
-//           child:
-//               Icon(
-//             icon,
-//             color:
-//                 Colors.green,
-//           ),
-//         ),
-
-//         const SizedBox(
-//           height: 10,
-//         ),
-
-//         Text(
-//           title,
-//           textAlign:
-//               TextAlign.center,
-//           style:
-//               const TextStyle(
-//             fontWeight:
-//                 FontWeight.bold,
-//             fontSize: 14,
-//           ),
-//         ),
-
-//         const SizedBox(
-//           height: 6,
-//         ),
-
-//         Text(
-//           value.isEmpty
-//               ? "--"
-//               : value,
-//           textAlign:
-//               TextAlign.center,
-//           style:
-//               const TextStyle(
-//             color:
-//                 Colors.black87,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-
-//   // ==========================================================
-//   // PHOTO CARD
-//   // ==========================================================
-
-//   Widget _photoCard({
-//     required String title,
-//     required String imagePath,
-//     required String latitude,
-//     required String longitude,
-//     required String dateTime,
-//     required VoidCallback onTap,
-//     required VoidCallback onRemove,
-//   }) {
-//     final bool hasImage =
-//         imagePath.isNotEmpty;
-
-//     return Card(
-//       elevation: 3,
-//       shape:
-//           RoundedRectangleBorder(
-//         borderRadius:
-//             BorderRadius.circular(18),
-//       ),
-//       child: InkWell(
-//         borderRadius:
-//             BorderRadius.circular(18),
-//         onTap: onTap,
-//         child: Padding(
-//           padding:
-//               const EdgeInsets.all(12),
-//           child: Column(
-//             children: [
-
-//               // ==================================================
-//               // PHOTO
-//               // ==================================================
-
-//               SizedBox(
-//                 height: 170,
-//                 width: double.infinity,
-//                 child: hasImage
-//                     ? ClipRRect(
-//                         borderRadius:
-//                             BorderRadius.circular(
-//                           12,
-//                         ),
-//                         child:
-//                             Image.file(
-//                           File(imagePath),
-//                           fit:
-//                               BoxFit.cover,
-//                         ),
-//                       )
-//                     : Container(
-//                         decoration:
-//                             BoxDecoration(
-//                           color:
-//                               Colors.green.shade50,
-//                           borderRadius:
-//                               BorderRadius.circular(
-//                             12,
-//                           ),
-//                         ),
-//                         child:
-//                             const Center(
-//                           child:
-//                               Icon(
-//                             Icons.camera_alt,
-//                             size: 50,
-//                             color:
-//                                 Colors.green,
-//                           ),
-//                         ),
-//                       ),
-//               ),
-
-//               const SizedBox(
-//                 height: 12,
-//               ),
-
-//               // ==================================================
-//               // TITLE
-//               // ==================================================
-
-//               Text(
-//                 title,
-//                 textAlign:
-//                     TextAlign.center,
-//                 style:
-//                     const TextStyle(
-//                   fontWeight:
-//                       FontWeight.bold,
-//                   fontSize: 16,
-//                 ),
-//               ),
-
-//               const SizedBox(
-//                 height: 8,
-//               ),
-
-//               Text(
-//                 hasImage
-//                     ? "Tap to Retake"
-//                     : "Tap to Capture",
-//                 style:
-//                     const TextStyle(
-//                   color:
-//                       Colors.grey,
-//                 ),
-//               ),
-
-//               // ==================================================
-//               // PHOTO GPS DETAILS
-//               // ==================================================
-
-//               if (hasImage &&
-//                   latitude.isNotEmpty &&
-//                   longitude.isNotEmpty) ...[
-//                 const SizedBox(
-//                   height: 12,
-//                 ),
-
-//                 Container(
-//                   width: double.infinity,
-//                   padding:
-//                       const EdgeInsets.all(10),
-//                   decoration:
-//                       BoxDecoration(
-//                     color:
-//                         Colors.green.shade50,
-//                     borderRadius:
-//                         BorderRadius.circular(
-//                       10,
-//                     ),
-//                   ),
-//                   child: Column(
-//                     crossAxisAlignment:
-//                         CrossAxisAlignment.start,
-//                     children: [
-
-//                       Row(
-//                         crossAxisAlignment:
-//                             CrossAxisAlignment.start,
-//                         children: [
-
-//                           const Icon(
-//                             Icons.location_on,
-//                             size: 17,
-//                             color:
-//                                 Colors.green,
-//                           ),
-
-//                           const SizedBox(
-//                             width: 5,
-//                           ),
-
-//                           Expanded(
-//                             child: Text(
-//                               "Lat: $latitude",
-//                               style:
-//                                   const TextStyle(
-//                                 fontSize:
-//                                     12,
-//                                 fontWeight:
-//                                     FontWeight.w600,
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-
-//                       const SizedBox(
-//                         height: 5,
-//                       ),
-
-//                       Row(
-//                         crossAxisAlignment:
-//                             CrossAxisAlignment.start,
-//                         children: [
-
-//                           const Icon(
-//                             Icons.location_searching,
-//                             size: 17,
-//                             color:
-//                                 Colors.green,
-//                           ),
-
-//                           const SizedBox(
-//                             width: 5,
-//                           ),
-
-//                           Expanded(
-//                             child: Text(
-//                               "Long: $longitude",
-//                               style:
-//                                   const TextStyle(
-//                                 fontSize:
-//                                     12,
-//                                 fontWeight:
-//                                     FontWeight.w600,
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-
-//                       const SizedBox(
-//                         height: 5,
-//                       ),
-
-//                       Row(
-//                         crossAxisAlignment:
-//                             CrossAxisAlignment.start,
-//                         children: [
-
-//                           const Icon(
-//                             Icons.access_time,
-//                             size: 17,
-//                             color:
-//                                 Colors.green,
-//                           ),
-
-//                           const SizedBox(
-//                             width: 5,
-//                           ),
-
-//                           Expanded(
-//                             child: Text(
-//                               dateTime,
-//                               style:
-//                                   const TextStyle(
-//                                 fontSize:
-//                                     12,
-//                                 fontWeight:
-//                                     FontWeight.w600,
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-
-//               // ==================================================
-//               // REMOVE
-//               // ==================================================
-
-//               if (hasImage) ...[
-//                 const SizedBox(
-//                   height: 5,
-//                 ),
-
-//                 TextButton.icon(
-//                   onPressed:
-//                       onRemove,
-//                   icon:
-//                       const Icon(
-//                     Icons.delete_outline,
-//                     color:
-//                         Colors.red,
-//                   ),
-//                   label:
-//                       const Text(
-//                     "Remove",
-//                     style:
-//                         TextStyle(
-//                       color:
-//                           Colors.red,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-// import 'dart:io';
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter_map/flutter_map.dart';
-// import 'package:get/get.dart';
-// import 'package:latlong2/latlong.dart';
-
-// import 'geotagging_controller.dart';
-
-// class GeoTaggingScreen extends StatelessWidget {
-//   GeoTaggingScreen({super.key});
-
-//   final GeoTaggingController controller =
-//       Get.find<GeoTaggingController>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xffF4F7FA),
-
-//       // ========================================================
-//       // APP BAR
-//       // ========================================================
-
-//       appBar: AppBar(
-//         elevation: 0,
-//         centerTitle: true,
-//         backgroundColor: Colors.green.shade800,
-//         foregroundColor: Colors.white,
-//         title: const Text(
-//           'Geo Tagging',
-//           style: TextStyle(
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//       ),
-
-//       // ========================================================
-//       // BODY
-//       // ========================================================
-
-//       body: Obx(
-//         () => SafeArea(
-//           child: SingleChildScrollView(
-//             padding: const EdgeInsets.all(16),
-//             child: Column(
-//               children: [
-//                 // ==================================================
-//                 // MAP
-//                 // ==================================================
-
-//                 Container(
-//                   height: 330,
-//                   width: double.infinity,
-//                   clipBehavior: Clip.antiAlias,
-//                   decoration: BoxDecoration(
-//                     color: Colors.white,
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color: Colors.grey.shade300,
-//                         blurRadius: 10,
-//                       ),
-//                     ],
-//                   ),
-//                   child: Stack(
-//                     children: [
-//                       FlutterMap(
-//                         mapController:
-//                             controller.mapController,
-//                         options: MapOptions(
-//                           initialCenter:
-//                               controller.currentLocation.value ??
-//                                   const LatLng(
-//                                     15.3173,
-//                                     75.7139,
-//                                   ),
-//                           initialZoom:
-//                               controller.initialZoom,
-//                           onTap: (
-//                             TapPosition tapPosition,
-//                             LatLng point,
-//                           ) {
-//                             controller.onMapTap(
-//                               tapPosition,
-//                               point,
-//                             );
-//                           },
-//                         ),
-//                         children: [
-//                           TileLayer(
-//                             urlTemplate: controller
-//                                     .satelliteMap.value
-//                                 ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-//                                 : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-//                             userAgentPackageName:
-//                                 'com.example.namma_kaimagga_app',
-//                           ),
-
-//                           // ------------------------------------------------
-//                           // CURRENT LOCATION
-//                           // ------------------------------------------------
-
-//                           if (controller.currentLocation.value !=
-//                               null)
-//                             MarkerLayer(
-//                               markers: [
-//                                 Marker(
-//                                   point: controller
-//                                       .currentLocation.value!,
-//                                   width: 50,
-//                                   height: 50,
-//                                   child: const Icon(
-//                                     Icons.my_location,
-//                                     color: Colors.blue,
-//                                     size: 40,
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-
-//                           // ------------------------------------------------
-//                           // SELECTED LOCATION
-//                           // ------------------------------------------------
-
-//                           if (controller.selectedLocation.value !=
-//                               null)
-//                             MarkerLayer(
-//                               markers: [
-//                                 Marker(
-//                                   point: controller
-//                                       .selectedLocation.value!,
-//                                   width: 55,
-//                                   height: 55,
-//                                   child: const Icon(
-//                                     Icons.location_pin,
-//                                     color: Colors.orange,
-//                                     size: 50,
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-//                         ],
-//                       ),
-
-//                       // ==================================================
-//                       // INSTRUCTION
-//                       // ==================================================
-
-//                       Positioned(
-//                         top: 12,
-//                         left: 12,
-//                         right: 12,
-//                         child: Container(
-//                           padding:
-//                               const EdgeInsets.symmetric(
-//                             horizontal: 14,
-//                             vertical: 10,
-//                           ),
-//                           decoration: BoxDecoration(
-//                             color:
-//                                 Colors.white.withValues(
-//                               alpha: 0.94,
-//                             ),
-//                             borderRadius:
-//                                 BorderRadius.circular(12),
-//                           ),
-//                           child: const Text(
-//                             'Tap on the map to select the Geo-Tagging location',
-//                             textAlign: TextAlign.center,
-//                             style: TextStyle(
-//                               fontWeight: FontWeight.w600,
-//                               fontSize: 13,
-//                             ),
-//                           ),
-//                         ),
-//                       ),
-
-//                       // ==================================================
-//                       // MAP BUTTONS
-//                       // ==================================================
-
-//                       Positioned(
-//                         left: 12,
-//                         bottom: 12,
-//                         child: Column(
-//                           children: [
-//                             FloatingActionButton.small(
-//                               heroTag: 'geo_gps',
-//                               backgroundColor:
-//                                   Colors.green.shade800,
-//                               foregroundColor:
-//                                   Colors.white,
-//                               onPressed:
-//                                   controller
-//                                       .moveToCurrentLocation,
-//                               child: const Icon(
-//                                 Icons.my_location,
-//                               ),
-//                             ),
-//                             const SizedBox(height: 10),
-//                             FloatingActionButton.small(
-//                               heroTag: 'geo_layer',
-//                               backgroundColor:
-//                                   Colors.green.shade800,
-//                               foregroundColor:
-//                                   Colors.white,
-//                               onPressed:
-//                                   controller
-//                                       .changeMapType,
-//                               child: const Icon(
-//                                 Icons.layers,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-
-//                       // ==================================================
-//                       // LOADING
-//                       // ==================================================
-
-//                       if (controller.isLoading.value)
-//                         Container(
-//                           color:
-//                               Colors.black.withValues(
-//                             alpha: 0.15,
-//                           ),
-//                           child: const Center(
-//                             child:
-//                                 CircularProgressIndicator(),
-//                           ),
-//                         ),
-//                     ],
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 16),
-
-//                 // ==================================================
-//                 // LOCATION STATUS
-//                 // ==================================================
-
-//                 Card(
-//                   elevation: 3,
-//                   shape:
-//                       RoundedRectangleBorder(
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                   ),
-//                   child: Padding(
-//                     padding:
-//                         const EdgeInsets.all(18),
-//                     child: Column(
-//                       children: [
-//                         const Align(
-//                           alignment:
-//                               Alignment.centerLeft,
-//                           child: Text(
-//                             'Location Details',
-//                             style: TextStyle(
-//                               fontSize: 19,
-//                               fontWeight:
-//                                   FontWeight.bold,
-//                             ),
-//                           ),
-//                         ),
-
-//                         const SizedBox(height: 18),
-
-//                         Row(
-//                           children: [
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.my_location,
-//                                 'Current Latitude',
-//                                 controller.latitude.value,
-//                               ),
-//                             ),
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.my_location,
-//                                 'Current Longitude',
-//                                 controller.longitude.value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-
-//                         const Divider(height: 30),
-
-//                         // ------------------------------------------------
-//                         // ACCURACY
-//                         // ------------------------------------------------
-
-//                         Row(
-//                           children: [
-//                             Expanded(
-//                               child: Column(
-//                                 children: [
-//                                   CircleAvatar(
-//                                     radius: 24,
-//                                     backgroundColor:
-//                                         controller
-//                                             .accuracyColor
-//                                             .withValues(
-//                                       alpha: 0.12,
-//                                     ),
-//                                     child: Icon(
-//                                       Icons.gps_fixed,
-//                                       color: controller
-//                                           .accuracyColor,
-//                                     ),
-//                                   ),
-//                                   const SizedBox(
-//                                     height: 8,
-//                                   ),
-//                                   const Text(
-//                                     'GPS Accuracy',
-//                                     style: TextStyle(
-//                                       fontWeight:
-//                                           FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                   const SizedBox(
-//                                     height: 5,
-//                                   ),
-//                                   Text(
-//                                     controller.accuracy
-//                                             .value
-//                                             .isEmpty
-//                                         ? '--'
-//                                         : controller
-//                                             .accuracy
-//                                             .value,
-//                                     style: TextStyle(
-//                                       color: controller
-//                                           .accuracyColor,
-//                                       fontWeight:
-//                                           FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-
-//                             // ------------------------------------------------
-//                             // DISTANCE
-//                             // ------------------------------------------------
-
-//                             Expanded(
-//                               child: Column(
-//                                 children: [
-//                                   CircleAvatar(
-//                                     radius: 24,
-//                                     backgroundColor:
-//                                         controller
-//                                                 .isWithinPhotoRadius
-//                                             ? Colors.green
-//                                                 .withValues(
-//                                                 alpha: 0.12,
-//                                               )
-//                                             : Colors.red
-//                                                 .withValues(
-//                                                 alpha: 0.12,
-//                                               ),
-//                                     child: Icon(
-//                                       Icons
-//                                           .straighten,
-//                                       color: controller
-//                                               .isWithinPhotoRadius
-//                                           ? Colors
-//                                               .green
-//                                               .shade800
-//                                           : Colors.red,
-//                                     ),
-//                                   ),
-//                                   const SizedBox(
-//                                     height: 8,
-//                                   ),
-//                                   const Text(
-//                                     'Distance',
-//                                     style: TextStyle(
-//                                       fontWeight:
-//                                           FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                   const SizedBox(
-//                                     height: 5,
-//                                   ),
-//                                   Text(
-//                                     controller
-//                                                 .selectedLocation
-//                                                 .value ==
-//                                             null
-//                                         ? '--'
-//                                         : '${controller.distanceFromSelectedLocation.value.toStringAsFixed(2)} m',
-//                                     style: TextStyle(
-//                                       color: controller
-//                                               .isWithinPhotoRadius
-//                                           ? Colors
-//                                               .green
-//                                               .shade800
-//                                           : Colors.red,
-//                                       fontWeight:
-//                                           FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-
-//                         const Divider(height: 30),
-
-//                         // ------------------------------------------------
-//                         // SELECTED LOCATION
-//                         // ------------------------------------------------
-
-//                         if (controller.selectedLocation.value !=
-//                             null)
-//                           Container(
-//                             width: double.infinity,
-//                             padding:
-//                                 const EdgeInsets.all(12),
-//                             decoration: BoxDecoration(
-//                               color: Colors.orange
-//                                   .withValues(
-//                                 alpha: 0.08,
-//                               ),
-//                               borderRadius:
-//                                   BorderRadius.circular(
-//                                 12,
-//                               ),
-//                             ),
-//                             child: Column(
-//                               crossAxisAlignment:
-//                                   CrossAxisAlignment.start,
-//                               children: [
-//                                 const Text(
-//                                   'Selected Location',
-//                                   style: TextStyle(
-//                                     fontWeight:
-//                                         FontWeight.bold,
-//                                   ),
-//                                 ),
-//                                 const SizedBox(
-//                                   height: 6,
-//                                 ),
-//                                 Text(
-//                                   'Latitude: ${controller.selectedLatitude.value}',
-//                                 ),
-//                                 Text(
-//                                   'Longitude: ${controller.selectedLongitude.value}',
-//                                 ),
-//                               ],
-//                             ),
-//                           ),
-
-//                         const SizedBox(height: 12),
-
-//                         // ------------------------------------------------
-//                         // PHOTO ELIGIBILITY
-//                         // ------------------------------------------------
-
-//                         Container(
-//                           width: double.infinity,
-//                           padding:
-//                               const EdgeInsets.all(12),
-//                           decoration: BoxDecoration(
-//                             color: controller
-//                                     .isWithinPhotoRadius
-//                                 ? Colors.green
-//                                     .withValues(
-//                                     alpha: 0.08,
-//                                   )
-//                                 : Colors.red
-//                                     .withValues(
-//                                     alpha: 0.08,
-//                                   ),
-//                             borderRadius:
-//                                 BorderRadius.circular(
-//                               12,
-//                             ),
-//                           ),
-//                           child: Text(
-//                             controller.selectedLocation
-//                                         .value ==
-//                                     null
-//                                 ? 'Select a location on the map.'
-//                                 : controller
-//                                         .isWithinPhotoRadius
-//                                     ? 'You are within the allowed 15 m radius. Photos can be captured.'
-//                                     : 'Move within 15 m of the selected location to capture photos.',
-//                             textAlign:
-//                                 TextAlign.center,
-//                             style: TextStyle(
-//                               fontWeight:
-//                                   FontWeight.w600,
-//                               color: controller
-//                                       .selectedLocation
-//                                       .value ==
-//                                   null
-//                                   ? Colors.grey.shade700
-//                                   : controller
-//                                           .isWithinPhotoRadius
-//                                       ? Colors.green
-//                                           .shade800
-//                                       : Colors.red,
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 20),
-
-//                 // ==================================================
-//                 // PHOTOS
-//                 // ==================================================
-
-//                 Row(
-//                   crossAxisAlignment:
-//                       CrossAxisAlignment.start,
-//                   children: [
-//                     Expanded(
-//                       child: _photoCard(
-//                         title: 'Photo 1',
-//                         imagePath:
-//                             controller.photo1Path.value,
-//                         latitude:
-//                             controller.photo1Latitude.value,
-//                         longitude:
-//                             controller.photo1Longitude.value,
-//                         dateTime:
-//                             controller.photo1DateTime.value,
-//                         enabled:
-//                             controller.isWithinPhotoRadius &&
-//                                 controller
-//                                     .isAccuracyAcceptable,
-//                         onTap:
-//                             controller.capturePhoto1,
-//                         onRemove:
-//                             controller.removePhoto1,
-//                       ),
-//                     ),
-
-//                     const SizedBox(width: 15),
-
-//                     Expanded(
-//                       child: _photoCard(
-//                         title: 'Photo 2',
-//                         imagePath:
-//                             controller.photo2Path.value,
-//                         latitude:
-//                             controller.photo2Latitude.value,
-//                         longitude:
-//                             controller.photo2Longitude.value,
-//                         dateTime:
-//                             controller.photo2DateTime.value,
-//                         enabled:
-//                             controller.isWithinPhotoRadius &&
-//                                 controller
-//                                     .isAccuracyAcceptable,
-//                         onTap:
-//                             controller.capturePhoto2,
-//                         onRemove:
-//                             controller.removePhoto2,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-
-//                 const SizedBox(height: 20),
-
-//                 // ==================================================
-//                 // REMARKS
-//                 // ==================================================
-
-//                 Card(
-//                   elevation: 3,
-//                   shape:
-//                       RoundedRectangleBorder(
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                   ),
-//                   child: Padding(
-//                     padding:
-//                         const EdgeInsets.all(18),
-//                     child: Column(
-//                       crossAxisAlignment:
-//                           CrossAxisAlignment.start,
-//                       children: [
-//                         const Text(
-//                           'Remarks',
-//                           style: TextStyle(
-//                             fontWeight:
-//                                 FontWeight.bold,
-//                             fontSize: 18,
-//                           ),
-//                         ),
-//                         const SizedBox(
-//                           height: 15,
-//                         ),
-//                         TextField(
-//                           controller:
-//                               controller
-//                                   .remarksController,
-//                           maxLines: 4,
-//                           decoration:
-//                               InputDecoration(
-//                             hintText:
-//                                 'Enter remarks (Optional)',
-//                             border:
-//                                 OutlineInputBorder(
-//                               borderRadius:
-//                                   BorderRadius.circular(
-//                                 12,
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 25),
-
-//                 // ==================================================
-//                 // BUTTONS
-//                 // ==================================================
-
-//                 Row(
-//                   children: [
-//                     // ------------------------------------------------
-//                     // CANCEL
-//                     // ------------------------------------------------
-
-//                     Expanded(
-//                       child: OutlinedButton(
-//                         onPressed:
-//                             controller.cancel,
-//                         style:
-//                             OutlinedButton.styleFrom(
-//                           minimumSize:
-//                               const Size.fromHeight(
-//                             55,
-//                           ),
-//                           foregroundColor:
-//                               Colors.red,
-//                           side: const BorderSide(
-//                             color: Colors.red,
-//                           ),
-//                         ),
-//                         child: const Text(
-//                           'Cancel',
-//                           style: TextStyle(
-//                             fontWeight:
-//                                 FontWeight.bold,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-
-//                     const SizedBox(width: 15),
-
-//                     // ------------------------------------------------
-//                     // SAVE DATA
-//                     // ------------------------------------------------
-
-//                     Expanded(
-//                       child: ElevatedButton(
-//                         onPressed:
-//                             controller.isSaving.value
-//                                 ? null
-//                                 : controller.saveData,
-//                         style:
-//                             ElevatedButton.styleFrom(
-//                           backgroundColor:
-//                               Colors.green.shade800,
-//                           foregroundColor:
-//                               Colors.white,
-//                           minimumSize:
-//                               const Size.fromHeight(
-//                             55,
-//                           ),
-//                         ),
-//                         child:
-//                             controller.isSaving.value
-//                                 ? const SizedBox(
-//                                     width: 24,
-//                                     height: 24,
-//                                     child:
-//                                         CircularProgressIndicator(
-//                                       strokeWidth: 2,
-//                                       color:
-//                                           Colors.white,
-//                                     ),
-//                                   )
-//                                 : const Text(
-//                                     'Save Data',
-//                                     style:
-//                                         TextStyle(
-//                                       fontWeight:
-//                                           FontWeight.bold,
-//                                     ),
-//                                   ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-
-//                 const SizedBox(height: 30),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   // ==========================================================
-//   // INFO TILE
-//   // ==========================================================
-
-//   Widget _infoTile(
-//     IconData icon,
-//     String title,
-//     String value,
-//   ) {
-//     return Column(
-//       children: [
-//         CircleAvatar(
-//           radius: 24,
-//           backgroundColor:
-//               Colors.green.shade50,
-//           child: Icon(
-//             icon,
-//             color: Colors.green.shade800,
-//           ),
-//         ),
-//         const SizedBox(height: 8),
-//         Text(
-//           title,
-//           textAlign: TextAlign.center,
-//           style: const TextStyle(
-//             fontWeight: FontWeight.bold,
-//             fontSize: 13,
-//           ),
-//         ),
-//         const SizedBox(height: 5),
-//         Text(
-//           value.isEmpty ? '--' : value,
-//           textAlign: TextAlign.center,
-//         ),
-//       ],
-//     );
-//   }
-
-//   // ==========================================================
-//   // PHOTO CARD
-//   // ==========================================================
-
-//   Widget _photoCard({
-//     required String title,
-//     required String imagePath,
-//     required String latitude,
-//     required String longitude,
-//     required String dateTime,
-//     required bool enabled,
-//     required VoidCallback onTap,
-//     required VoidCallback onRemove,
-//   }) {
-//     final bool hasImage =
-//         imagePath.isNotEmpty;
-
-//     return Card(
-//       elevation: 3,
-//       shape: RoundedRectangleBorder(
-//         borderRadius:
-//             BorderRadius.circular(18),
-//       ),
-//       child: InkWell(
-//         borderRadius:
-//             BorderRadius.circular(18),
-//         onTap: enabled ? onTap : null,
-//         child: Opacity(
-//           opacity: enabled || hasImage ? 1.0 : 0.45,
-//           child: Padding(
-//             padding:
-//                 const EdgeInsets.all(12),
-//             child: Column(
-//               children: [
-//                 SizedBox(
-//                   height: 170,
-//                   width: double.infinity,
-//                   child: hasImage
-//                       ? ClipRRect(
-//                           borderRadius:
-//                               BorderRadius.circular(
-//                             12,
-//                           ),
-//                           child: Image.file(
-//                             File(imagePath),
-//                             fit: BoxFit.cover,
-//                           ),
-//                         )
-//                       : Container(
-//                           decoration:
-//                               BoxDecoration(
-//                             color:
-//                                 Colors.green.shade50,
-//                             borderRadius:
-//                                 BorderRadius.circular(
-//                               12,
-//                             ),
-//                           ),
-//                           child: const Center(
-//                             child: Icon(
-//                               Icons.camera_alt,
-//                               size: 50,
-//                               color: Colors.green,
-//                             ),
-//                           ),
-//                         ),
-//                 ),
-
-//                 const SizedBox(height: 12),
-
-//                 Text(
-//                   title,
-//                   textAlign: TextAlign.center,
-//                   style: const TextStyle(
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 15,
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 7),
-
-//                 Text(
-//                   hasImage
-//                       ? 'Tap to Retake'
-//                       : enabled
-//                           ? 'Tap to Capture'
-//                           : 'Within 15 m required',
-//                   textAlign: TextAlign.center,
-//                   style: const TextStyle(
-//                     color: Colors.grey,
-//                     fontSize: 12,
-//                   ),
-//                 ),
-
-//                 if (hasImage &&
-//                     latitude.isNotEmpty &&
-//                     longitude.isNotEmpty) ...[
-//                   const SizedBox(height: 10),
-
-//                   Container(
-//                     width: double.infinity,
-//                     padding:
-//                         const EdgeInsets.all(9),
-//                     decoration:
-//                         BoxDecoration(
-//                       color:
-//                           Colors.green.shade50,
-//                       borderRadius:
-//                           BorderRadius.circular(
-//                         10,
-//                       ),
-//                     ),
-//                     child: Column(
-//                       crossAxisAlignment:
-//                           CrossAxisAlignment.start,
-//                       children: [
-//                         Text(
-//                           'Lat: $latitude',
-//                           style:
-//                               const TextStyle(
-//                             fontSize: 11,
-//                           ),
-//                         ),
-//                         Text(
-//                           'Long: $longitude',
-//                           style:
-//                               const TextStyle(
-//                             fontSize: 11,
-//                           ),
-//                         ),
-//                         Text(
-//                           dateTime,
-//                           style:
-//                               const TextStyle(
-//                             fontSize: 11,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-
-//                   TextButton.icon(
-//                     onPressed: onRemove,
-//                     icon: const Icon(
-//                       Icons.delete_outline,
-//                       color: Colors.red,
-//                     ),
-//                     label: const Text(
-//                       'Remove',
-//                       style: TextStyle(
-//                         color: Colors.red,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// import 'dart:io';
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter_map/flutter_map.dart';
-// import 'package:get/get.dart';
-// import 'package:latlong2/latlong.dart';
-// import 'package:namma_kaimagga_app/widgets/common_footer.dart';
-
-// import 'geotagging_controller.dart';
-
-// class GeoTaggingScreen extends StatelessWidget {
-//   GeoTaggingScreen({super.key});
-
-//   final GeoTaggingController controller =
-//       Get.find<GeoTaggingController>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xffF4F7FA),
-
-//       // ========================================================
-//       // APP BAR
-//       // ========================================================
-
-//       appBar: AppBar(
-//         elevation: 0,
-//         centerTitle: true,
-//         backgroundColor: const Color(0xff1565C0),
-//         foregroundColor: Colors.white,
-//         title: const Text(
-//           'Geo Tagging',
-//           style: TextStyle(
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//       ),
-//       bottomNavigationBar: CommonFooter(),
-
-//       // ========================================================
-//       // BODY
-//       // ========================================================
-
-//       body: Obx(
-//         () => SafeArea(
-//           child: SingleChildScrollView(
-//             padding: const EdgeInsets.all(16),
-//             child: Column(
-//               children: [
-//                 // ==================================================
-//                 // MAP
-//                 // ==================================================
-
-//                 Container(
-//                   height: 330,
-//                   width: double.infinity,
-//                   clipBehavior: Clip.antiAlias,
-//                   decoration: BoxDecoration(
-//                     color: Colors.white,
-//                     borderRadius: BorderRadius.circular(18),
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color: Colors.grey.shade300,
-//                         blurRadius: 10,
-//                       ),
-//                     ],
-//                   ),
-//                   child: Stack(
-//                     children: [
-//                       FlutterMap(
-//                         mapController:
-//                             controller.mapController,
-//                         options: MapOptions(
-//                           initialCenter:
-//                               controller.currentLocation.value ??
-//                                   const LatLng(
-//                                     15.3173,
-//                                     75.7139,
-//                                   ),
-//                           initialZoom:
-//                               controller.initialZoom,
-//                           onTap: (
-//                             TapPosition tapPosition,
-//                             LatLng point,
-//                           ) {
-//                             controller.onMapTap(
-//                               tapPosition,
-//                               point,
-//                             );
-//                           },
-//                         ),
-//                         children: [
-//                           // ==================================================
-//                           // MAP TILE
-//                           // ==================================================
-
-//                           TileLayer(
-//                             urlTemplate:
-//                                 controller.satelliteMap.value
-//                                     ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-//                                     : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-//                             userAgentPackageName:
-//                                 'com.example.namma_kaimagga_app',
-//                           ),
-
-//                           // ==================================================
-//                           // CURRENT LOCATION
-//                           // ==================================================
-
-//                           if (controller.currentLocation.value != null)
-//                             MarkerLayer(
-//                               markers: [
-//                                 Marker(
-//                                   point:
-//                                       controller.currentLocation.value!,
-//                                   width: 50,
-//                                   height: 50,
-//                                   child: const Icon(
-//                                     Icons.my_location,
-//                                     color: Colors.blue,
-//                                     size: 40,
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-
-//                           // ==================================================
-//                           // SELECTED LOCATION
-//                           // ==================================================
-
-//                           if (controller.selectedLocation.value != null)
-//                             MarkerLayer(
-//                               markers: [
-//                                 Marker(
-//                                   point:
-//                                       controller.selectedLocation.value!,
-//                                   width: 55,
-//                                   height: 55,
-//                                   child: const Icon(
-//                                     Icons.location_pin,
-//                                     color: Colors.orange,
-//                                     size: 50,
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-//                         ],
-//                       ),
-
-//                       // ==================================================
-//                       // MAP INSTRUCTION
-//                       // ==================================================
-
-//                       Positioned(
-//                         top: 12,
-//                         left: 12,
-//                         right: 12,
-//                         child: Container(
-//                           padding:
-//                               const EdgeInsets.symmetric(
-//                             horizontal: 14,
-//                             vertical: 10,
-//                           ),
-//                           decoration: BoxDecoration(
-//                             color:
-//                                 Colors.white.withValues(
-//                               alpha: 0.94,
-//                             ),
-//                             borderRadius:
-//                                 BorderRadius.circular(12),
-//                           ),
-//                           child: const Text(
-//                             'Tap on the map to select the Geo-Tagging location',
-//                             textAlign: TextAlign.center,
-//                             style: TextStyle(
-//                               fontWeight: FontWeight.w600,
-//                               fontSize: 13,
-//                             ),
-//                           ),
-//                         ),
-//                       ),
-
-//                       // ==================================================
-//                       // MAP BUTTONS
-//                       // ==================================================
-
-//                       Positioned(
-//                         left: 12,
-//                         bottom: 12,
-//                         child: Column(
-//                           children: [
-//                             FloatingActionButton.small(
-//                               heroTag: 'geo_gps',
-//                               backgroundColor:
-//                                   Colors.green.shade800,
-//                               foregroundColor:
-//                                   Colors.white,
-//                               onPressed:
-//                                   controller
-//                                       .moveToCurrentLocation,
-//                               child: const Icon(
-//                                 Icons.my_location,
-//                               ),
-//                             ),
-//                             const SizedBox(
-//                               height: 10,
-//                             ),
-//                             FloatingActionButton.small(
-//                               heroTag: 'geo_layer',
-//                               backgroundColor:
-//                                   Colors.green.shade800,
-//                               foregroundColor:
-//                                   Colors.white,
-//                               onPressed:
-//                                   controller
-//                                       .changeMapType,
-//                               child: const Icon(
-//                                 Icons.layers,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-
-//                       // ==================================================
-//                       // LOADING
-//                       // ==================================================
-
-//                       if (controller.isLoading.value)
-//                         Container(
-//                           color:
-//                               Colors.black.withValues(
-//                             alpha: 0.15,
-//                           ),
-//                           child: const Center(
-//                             child:
-//                                 CircularProgressIndicator(),
-//                           ),
-//                         ),
-//                     ],
-//                   ),
-//                 ),
-
-//                 const SizedBox(
-//                   height: 16,
-//                 ),
-
-//                 // ==================================================
-//                 // LOCATION STATUS
-//                 // ==================================================
-
-//                 Card(
-//                   elevation: 3,
-//                   shape:
-//                       RoundedRectangleBorder(
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                   ),
-//                   child: Padding(
-//                     padding:
-//                         const EdgeInsets.all(18),
-//                     child: Column(
-//                       children: [
-//                         const Align(
-//                           alignment:
-//                               Alignment.centerLeft,
-//                           child: Text(
-//                             'Location Details',
-//                             style: TextStyle(
-//                               fontSize: 19,
-//                               fontWeight:
-//                                   FontWeight.bold,
-//                             ),
-//                           ),
-//                         ),
-
-//                         const SizedBox(
-//                           height: 18,
-//                         ),
-
-//                         // ==================================================
-//                         // CURRENT LATITUDE / LONGITUDE
-//                         // ==================================================
-
-//                         Row(
-//                           children: [
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.my_location,
-//                                 'Current Latitude',
-//                                 controller
-//                                     .latitude
-//                                     .value,
-//                               ),
-//                             ),
-//                             Expanded(
-//                               child: _infoTile(
-//                                 Icons.my_location,
-//                                 'Current Longitude',
-//                                 controller
-//                                     .longitude
-//                                     .value,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-
-//                         const Divider(
-//                           height: 30,
-//                         ),
-
-//                         // ==================================================
-//                         // ACCURACY + DISTANCE
-//                         // ==================================================
-
-//                         Row(
-//                           children: [
-//                             // ==================================================
-//                             // GPS ACCURACY
-//                             // ==================================================
-
-//                             Expanded(
-//                               child: Column(
-//                                 children: [
-//                                   CircleAvatar(
-//                                     radius: 24,
-//                                     backgroundColor:
-//                                         controller
-//                                             .accuracyColor
-//                                             .withValues(
-//                                       alpha: 0.12,
-//                                     ),
-//                                     child: Icon(
-//                                       Icons.gps_fixed,
-//                                       color:
-//                                           controller
-//                                               .accuracyColor,
-//                                     ),
-//                                   ),
-
-//                                   const SizedBox(
-//                                     height: 8,
-//                                   ),
-
-//                                   const Text(
-//                                     'GPS Accuracy',
-//                                     style:
-//                                         TextStyle(
-//                                       fontWeight:
-//                                           FontWeight.bold,
-//                                     ),
-//                                   ),
-
-//                                   const SizedBox(
-//                                     height: 5,
-//                                   ),
-
-//                                   Text(
-//                                     controller
-//                                             .accuracy
-//                                             .value
-//                                             .isEmpty
-//                                         ? '--'
-//                                         : controller
-//                                             .accuracy
-//                                             .value,
-//                                     style:
-//                                         TextStyle(
-//                                       color:
-//                                           controller
-//                                               .accuracyColor,
-//                                       fontWeight:
-//                                           FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-
-//                             // ==================================================
-//                             // DISTANCE
-//                             // ==================================================
-
-//                             Expanded(
-//                               child: Column(
-//                                 children: [
-//                                   CircleAvatar(
-//                                     radius: 24,
-//                                     backgroundColor:
-//                                         controller
-//                                                 .isWithinPhotoRadius
-//                                             ? Colors
-//                                                 .green
-//                                                 .withValues(
-//                                                 alpha: 0.12,
-//                                               )
-//                                             : Colors
-//                                                 .red
-//                                                 .withValues(
-//                                                 alpha: 0.12,
-//                                               ),
-//                                     child: Icon(
-//                                       Icons
-//                                           .straighten,
-//                                       color: controller
-//                                               .isWithinPhotoRadius
-//                                           ? Colors
-//                                               .green
-//                                               .shade800
-//                                           : Colors.red,
-//                                     ),
-//                                   ),
-
-//                                   const SizedBox(
-//                                     height: 8,
-//                                   ),
-
-//                                   const Text(
-//                                     'Distance',
-//                                     style:
-//                                         TextStyle(
-//                                       fontWeight:
-//                                           FontWeight.bold,
-//                                     ),
-//                                   ),
-
-//                                   const SizedBox(
-//                                     height: 5,
-//                                   ),
-
-//                                   Text(
-//                                     controller
-//                                                 .selectedLocation
-//                                                 .value ==
-//                                             null
-//                                         ? '--'
-//                                         : '${controller.distanceFromSelectedLocation.value.toStringAsFixed(2)} m',
-//                                     style:
-//                                         TextStyle(
-//                                       color: controller
-//                                               .isWithinPhotoRadius
-//                                           ? Colors
-//                                               .green
-//                                               .shade800
-//                                           : Colors.red,
-//                                       fontWeight:
-//                                           FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-
-//                         const Divider(
-//                           height: 30,
-//                         ),
-
-//                         // ==================================================
-//                         // SELECTED LOCATION
-//                         // ==================================================
-
-//                         if (controller
-//                                 .selectedLocation
-//                                 .value !=
-//                             null)
-//                           Container(
-//                             width: double.infinity,
-//                             padding:
-//                                 const EdgeInsets.all(12),
-//                             decoration:
-//                                 BoxDecoration(
-//                               color: Colors.orange
-//                                   .withValues(
-//                                 alpha: 0.08,
-//                               ),
-//                               borderRadius:
-//                                   BorderRadius.circular(
-//                                 12,
-//                               ),
-//                             ),
-//                             child: Column(
-//                               crossAxisAlignment:
-//                                   CrossAxisAlignment
-//                                       .start,
-//                               children: [
-//                                 const Text(
-//                                   'Selected Location',
-//                                   style:
-//                                       TextStyle(
-//                                     fontWeight:
-//                                         FontWeight.bold,
-//                                   ),
-//                                 ),
-
-//                                 const SizedBox(
-//                                   height: 6,
-//                                 ),
-
-//                                 Text(
-//                                   'Latitude: ${controller.selectedLatitude.value}',
-//                                 ),
-
-//                                 Text(
-//                                   'Longitude: ${controller.selectedLongitude.value}',
-//                                 ),
-//                               ],
-//                             ),
-//                           ),
-
-//                         const SizedBox(
-//                           height: 12,
-//                         ),
-
-//                         // ==================================================
-//                         // PHOTO ELIGIBILITY
-//                         // ==================================================
-
-//                         Container(
-//                           width: double.infinity,
-//                           padding:
-//                               const EdgeInsets.all(12),
-//                           decoration:
-//                               BoxDecoration(
-//                             color: controller
-//                                     .isWithinPhotoRadius
-//                                 ? Colors.green
-//                                     .withValues(
-//                                     alpha: 0.08,
-//                                   )
-//                                 : Colors.red
-//                                     .withValues(
-//                                     alpha: 0.08,
-//                                   ),
-//                             borderRadius:
-//                                 BorderRadius.circular(
-//                               12,
-//                             ),
-//                           ),
-//                           child: Text(
-//                             controller
-//                                         .selectedLocation
-//                                         .value ==
-//                                     null
-//                                 ? 'Select a location on the map.'
-//                                 : controller
-//                                         .isWithinPhotoRadius
-//                                     ? 'You are within the allowed 15 m radius. Photos can be captured.'
-//                                     : 'Move within 15 m of the selected location to capture photos.',
-//                             textAlign:
-//                                 TextAlign.center,
-//                             style: TextStyle(
-//                               fontWeight:
-//                                   FontWeight.w600,
-//                               color: controller
-//                                           .selectedLocation
-//                                           .value ==
-//                                       null
-//                                   ? Colors.grey
-//                                       .shade700
-//                                   : controller
-//                                           .isWithinPhotoRadius
-//                                       ? Colors
-//                                           .green
-//                                           .shade800
-//                                       : Colors.red,
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(
-//                   height: 20,
-//                 ),
-
-//                 // ==================================================
-//                 // PHOTO 1 + PHOTO 2
-//                 // ==================================================
-
-//                 Row(
-//                   crossAxisAlignment:
-//                       CrossAxisAlignment.start,
-//                   children: [
-//                     Expanded(
-//                       child: _photoCard(
-//                         title: 'Photo 1',
-//                         imagePath:
-//                             controller
-//                                 .photo1Path
-//                                 .value,
-//                         latitude:
-//                             controller
-//                                 .photo1Latitude
-//                                 .value,
-//                         longitude:
-//                             controller
-//                                 .photo1Longitude
-//                                 .value,
-//                         dateTime:
-//                             controller
-//                                 .photo1DateTime
-//                                 .value,
-//                         enabled:
-//                             controller
-//                                     .isWithinPhotoRadius &&
-//                                 controller
-//                                     .isAccuracyAcceptable,
-//                         onTap:
-//                             controller
-//                                 .capturePhoto1,
-//                         onRemove:
-//                             controller
-//                                 .removePhoto1,
-//                       ),
-//                     ),
-
-//                     const SizedBox(
-//                       width: 15,
-//                     ),
-
-//                     Expanded(
-//                       child: _photoCard(
-//                         title: 'Photo 2',
-//                         imagePath:
-//                             controller
-//                                 .photo2Path
-//                                 .value,
-//                         latitude:
-//                             controller
-//                                 .photo2Latitude
-//                                 .value,
-//                         longitude:
-//                             controller
-//                                 .photo2Longitude
-//                                 .value,
-//                         dateTime:
-//                             controller
-//                                 .photo2DateTime
-//                                 .value,
-//                         enabled:
-//                             controller
-//                                     .isWithinPhotoRadius &&
-//                                 controller
-//                                     .isAccuracyAcceptable,
-//                         onTap:
-//                             controller
-//                                 .capturePhoto2,
-//                         onRemove:
-//                             controller
-//                                 .removePhoto2,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-
-//                 const SizedBox(
-//                   height: 20,
-//                 ),
-
-//                 // ==================================================
-//                 // REMARKS
-//                 // ==================================================
-
-//                 Card(
-//                   elevation: 3,
-//                   shape:
-//                       RoundedRectangleBorder(
-//                     borderRadius:
-//                         BorderRadius.circular(18),
-//                   ),
-//                   child: Padding(
-//                     padding:
-//                         const EdgeInsets.all(18),
-//                     child: Column(
-//                       crossAxisAlignment:
-//                           CrossAxisAlignment.start,
-//                       children: [
-//                         const Text(
-//                           'Remarks',
-//                           style: TextStyle(
-//                             fontWeight:
-//                                 FontWeight.bold,
-//                             fontSize: 18,
-//                           ),
-//                         ),
-
-//                         const SizedBox(
-//                           height: 15,
-//                         ),
-
-//                         TextField(
-//                           controller:
-//                               controller
-//                                   .remarksController,
-//                           maxLines: 4,
-//                           decoration:
-//                               InputDecoration(
-//                             hintText:
-//                                 'Enter remarks (Optional)',
-//                             border:
-//                                 OutlineInputBorder(
-//                               borderRadius:
-//                                   BorderRadius
-//                                       .circular(
-//                                 12,
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(
-//                   height: 25,
-//                 ),
-
-//                 // ==================================================
-//                 // BUTTONS
-//                 // ==================================================
-
-//                 Row(
-//                   children: [
-//                     // ==================================================
-//                     // CANCEL
-//                     // ==================================================
-
-//                     Expanded(
-//                       child:
-//                           OutlinedButton(
-//                         onPressed:
-//                             controller.cancel,
-//                         style:
-//                             OutlinedButton.styleFrom(
-//                           minimumSize:
-//                               const Size
-//                                   .fromHeight(
-//                             55,
-//                           ),
-//                           foregroundColor:
-//                               Colors.red,
-//                           side:
-//                               const BorderSide(
-//                             color:
-//                                 Colors.red,
-//                           ),
-//                         ),
-//                         child:
-//                             const Text(
-//                           'Cancel',
-//                           style:
-//                               TextStyle(
-//                             fontWeight:
-//                                 FontWeight.bold,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-
-//                     const SizedBox(
-//                       width: 15,
-//                     ),
-
-//                     // ==================================================
-//                     // SAVE DATA
-//                     // ==================================================
-
-//                     Expanded(
-//                       child:
-//                           ElevatedButton(
-//                         onPressed:
-//                             controller
-//                                     .isSaving
-//                                     .value
-//                                 ? null
-//                                 : controller
-//                                     .saveData,
-//                         style:
-//                             ElevatedButton.styleFrom(
-//                           backgroundColor:
-//                               Colors
-//                                   .green
-//                                   .shade800,
-//                           foregroundColor:
-//                               Colors.white,
-//                           minimumSize:
-//                               const Size
-//                                   .fromHeight(
-//                             55,
-//                           ),
-//                         ),
-//                         child: controller
-//                                 .isSaving
-//                                 .value
-//                             ? const SizedBox(
-//                                 width: 24,
-//                                 height: 24,
-//                                 child:
-//                                     CircularProgressIndicator(
-//                                   strokeWidth:
-//                                       2,
-//                                   color: Colors
-//                                       .white,
-//                                 ),
-//                               )
-//                             : const Text(
-//                                 'Save Data',
-//                                 style:
-//                                     TextStyle(
-//                                   fontWeight:
-//                                       FontWeight
-//                                           .bold,
-//                                 ),
-//                               ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-
-//                 const SizedBox(
-//                   height: 30,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   // ==========================================================
-//   // INFO TILE
-//   // ==========================================================
-
-//   Widget _infoTile(
-//     IconData icon,
-//     String title,
-//     String value,
-//   ) {
-//     return Column(
-//       children: [
-//         CircleAvatar(
-//           radius: 24,
-//           backgroundColor:
-//               Colors.green.shade50,
-//           child: Icon(
-//             icon,
-//             color:
-//                 Colors.green.shade800,
-//           ),
-//         ),
-
-//         const SizedBox(
-//           height: 8,
-//         ),
-
-//         Text(
-//           title,
-//           textAlign:
-//               TextAlign.center,
-//           style:
-//               const TextStyle(
-//             fontWeight:
-//                 FontWeight.bold,
-//             fontSize: 13,
-//           ),
-//         ),
-
-//         const SizedBox(
-//           height: 5,
-//         ),
-
-//         Text(
-//           value.isEmpty
-//               ? '--'
-//               : value,
-//           textAlign:
-//               TextAlign.center,
-//         ),
-//       ],
-//     );
-//   }
-
-//   // ==========================================================
-//   // PHOTO CARD
-//   // ==========================================================
-
-//   Widget _photoCard({
-//     required String title,
-//     required String imagePath,
-//     required String latitude,
-//     required String longitude,
-//     required String dateTime,
-//     required bool enabled,
-//     required VoidCallback onTap,
-//     required VoidCallback onRemove,
-//   }) {
-//     final bool hasImage =
-//         imagePath.isNotEmpty;
-
-//     return Card(
-//       elevation: 3,
-//       shape:
-//           RoundedRectangleBorder(
-//         borderRadius:
-//             BorderRadius.circular(
-//           18,
-//         ),
-//       ),
-//       child: InkWell(
-//         borderRadius:
-//             BorderRadius.circular(
-//           18,
-//         ),
-//         onTap:
-//             enabled ? onTap : null,
-//         child: Opacity(
-//           opacity:
-//               enabled || hasImage
-//                   ? 1.0
-//                   : 0.45,
-//           child: Padding(
-//             padding:
-//                 const EdgeInsets.all(
-//               12,
-//             ),
-//             child: Column(
-//               children: [
-//                 // ==================================================
-//                 // IMAGE
-//                 // ==================================================
-
-//                 SizedBox(
-//                   height: 170,
-//                   width: double.infinity,
-//                   child: hasImage
-//                       ? ClipRRect(
-//                           borderRadius:
-//                               BorderRadius
-//                                   .circular(
-//                             12,
-//                           ),
-//                           child:
-//                               Image.file(
-//                             File(
-//                               imagePath,
-//                             ),
-//                             fit: BoxFit
-//                                 .cover,
-//                           ),
-//                         )
-//                       : Container(
-//                           decoration:
-//                               BoxDecoration(
-//                             color: Colors
-//                                 .green
-//                                 .shade50,
-//                             borderRadius:
-//                                 BorderRadius
-//                                     .circular(
-//                               12,
-//                             ),
-//                           ),
-//                           child:
-//                               const Center(
-//                             child: Icon(
-//                               Icons
-//                                   .camera_alt,
-//                               size: 50,
-//                               color: Colors
-//                                   .green,
-//                             ),
-//                           ),
-//                         ),
-//                 ),
-
-//                 const SizedBox(
-//                   height: 12,
-//                 ),
-
-//                 // ==================================================
-//                 // PHOTO TITLE
-//                 // ==================================================
-
-//                 Text(
-//                   title,
-//                   textAlign:
-//                       TextAlign.center,
-//                   style:
-//                       const TextStyle(
-//                     fontWeight:
-//                         FontWeight.bold,
-//                     fontSize: 15,
-//                   ),
-//                 ),
-
-//                 const SizedBox(
-//                   height: 7,
-//                 ),
-
-//                 // ==================================================
-//                 // CAPTURE / RETAKE TEXT
-//                 // ==================================================
-
-//                 Text(
-//                   hasImage
-//                       ? 'Tap on the Photo to Retake'
-//                       : enabled
-//                           ? 'Tap to Capture'
-//                           : 'Within 15 m required',
-//                   textAlign:
-//                       TextAlign.center,
-//                   style:
-//                       const TextStyle(
-//                     color:
-//                         Colors.grey,
-//                     fontSize: 12,
-//                   ),
-//                 ),
-
-//                 // ==================================================
-//                 // PHOTO DETAILS
-//                 // ==================================================
-
-//                 if (hasImage &&
-//                     latitude
-//                         .isNotEmpty &&
-//                     longitude
-//                         .isNotEmpty) ...[
-//                   const SizedBox(
-//                     height: 10,
-//                   ),
-
-//                   Container(
-//                     width:
-//                         double.infinity,
-//                     padding:
-//                         const EdgeInsets
-//                             .all(
-//                       9,
-//                     ),
-//                     decoration:
-//                         BoxDecoration(
-//                       color: Colors
-//                           .green
-//                           .shade50,
-//                       borderRadius:
-//                           BorderRadius
-//                               .circular(
-//                         10,
-//                       ),
-//                     ),
-//                     child: Column(
-//                       crossAxisAlignment:
-//                           CrossAxisAlignment
-//                               .start,
-//                       children: [
-//                         Text(
-//                           'Lat: $latitude',
-//                           style:
-//                               const TextStyle(
-//                             fontSize:
-//                                 11,
-//                           ),
-//                         ),
-//                         Text(
-//                           'Long: $longitude',
-//                           style:
-//                               const TextStyle(
-//                             fontSize:
-//                                 11,
-//                           ),
-//                         ),
-//                         Text(
-//                           dateTime,
-//                           style:
-//                               const TextStyle(
-//                             fontSize:
-//                                 11,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-
-//                   // ==================================================
-//                   // REMOVE PHOTO
-//                   // ==================================================
-
-//                   TextButton.icon(
-//                     onPressed:
-//                         onRemove,
-//                     icon:
-//                         const Icon(
-//                       Icons
-//                           .delete_outline,
-//                       color:
-//                           Colors.red,
-//                     ),
-//                     label:
-//                         const Text(
-//                       'Remove',
-//                       style:
-//                           TextStyle(
-//                         color:
-//                             Colors.red,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -4828,819 +11,569 @@ import '../../widgets/common_footer.dart';
 class GeoTaggingScreen extends StatelessWidget {
   GeoTaggingScreen({super.key});
 
-  final GeoTaggingController controller =
-      Get.find<GeoTaggingController>();
+  final GeoTaggingController controller = Get.find<GeoTaggingController>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF4F7FA),
-      bottomNavigationBar: const CommonFooter(),
-
-      // ========================================================
-      // APP BAR
-      // ========================================================
-
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: const Color(0xff1565C0),
-        foregroundColor: Colors.white,
-        title: const Text(
-          'Geo Tagging',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(
+            'assets/images/background.jpg',
+          ), // Or NetworkImage('url')
+          fit: BoxFit.cover, // Ensures the image fills the entire screen
         ),
       ),
+      child: Scaffold(
+        // backgroundColor: const Color(0xffF4F7FA),
+        backgroundColor: Colors.transparent,
+        bottomNavigationBar: const CommonFooter(),
 
-      // ========================================================
-      // BODY
-      // ========================================================
+        // ========================================================
+        // APP BAR
+        // ========================================================
+        appBar: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: const Color(0xff1565C0),
+          foregroundColor: Colors.white,
+          title: const Text(
+            'Geo Tagging',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
 
-      body: Obx(
-        () => SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                // ==================================================
-                // MAP
-                // ==================================================
-
-                Container(
-                  height: 330,
-                  width: double.infinity,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade300,
-                        blurRadius: 10,
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: [
-                      FlutterMap(
-                        mapController:
-                            controller.mapController,
-                        options: MapOptions(
-                          initialCenter: const LatLng(
-                            15.3173,
-                            75.7139,
-                          ),
-                          initialZoom:
-                              controller.initialZoom,
-                          onTap: (
-                            TapPosition tapPosition,
-                            LatLng point,
-                          ) {
-                            controller.onMapTap(
-                              tapPosition,
-                              point,
-                            );
-                          },
-                        ),
-                        children: [
-                          // ==================================================
-                          // MAP TILE
-                          // ==================================================
-
-                          TileLayer(
-                            urlTemplate:
-                                controller.satelliteMap.value
-                                    ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-                                    : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            userAgentPackageName:
-                                'com.example.namma_kaimagga_app',
-                          ),
-
-                          // ==================================================
-                          // CURRENT LOCATION
-                          // ==================================================
-
-                          if (controller.currentLocation.value != null)
-                            MarkerLayer(
-                              markers: [
-                                Marker(
-                                  point:
-                                      controller.currentLocation.value!,
-                                  width: 50,
-                                  height: 50,
-                                  child: const Icon(
-                                    Icons.my_location,
-                                    color: Colors.blue,
-                                    size: 40,
-                                  ),
-                                ),
-                              ],
+        // ========================================================
+        // BODY
+        // ========================================================
+        body: Obx(
+          () => SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // ==================================================
+                  // MAP
+                  // ==================================================
+                  Container(
+                    height: 330,
+                    width: double.infinity,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: [
+                        BoxShadow(color: Colors.grey.shade300, blurRadius: 10),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        FlutterMap(
+                          mapController: controller.mapController,
+                          options: MapOptions(
+                            initialCenter:
+                                controller.currentLocation.value ??
+                                const LatLng(15.3173, 75.7139),
+                            initialZoom: controller.initialZoom,
+                            // Disable map rotation while retaining pan and zoom.
+                            interactionOptions: const InteractionOptions(
+                              flags:
+                                  InteractiveFlag.all & ~InteractiveFlag.rotate,
                             ),
+                            onMapReady: controller.onMapReady,
+                            onTap: (TapPosition tapPosition, LatLng point) {
+                              controller.onMapTap(tapPosition, point);
+                            },
+                          ),
+                          children: [
+                            // ==================================================
+                            // MAP TILE
+                            // ==================================================
+                            TileLayer(
+                              urlTemplate: controller.satelliteMap.value
+                                  ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+                                  : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              userAgentPackageName:
+                                  'com.example.namma_kaimagga_app',
+                            ),
+
+                            // ==================================================
+                            // CURRENT LOCATION
+                            // ==================================================
+                            if (controller.currentLocation.value != null)
+                              MarkerLayer(
+                                markers: [
+                                  Marker(
+                                    point: controller.currentLocation.value!,
+                                    width: 50,
+                                    height: 50,
+                                    child: const Icon(
+                                      Icons.my_location,
+                                      color: Colors.blue,
+                                      size: 40,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                            // ==================================================
+                            // SELECTED LOCATION
+                            // ==================================================
+                            if (controller.selectedLocation.value != null)
+                              MarkerLayer(
+                                markers: [
+                                  Marker(
+                                    point: controller.selectedLocation.value!,
+                                    width: 55,
+                                    height: 55,
+                                    child: const Icon(
+                                      Icons.location_pin,
+                                      color: Colors.orange,
+                                      size: 50,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+
+                        // ==================================================
+                        // MAP INSTRUCTION
+                        // ==================================================
+                        Positioned(
+                          top: 12,
+                          left: 12,
+                          right: 12,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.94),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Text(
+                              'Tap on the map to select the Geo-Tagging location',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // ==================================================
+                        // MAP BUTTONS
+                        // ==================================================
+                        Positioned(
+                          left: 12,
+                          bottom: 12,
+                          child: Column(
+                            children: [
+                              FloatingActionButton.small(
+                                heroTag: 'geo_gps',
+                                backgroundColor: const Color(0xff1565C0),
+                                foregroundColor: Colors.white,
+                                onPressed: controller.moveToCurrentLocation,
+                                child: const Icon(Icons.my_location),
+                              ),
+                              const SizedBox(height: 10),
+                              FloatingActionButton.small(
+                                heroTag: 'geo_layer',
+                                backgroundColor: const Color(0xff1565C0),
+                                foregroundColor: Colors.white,
+                                onPressed: controller.changeMapType,
+                                child: const Icon(Icons.layers),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // ==================================================
+                        // LOADING
+                        // ==================================================
+                        if (controller.isLoading.value)
+                          Container(
+                            color: Colors.black.withValues(alpha: 0.15),
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // ==================================================
+                  // LOCATION STATUS
+                  // ==================================================
+                  Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Column(
+                        children: [
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Location Details',
+                              style: TextStyle(
+                                fontSize: 19,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 18),
+
+                          // ==================================================
+                          // CURRENT LATITUDE / LONGITUDE
+                          // ==================================================
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _infoTile(
+                                  Icons.my_location,
+                                  'Current Latitude',
+                                  controller.latitude.value,
+                                ),
+                              ),
+                              Expanded(
+                                child: _infoTile(
+                                  Icons.my_location,
+                                  'Current Longitude',
+                                  controller.longitude.value,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const Divider(height: 30),
+
+                          // ==================================================
+                          // ACCURACY + DISTANCE
+                          // ==================================================
+                          Row(
+                            children: [
+                              // ==================================================
+                              // GPS ACCURACY
+                              // ==================================================
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 24,
+                                      backgroundColor: controller.accuracyColor
+                                          .withValues(alpha: 0.12),
+                                      child: Icon(
+                                        Icons.gps_fixed,
+                                        color: controller.accuracyColor,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 8),
+
+                                    const Text(
+                                      'GPS Accuracy',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 5),
+
+                                    Text(
+                                      controller.accuracy.value.isEmpty
+                                          ? '--'
+                                          : controller.accuracy.value,
+                                      style: TextStyle(
+                                        color: controller.accuracyColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // ==================================================
+                              // DISTANCE
+                              // ==================================================
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 24,
+                                      backgroundColor:
+                                          controller.isWithinPhotoRadius
+                                          ? Colors.green.withValues(alpha: 0.12)
+                                          : Colors.red.withValues(alpha: 0.12),
+                                      child: Icon(
+                                        Icons.straighten,
+                                        color: controller.isWithinPhotoRadius
+                                            ? Colors.green.shade800
+                                            : Colors.red,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 8),
+
+                                    const Text(
+                                      'Distance',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 5),
+
+                                    Text(
+                                      controller.selectedLocation.value == null
+                                          ? '--'
+                                          : '${controller.distanceFromSelectedLocation.value.toStringAsFixed(2)} m',
+                                      style: TextStyle(
+                                        color: controller.isWithinPhotoRadius
+                                            ? Colors.green.shade800
+                                            : Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const Divider(height: 30),
 
                           // ==================================================
                           // SELECTED LOCATION
                           // ==================================================
-
                           if (controller.selectedLocation.value != null)
-                            MarkerLayer(
-                              markers: [
-                                Marker(
-                                  point:
-                                      controller.selectedLocation.value!,
-                                  width: 55,
-                                  height: 55,
-                                  child: const Icon(
-                                    Icons.location_pin,
-                                    color: Colors.orange,
-                                    size: 50,
-                                  ),
-                                ),
-                              ],
-                            ),
-                        ],
-                      ),
-
-                      // ==================================================
-                      // MAP INSTRUCTION
-                      // ==================================================
-
-                      Positioned(
-                        top: 12,
-                        left: 12,
-                        right: 12,
-                        child: Container(
-                          padding:
-                              const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color:
-                                Colors.white.withValues(
-                              alpha: 0.94,
-                            ),
-                            borderRadius:
-                                BorderRadius.circular(12),
-                          ),
-                          child: const Text(
-                            'Tap on the map to select the Geo-Tagging location',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // ==================================================
-                      // MAP BUTTONS
-                      // ==================================================
-
-                      Positioned(
-                        left: 12,
-                        bottom: 12,
-                        child: Column(
-                          children: [
-                            FloatingActionButton.small(
-                              heroTag: 'geo_gps',
-                              backgroundColor:
-                                  const Color(0xff1565C0),
-                              foregroundColor:
-                                  Colors.white,
-                              onPressed:
-                                  controller
-                                      .moveToCurrentLocation,
-                              child: const Icon(
-                                Icons.my_location,
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.orange.withValues(alpha: 0.08),
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            FloatingActionButton.small(
-                              heroTag: 'geo_layer',
-                              backgroundColor:
-                                  const Color(0xff1565C0),
-                              foregroundColor:
-                                  Colors.white,
-                              onPressed:
-                                  controller
-                                      .changeMapType,
-                              child: const Icon(
-                                Icons.layers,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // ==================================================
-                      // LOADING
-                      // ==================================================
-
-                      if (controller.isLoading.value)
-                        Container(
-                          color:
-                              Colors.black.withValues(
-                            alpha: 0.15,
-                          ),
-                          child: const Center(
-                            child:
-                                CircularProgressIndicator(),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(
-                  height: 16,
-                ),
-
-                // ==================================================
-                // LOCATION STATUS
-                // ==================================================
-
-                Card(
-                  elevation: 3,
-                  shape:
-                      RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(18),
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.all(18),
-                    child: Column(
-                      children: [
-                        const Align(
-                          alignment:
-                              Alignment.centerLeft,
-                          child: Text(
-                            'Location Details',
-                            style: TextStyle(
-                              fontSize: 19,
-                              fontWeight:
-                                  FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(
-                          height: 18,
-                        ),
-
-                        // ==================================================
-                        // CURRENT LATITUDE / LONGITUDE
-                        // ==================================================
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _infoTile(
-                                Icons.my_location,
-                                'Current Latitude',
-                                controller
-                                    .latitude
-                                    .value,
-                              ),
-                            ),
-                            Expanded(
-                              child: _infoTile(
-                                Icons.my_location,
-                                'Current Longitude',
-                                controller
-                                    .longitude
-                                    .value,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        const Divider(
-                          height: 30,
-                        ),
-
-                        // ==================================================
-                        // ACCURACY + DISTANCE
-                        // ==================================================
-
-                        Row(
-                          children: [
-                            // ==================================================
-                            // GPS ACCURACY
-                            // ==================================================
-
-                            Expanded(
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CircleAvatar(
-                                    radius: 24,
-                                    backgroundColor:
-                                        controller
-                                            .accuracyColor
-                                            .withValues(
-                                      alpha: 0.12,
-                                    ),
-                                    child: Icon(
-                                      Icons.gps_fixed,
-                                      color:
-                                          controller
-                                              .accuracyColor,
-                                    ),
-                                  ),
-
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-
                                   const Text(
-                                    'GPS Accuracy',
-                                    style:
-                                        TextStyle(
-                                      fontWeight:
-                                          FontWeight.bold,
+                                    'Selected Location',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
 
-                                  const SizedBox(
-                                    height: 5,
+                                  const SizedBox(height: 6),
+
+                                  Text(
+                                    'Latitude: ${controller.selectedLatitude.value}',
                                   ),
 
                                   Text(
-                                    controller
-                                            .accuracy
-                                            .value
-                                            .isEmpty
-                                        ? '--'
-                                        : controller
-                                            .accuracy
-                                            .value,
-                                    style:
-                                        TextStyle(
-                                      color:
-                                          controller
-                                              .accuracyColor,
-                                      fontWeight:
-                                          FontWeight.bold,
-                                    ),
+                                    'Longitude: ${controller.selectedLongitude.value}',
                                   ),
                                 ],
                               ),
                             ),
 
-                            // ==================================================
-                            // DISTANCE
-                            // ==================================================
+                          const SizedBox(height: 12),
 
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 24,
-                                    backgroundColor:
-                                        controller
-                                                .isWithinPhotoRadius
-                                            ? Colors
-                                                .green
-                                                .withValues(
-                                                alpha: 0.12,
-                                              )
-                                            : Colors
-                                                .red
-                                                .withValues(
-                                                alpha: 0.12,
-                                              ),
-                                    child: Icon(
-                                      Icons
-                                          .straighten,
-                                      color: controller
-                                              .isWithinPhotoRadius
-                                          ? Colors
-                                              .green
-                                              .shade800
-                                          : Colors.red,
-                                    ),
-                                  ),
-
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-
-                                  const Text(
-                                    'Distance',
-                                    style:
-                                        TextStyle(
-                                      fontWeight:
-                                          FontWeight.bold,
-                                    ),
-                                  ),
-
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-
-                                  Text(
-                                    controller
-                                                .selectedLocation
-                                                .value ==
-                                            null
-                                        ? '--'
-                                        : '${controller.distanceFromSelectedLocation.value.toStringAsFixed(2)} m',
-                                    style:
-                                        TextStyle(
-                                      color: controller
-                                              .isWithinPhotoRadius
-                                          ? Colors
-                                              .green
-                                              .shade800
-                                          : Colors.red,
-                                      fontWeight:
-                                          FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        const Divider(
-                          height: 30,
-                        ),
-
-                        // ==================================================
-                        // SELECTED LOCATION
-                        // ==================================================
-
-                        if (controller
-                                .selectedLocation
-                                .value !=
-                            null)
+                          // ==================================================
+                          // PHOTO ELIGIBILITY
+                          // ==================================================
                           Container(
                             width: double.infinity,
-                            padding:
-                                const EdgeInsets.all(12),
-                            decoration:
-                                BoxDecoration(
-                              color: Colors.orange
-                                  .withValues(
-                                alpha: 0.08,
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(
-                                12,
-                              ),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: controller.isWithinPhotoRadius
+                                  ? Colors.green.withValues(alpha: 0.08)
+                                  : Colors.red.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment
-                                      .start,
-                              children: [
-                                const Text(
-                                  'Selected Location',
-                                  style:
-                                      TextStyle(
-                                    fontWeight:
-                                        FontWeight.bold,
-                                  ),
-                                ),
-
-                                const SizedBox(
-                                  height: 6,
-                                ),
-
-                                Text(
-                                  'Latitude: ${controller.selectedLatitude.value}',
-                                ),
-
-                                Text(
-                                  'Longitude: ${controller.selectedLongitude.value}',
-                                ),
-                              ],
+                            child: Text(
+                              controller.selectedLocation.value == null
+                                  ? 'Select a location on the map.'
+                                  : !controller.isWithinPhotoRadius
+                                  ? 'Move within 30 m of the selected location to capture photos.'
+                                  : !controller.isAccuracyAcceptable
+                                  ? 'GPS accuracy must be acceptable before capturing photos.'
+                                  : controller.photo1Path.value.isNotEmpty &&
+                                        controller.photo2Path.value.isNotEmpty
+                                  ? 'Both photos captured successfully within the allowed 30 m radius. GPS accuracy: ${controller.accuracy.value}.'
+                                  : controller.photo1Path.value.isNotEmpty
+                                  ? 'Photo 1 captured successfully. Capture Photo 2 to complete both photos.'
+                                  : controller.photo2Path.value.isNotEmpty
+                                  ? 'Photo 2 captured successfully. Capture Photo 1 to complete both photos.'
+                                  : 'You are within the allowed 30 m radius. GPS accuracy: ${controller.accuracy.value}. Photos can be captured.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: controller.selectedLocation.value == null
+                                    ? Colors.grey.shade700
+                                    : controller.isWithinPhotoRadius &&
+                                          controller.isAccuracyAcceptable
+                                    ? Colors.green.shade800
+                                    : Colors.red,
+                              ),
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
 
-                        const SizedBox(
-                          height: 12,
+                  const SizedBox(height: 20),
+
+                  // ==================================================
+                  // PHOTO 1 + PHOTO 2
+                  // ==================================================
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: _photoCard(
+                          title: 'Photo 1',
+                          imagePath: controller.photo1Path.value,
+                          latitude: controller.photo1Latitude.value,
+                          longitude: controller.photo1Longitude.value,
+                          dateTime: controller.photo1DateTime.value,
+                          enabled:
+                              controller.isWithinPhotoRadius &&
+                              controller.isAccuracyAcceptable,
+                          onTap: controller.capturePhoto1,
+                          onRemove: controller.removePhoto1,
                         ),
+                      ),
 
-                        // ==================================================
-                        // PHOTO ELIGIBILITY
-                        // ==================================================
+                      const SizedBox(width: 15),
 
-                        Container(
-                          width: double.infinity,
-                          padding:
-                              const EdgeInsets.all(12),
-                          decoration:
-                              BoxDecoration(
-                            color: controller
-                                    .isWithinPhotoRadius
-                                ? Colors.green
-                                    .withValues(
-                                    alpha: 0.08,
-                                  )
-                                : Colors.red
-                                    .withValues(
-                                    alpha: 0.08,
-                                  ),
-                            borderRadius:
-                                BorderRadius.circular(
-                              12,
-                            ),
-                          ),
-                          child: Text(
-                            controller
-                                        .selectedLocation
-                                        .value ==
-                                    null
-                                ? 'Select a location on the map.'
-                                : controller
-                                        .isWithinPhotoRadius
-                                    ? 'You are within the allowed 15 m radius. Photos can be captured.'
-                                    : 'Move within 15 m of the selected location to capture photos.',
-                            textAlign:
-                                TextAlign.center,
+                      Expanded(
+                        child: _photoCard(
+                          title: 'Photo 2',
+                          imagePath: controller.photo2Path.value,
+                          latitude: controller.photo2Latitude.value,
+                          longitude: controller.photo2Longitude.value,
+                          dateTime: controller.photo2DateTime.value,
+                          enabled:
+                              controller.isWithinPhotoRadius &&
+                              controller.isAccuracyAcceptable,
+                          onTap: controller.capturePhoto2,
+                          onRemove: controller.removePhoto2,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // ==================================================
+                  // REMARKS
+                  // ==================================================
+                  Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Remarks',
                             style: TextStyle(
-                              fontWeight:
-                                  FontWeight.w600,
-                              color: controller
-                                          .selectedLocation
-                                          .value ==
-                                      null
-                                  ? Colors.grey
-                                      .shade700
-                                  : controller
-                                          .isWithinPhotoRadius
-                                      ? Colors
-                                          .green
-                                          .shade800
-                                      : Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
 
-                const SizedBox(
-                  height: 20,
-                ),
+                          const SizedBox(height: 15),
 
-                // ==================================================
-                // PHOTO 1 + PHOTO 2
-                // ==================================================
-
-                Row(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _photoCard(
-                        title: 'Photo 1',
-                        imagePath:
-                            controller
-                                .photo1Path
-                                .value,
-                        latitude:
-                            controller
-                                .photo1Latitude
-                                .value,
-                        longitude:
-                            controller
-                                .photo1Longitude
-                                .value,
-                        dateTime:
-                            controller
-                                .photo1DateTime
-                                .value,
-                        enabled:
-                            controller
-                                    .isWithinPhotoRadius &&
-                                controller
-                                    .isAccuracyAcceptable,
-                        onTap:
-                            controller
-                                .capturePhoto1,
-                        onRemove:
-                            controller
-                                .removePhoto1,
-                      ),
-                    ),
-
-                    const SizedBox(
-                      width: 15,
-                    ),
-
-                    Expanded(
-                      child: _photoCard(
-                        title: 'Photo 2',
-                        imagePath:
-                            controller
-                                .photo2Path
-                                .value,
-                        latitude:
-                            controller
-                                .photo2Latitude
-                                .value,
-                        longitude:
-                            controller
-                                .photo2Longitude
-                                .value,
-                        dateTime:
-                            controller
-                                .photo2DateTime
-                                .value,
-                        enabled:
-                            controller
-                                    .isWithinPhotoRadius &&
-                                controller
-                                    .isAccuracyAcceptable,
-                        onTap:
-                            controller
-                                .capturePhoto2,
-                        onRemove:
-                            controller
-                                .removePhoto2,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(
-                  height: 20,
-                ),
-
-                // ==================================================
-                // REMARKS
-                // ==================================================
-
-                Card(
-                  elevation: 3,
-                  shape:
-                      RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(18),
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.all(18),
-                    child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Remarks',
-                          style: TextStyle(
-                            fontWeight:
-                                FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-
-                        const SizedBox(
-                          height: 15,
-                        ),
-
-                        TextField(
-                          controller:
-                              controller
-                                  .remarksController,
-                          maxLines: 4,
-                          decoration:
-                              InputDecoration(
-                            hintText:
-                                'Enter remarks (Optional)',
-                            border:
-                                OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius
-                                      .circular(
-                                12,
+                          TextField(
+                            controller: controller.remarksController,
+                            maxLines: 4,
+                            decoration: InputDecoration(
+                              hintText: 'Enter remarks (Optional)',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
 
-                const SizedBox(
-                  height: 25,
-                ),
+                  const SizedBox(height: 25),
 
-                // ==================================================
-                // BUTTONS
-                // ==================================================
-
-                Row(
-                  children: [
-                    // ==================================================
-                    // CANCEL
-                    // ==================================================
-
-                    Expanded(
-                      child:
-                          OutlinedButton(
-                        onPressed:
-                            controller.cancel,
-                        style:
-                            OutlinedButton.styleFrom(
-                          minimumSize:
-                              const Size
-                                  .fromHeight(
-                            55,
+                  // ==================================================
+                  // BUTTONS
+                  // ==================================================
+                  Row(
+                    children: [
+                      // ==================================================
+                      // CANCEL
+                      // ==================================================
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: controller.cancel,
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(55),
+                            foregroundColor: Colors.red,
+                            side: const BorderSide(color: Colors.red),
                           ),
-                          foregroundColor:
-                              Colors.red,
-                          side:
-                              const BorderSide(
-                            color:
-                                Colors.red,
-                          ),
-                        ),
-                        child:
-                            const Text(
-                          'Cancel',
-                          style:
-                              TextStyle(
-                            fontWeight:
-                                FontWeight.bold,
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
-                    ),
 
-                    const SizedBox(
-                      width: 15,
-                    ),
+                      const SizedBox(width: 15),
 
-                    // ==================================================
-                    // SAVE DATA
-                    // ==================================================
-
-                    Expanded(
-                      child:
-                          ElevatedButton(
-                        onPressed:
-                            controller
-                                    .isSaving
-                                    .value
-                                ? null
-                                : controller
-                                    .saveData,
-                        style:
-                            ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Colors
-                                  .green
-                                  .shade800,
-                          foregroundColor:
-                              Colors.white,
-                          minimumSize:
-                              const Size
-                                  .fromHeight(
-                            55,
+                      // ==================================================
+                      // SAVE DATA
+                      // ==================================================
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: controller.isSaving.value
+                              ? null
+                              : controller.saveData,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green.shade800,
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size.fromHeight(55),
                           ),
+                          child: controller.isSaving.value
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Text(
+                                  'Save Data',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                         ),
-                        child: controller
-                                .isSaving
-                                .value
-                            ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child:
-                                    CircularProgressIndicator(
-                                  strokeWidth:
-                                      2,
-                                  color: Colors
-                                      .white,
-                                ),
-                              )
-                            : const Text(
-                                'Save Data',
-                                style:
-                                    TextStyle(
-                                  fontWeight:
-                                      FontWeight
-                                          .bold,
-                                ),
-                              ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
 
-                const SizedBox(
-                  height: 30,
-                ),
-              ],
+                  const SizedBox(height: 30),
+                ],
+              ),
             ),
           ),
         ),
@@ -5652,51 +585,26 @@ class GeoTaggingScreen extends StatelessWidget {
   // INFO TILE
   // ==========================================================
 
-  Widget _infoTile(
-    IconData icon,
-    String title,
-    String value,
-  ) {
+  Widget _infoTile(IconData icon, String title, String value) {
     return Column(
       children: [
         CircleAvatar(
           radius: 24,
-          backgroundColor:
-              const Color(0xff1565C0).withValues(alpha: 0.08),
-          child: Icon(
-            icon,
-            color:
-                const Color(0xff1565C0),
-          ),
+          backgroundColor: const Color(0xff1565C0).withValues(alpha: 0.08),
+          child: Icon(icon, color: const Color(0xff1565C0)),
         ),
 
-        const SizedBox(
-          height: 8,
-        ),
+        const SizedBox(height: 8),
 
         Text(
           title,
-          textAlign:
-              TextAlign.center,
-          style:
-              const TextStyle(
-            fontWeight:
-                FontWeight.bold,
-            fontSize: 13,
-          ),
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
         ),
 
-        const SizedBox(
-          height: 5,
-        ),
+        const SizedBox(height: 5),
 
-        Text(
-          value.isEmpty
-              ? '--'
-              : value,
-          textAlign:
-              TextAlign.center,
-        ),
+        Text(value.isEmpty ? '--' : value, textAlign: TextAlign.center),
       ],
     );
   }
@@ -5715,190 +623,102 @@ class GeoTaggingScreen extends StatelessWidget {
     required VoidCallback onTap,
     required VoidCallback onRemove,
   }) {
-    final bool hasImage =
-        imagePath.isNotEmpty;
+    final bool hasImage = imagePath.isNotEmpty;
 
     return Card(
       elevation: 3,
-      shape:
-          RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(
-          18,
-        ),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: InkWell(
-        borderRadius:
-            BorderRadius.circular(
-          18,
-        ),
-        onTap:
-            enabled ? onTap : null,
+        borderRadius: BorderRadius.circular(18),
+        onTap: enabled ? onTap : null,
         child: Opacity(
-          opacity:
-              enabled || hasImage
-                  ? 1.0
-                  : 0.45,
+          opacity: enabled || hasImage ? 1.0 : 0.45,
           child: Padding(
-            padding:
-                const EdgeInsets.all(
-              12,
-            ),
+            padding: const EdgeInsets.all(12),
             child: Column(
               children: [
                 // ==================================================
                 // IMAGE
                 // ==================================================
-
                 SizedBox(
                   height: 170,
                   width: double.infinity,
                   child: hasImage
                       ? ClipRRect(
-                          borderRadius:
-                              BorderRadius
-                                  .circular(
-                            12,
-                          ),
-                          child:
-                              Image.file(
-                            File(
-                              imagePath,
-                            ),
-                            fit: BoxFit
-                                .cover,
-                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.file(File(imagePath), fit: BoxFit.cover),
                         )
                       : Container(
-                          decoration:
-                              BoxDecoration(
-                            color: Colors
-                                .green
-                                .shade50,
-                            borderRadius:
-                                BorderRadius
-                                    .circular(
-                              12,
-                            ),
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade50,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child:
-                              const Center(
+                          child: const Center(
                             child: Icon(
-                              Icons
-                                  .camera_alt,
+                              Icons.camera_alt,
                               size: 50,
-                              color: Colors
-                                  .green,
+                              color: Colors.green,
                             ),
                           ),
                         ),
                 ),
 
-                const SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
 
                 // ==================================================
                 // PHOTO TITLE
                 // ==================================================
-
                 Text(
                   title,
-                  textAlign:
-                      TextAlign.center,
-                  style:
-                      const TextStyle(
-                    fontWeight:
-                        FontWeight.bold,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
                     fontSize: 15,
                   ),
                 ),
 
-                const SizedBox(
-                  height: 7,
-                ),
+                const SizedBox(height: 7),
 
                 // ==================================================
                 // CAPTURE / RETAKE TEXT
                 // ==================================================
-
                 Text(
                   hasImage
                       ? 'Tap on the Photo to Retake'
                       : enabled
-                          ? 'Tap to Capture'
-                          : 'Within 15 m required',
-                  textAlign:
-                      TextAlign.center,
-                  style:
-                      const TextStyle(
-                    color:
-                        Colors.grey,
-                    fontSize: 12,
-                  ),
+                      ? 'Tap to Capture'
+                      : 'Within 30 m required',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
 
                 // ==================================================
                 // PHOTO DETAILS
                 // ==================================================
-
                 if (hasImage &&
-                    latitude
-                        .isNotEmpty &&
-                    longitude
-                        .isNotEmpty) ...[
-                  const SizedBox(
-                    height: 10,
-                  ),
+                    latitude.isNotEmpty &&
+                    longitude.isNotEmpty) ...[
+                  const SizedBox(height: 10),
 
                   Container(
-                    width:
-                        double.infinity,
-                    padding:
-                        const EdgeInsets
-                            .all(
-                      9,
-                    ),
-                    decoration:
-                        BoxDecoration(
-                      color: Colors
-                          .green
-                          .shade50,
-                      borderRadius:
-                          BorderRadius
-                              .circular(
-                        10,
-                      ),
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(9),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment
-                              .start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Lat: $latitude',
-                          style:
-                              const TextStyle(
-                            fontSize:
-                                11,
-                          ),
+                          style: const TextStyle(fontSize: 11),
                         ),
                         Text(
                           'Long: $longitude',
-                          style:
-                              const TextStyle(
-                            fontSize:
-                                11,
-                          ),
+                          style: const TextStyle(fontSize: 11),
                         ),
-                        Text(
-                          dateTime,
-                          style:
-                              const TextStyle(
-                            fontSize:
-                                11,
-                          ),
-                        ),
+                        Text(dateTime, style: const TextStyle(fontSize: 11)),
                       ],
                     ),
                   ),
@@ -5906,25 +726,12 @@ class GeoTaggingScreen extends StatelessWidget {
                   // ==================================================
                   // REMOVE PHOTO
                   // ==================================================
-
                   TextButton.icon(
-                    onPressed:
-                        onRemove,
-                    icon:
-                        const Icon(
-                      Icons
-                          .delete_outline,
-                      color:
-                          Colors.red,
-                    ),
-                    label:
-                        const Text(
+                    onPressed: onRemove,
+                    icon: const Icon(Icons.delete_outline, color: Colors.red),
+                    label: const Text(
                       'Remove',
-                      style:
-                          TextStyle(
-                        color:
-                            Colors.red,
-                      ),
+                      style: TextStyle(color: Colors.red),
                     ),
                   ),
                 ],

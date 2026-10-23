@@ -18,13 +18,11 @@ class SurveySyncModel {
 }
 
 class SyncStatusController extends GetxController {
-
   //--------------------------------------------
   // SURVEY LIST
   //--------------------------------------------
 
-  RxList<SurveySyncModel> surveys =
-      <SurveySyncModel>[].obs;
+  RxList<SurveySyncModel> surveys = <SurveySyncModel>[].obs;
 
   //--------------------------------------------
   // LOADING
@@ -48,12 +46,10 @@ class SyncStatusController extends GetxController {
   //--------------------------------------------
 
   void loadLocalSurveys() {
-
     // TODO:
     // Replace with SQLite query
 
     surveys.assignAll([
-
       SurveySyncModel(
         barcode: "HL000001",
         latitude: "13.028900",
@@ -82,7 +78,6 @@ class SyncStatusController extends GetxController {
   //--------------------------------------------
 
   void deleteSurvey(int index) {
-
     surveys.removeAt(index);
 
     Get.snackbar(
@@ -91,12 +86,11 @@ class SyncStatusController extends GetxController {
       snackPosition: SnackPosition.BOTTOM,
     );
   }
-    //--------------------------------------------
+  //--------------------------------------------
   // SYNC SINGLE SURVEY
   //--------------------------------------------
 
   Future<void> syncSurvey(int index) async {
-
     if (surveys[index].synced) {
       return;
     }
@@ -104,14 +98,11 @@ class SyncStatusController extends GetxController {
     isUploading.value = true;
 
     Get.dialog(
-      const Center(
-        child: CircularProgressIndicator(),
-      ),
+      const Center(child: CircularProgressIndicator()),
       barrierDismissible: false,
     );
 
     try {
-
       // TODO:
       // Read survey from SQLite
 
@@ -124,9 +115,7 @@ class SyncStatusController extends GetxController {
       // TODO:
       // Upload Images
 
-      await Future.delayed(
-        const Duration(seconds: 2),
-      );
+      await Future.delayed(const Duration(seconds: 2));
 
       surveys[index].synced = true;
 
@@ -139,9 +128,7 @@ class SyncStatusController extends GetxController {
         "Survey uploaded successfully.",
         snackPosition: SnackPosition.BOTTOM,
       );
-
     } catch (e) {
-
       if (Get.isDialogOpen ?? false) {
         Get.back();
       }
@@ -151,11 +138,8 @@ class SyncStatusController extends GetxController {
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
       );
-
     } finally {
-
       isUploading.value = false;
-
     }
   }
 
@@ -164,13 +148,8 @@ class SyncStatusController extends GetxController {
   //--------------------------------------------
 
   Future<void> syncAll() async {
-
     if (surveys.isEmpty) {
-
-      Get.snackbar(
-        "No Data",
-        "No surveys available.",
-      );
+      Get.snackbar("No Data", "No surveys available.");
 
       return;
     }
@@ -178,24 +157,17 @@ class SyncStatusController extends GetxController {
     isUploading.value = true;
 
     Get.dialog(
-      const Center(
-        child: CircularProgressIndicator(),
-      ),
+      const Center(child: CircularProgressIndicator()),
       barrierDismissible: false,
     );
 
     try {
-
       for (int i = 0; i < surveys.length; i++) {
-
         if (!surveys[i].synced) {
-
           // TODO:
           // Upload current survey
 
-          await Future.delayed(
-            const Duration(milliseconds: 800),
-          );
+          await Future.delayed(const Duration(milliseconds: 800));
 
           surveys[i].synced = true;
         }
@@ -210,9 +182,7 @@ class SyncStatusController extends GetxController {
         "All pending surveys uploaded successfully.",
         snackPosition: SnackPosition.BOTTOM,
       );
-
     } catch (e) {
-
       if (Get.isDialogOpen ?? false) {
         Get.back();
       }
@@ -222,11 +192,8 @@ class SyncStatusController extends GetxController {
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
       );
-
     } finally {
-
       isUploading.value = false;
-
     }
   }
 
@@ -235,9 +202,7 @@ class SyncStatusController extends GetxController {
   //--------------------------------------------
 
   Future<void> refreshData() async {
-
     loadLocalSurveys();
-
   }
 
   //--------------------------------------------
@@ -250,14 +215,11 @@ class SyncStatusController extends GetxController {
   // TOTAL PENDING
   //--------------------------------------------
 
-  int get pendingSurveys =>
-      surveys.where((e) => !e.synced).length;
+  int get pendingSurveys => surveys.where((e) => !e.synced).length;
 
   //--------------------------------------------
   // TOTAL SYNCED
   //--------------------------------------------
 
-  int get syncedSurveys =>
-      surveys.where((e) => e.synced).length;
-
+  int get syncedSurveys => surveys.where((e) => e.synced).length;
 }

@@ -41,6 +41,7 @@ dependencies:
   shared_preferences: ^2.5.5
   dio: ^5.10.0
   connectivity_plus: ^7.2.0
+  http: ^1.6.0
   # arcgis_maps: ^300.0.0+4935
   # arcgis_maps_toolkit: ^300.0.0+4935
   image_picker: ^1.2.3

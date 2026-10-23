@@ -21,23 +21,14 @@ class SubmitSurveyScreen extends StatelessWidget {
           ),
           Expanded(
             flex: 6,
-            child: Text(
-              value,
-              style: TextStyle(
-                color: Colors.grey.shade700,
-              ),
-            ),
+            child: Text(value, style: TextStyle(color: Colors.grey.shade700)),
           ),
         ],
       ),
     );
   }
 
-  Widget statusTile(
-      IconData icon,
-      String title,
-      Color color,
-      ) {
+  Widget statusTile(IconData icon, String title, Color color) {
     return Card(
       elevation: 2,
       child: ListTile(
@@ -46,10 +37,7 @@ class SubmitSurveyScreen extends StatelessWidget {
           child: Icon(icon, color: color),
         ),
         title: Text(title),
-        trailing: Icon(
-          Icons.check_circle,
-          color: color,
-        ),
+        trailing: Icon(Icons.check_circle, color: color),
       ),
     );
   }
@@ -57,14 +45,11 @@ class SubmitSurveyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Review & Submit"),
-      ),
+      appBar: AppBar(title: const Text("Review & Submit")),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(18),
         child: Column(
           children: [
-
             Card(
               elevation: 4,
               shape: RoundedRectangleBorder(
@@ -74,7 +59,6 @@ class SubmitSurveyScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(18),
                 child: Column(
                   children: [
-
                     const CircleAvatar(
                       radius: 38,
                       backgroundColor: Colors.green,
@@ -104,7 +88,6 @@ class SubmitSurveyScreen extends StatelessWidget {
                     buildRow("Weaver", "Ramesh"),
                     buildRow("Mobile", "9876543210"),
                     buildRow("Fibre Type", "Cotton"),
-
                   ],
                 ),
               ),
@@ -124,17 +107,9 @@ class SubmitSurveyScreen extends StatelessWidget {
               Colors.green,
             ),
 
-            statusTile(
-              Icons.location_on,
-              "GPS Location Verified",
-              Colors.blue,
-            ),
+            statusTile(Icons.location_on, "GPS Location Verified", Colors.blue),
 
-            statusTile(
-              Icons.storage,
-              "Ready to Save",
-              Colors.orange,
-            ),
+            statusTile(Icons.storage, "Ready to Save", Colors.orange),
 
             const SizedBox(height: 30),
 
@@ -155,12 +130,9 @@ class SubmitSurveyScreen extends StatelessWidget {
                     colorText: Colors.white,
                   );
 
-                  Future.delayed(
-                    const Duration(seconds: 1),
-                        () {
-                      Get.back();
-                    },
-                  );
+                  Future.delayed(const Duration(seconds: 1), () {
+                    Get.back();
+                  });
                 },
               ),
             ),
@@ -178,7 +150,6 @@ class SubmitSurveyScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 20),
-
           ],
         ),
       ),
