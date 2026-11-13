@@ -108,7 +108,7 @@ class DisclaimerScreen extends StatelessWidget {
 
                       Text(
                         "Map boundaries and geographic information displayed in this application are intended only for reference purposes. They are not survey-grade data and should not be used for any legal, administrative, cadastral, or property-related decisions.",
-                        textAlign: TextAlign.justify,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey.shade800,

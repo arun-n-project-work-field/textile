@@ -18,7 +18,7 @@ class CommonFooter extends StatelessWidget {
       child: const SafeArea(
         top: false,
         child: Text(
-          'KGIS - 2.0, KSRSAC, Bengaluru',
+          'KGIS - 2.0 | KSRSAC | Bengaluru',
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

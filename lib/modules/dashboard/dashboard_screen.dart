@@ -6,6 +6,7 @@ import 'package:namma_kaimagga_app/services/app_session.dart';
 import 'package:namma_kaimagga_app/database/database_helper.dart';
 import 'package:namma_kaimagga_app/widgets/common_footer.dart';
 import 'package:namma_kaimagga_app/widgets/common_header.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'dashboard_controller.dart';
 
@@ -346,40 +347,75 @@ class _AppDrawer extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: Center(
-                  // FIX: ClipRRect clips its child widget to a rounded shape
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      16.0,
-                    ), // Adjust this value to change the roundness
+                    borderRadius: BorderRadius.circular(16.0),
                     child: const Image(
                       image: AssetImage('assets/icons/app_icon.png'),
-
-                      fit: BoxFit
-                          .cover, // Ensures the image fills the rounded boundary nicely
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
               ),
             ),
-            _drawerItem(context, Icons.info_outline, "About", AppRoutes.about),
 
+            // About
+            _drawerItem(
+              context,
+              Icons.info_outline,
+              'About',
+              route: AppRoutes.about,
+            ),
+
+            // Disclaimer
             _drawerItem(
               context,
               Icons.description,
-              "Disclaimer",
-              AppRoutes.disclaimer,
+              'Disclaimer',
+              route: AppRoutes.disclaimer,
             ),
 
+            // Privacy Policy - open directly in external browser
+            _drawerItem(
+              context,
+              Icons.privacy_tip_outlined,
+              'Privacy Policy',
+              onTap: () async {
+                final Uri uri = Uri.parse(
+                  'https://ksrsacdev.github.io/ksrsac.github.io/',
+                );
+
+                try {
+                  final bool launched = await launchUrl(
+                    uri,
+                    mode: LaunchMode.externalApplication,
+                  );
+
+                  if (!launched) {
+                    debugPrint('Could not open Privacy Policy URL');
+                  }
+                } catch (e) {
+                  debugPrint('Could not open Privacy Policy URL: $e');
+                }
+              },
+            ),
+
+            // Contact Us
             _drawerItem(
               context,
               Icons.phone_android,
-              "Contact Us",
-              AppRoutes.contact,
+              'Contact Us',
+              route: AppRoutes.contact,
             ),
 
             const Divider(),
 
-            _drawerItem(context, Icons.logout, "Logout", AppRoutes.login),
+            // Logout
+            _drawerItem(
+              context,
+              Icons.logout,
+              'Logout',
+              onTap: () => _confirmLogout(context),
+            ),
           ],
         ),
       ),
@@ -389,18 +425,20 @@ class _AppDrawer extends StatelessWidget {
   Widget _drawerItem(
     BuildContext context,
     IconData icon,
-    String title,
-    String route,
-  ) {
+    String title, {
+    String? route,
+    VoidCallback? onTap,
+  }) {
     return ListTile(
       leading: Icon(icon),
       title: Text(title),
       onTap: () {
+        // Close the drawer first.
         Navigator.pop(context);
 
-        if (title == "Logout") {
-          _confirmLogout(context);
-        } else {
+        if (onTap != null) {
+          onTap();
+        } else if (route != null) {
           Get.toNamed(route);
         }
       },

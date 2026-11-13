@@ -99,13 +99,15 @@ class _AboutAppScreenState extends State<AboutAppScreen> {
                 ),
                 child: Column(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 45,
                       backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.handshake,
-                        color: Colors.blue,
-                        size: 50,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16.0),
+                        child: Image(
+                          image: AssetImage('assets/icons/app_icon.png'),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -141,6 +143,7 @@ class _AboutAppScreenState extends State<AboutAppScreen> {
                 title: 'Developed By',
                 value:
                     'Karnataka GIS - 2.0\n'
+                    ''
                     'KSRSAC (Karnataka State Remote Sensing '
                     'Applications Centre), Bengaluru',
               ),
